@@ -73,7 +73,7 @@
             height: 50%;
         }
         .companyDescription{
-            padding-left: 200px;
+            padding-left: 100px;
             color: white;
         }
         .companyDescription h1{
@@ -123,7 +123,7 @@
             width: 250px;
             height: 250px;
             border-radius: 50%;
-            padding: 30px;
+            padding: 10px;
         }
         .team-member p{
             font-size: smaller;
