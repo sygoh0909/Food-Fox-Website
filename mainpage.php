@@ -3,7 +3,139 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Main Page</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <style>
+        body{
+            background-color: #F5EEDC;
+            margin: 0;
+            font-family: Arial, sans-serif;
+        }
+        .navbar{
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+            background-color: #5C4033;
+        }
+        .social-media{
+            display: flex;
+            gap: 10px;
+        }
+        .social-media a{
+            color: white;
+            font-size: 20px;
+            text-decoration: none;
+        }
+        .nav-links{
+            display: flex;
+            gap: 30px;
+        }
+        .roundButton{
+            padding: 8px 20px;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        .login{
+            background-color: white;
+            color: #d3a029;
+            font-size: smaller;
+        }
+        .signup{
+            background-color: #d3a029;
+            color: white;
+            font-size: smaller;
+        }
+        .login:hover, .signup:hover{
+            transform: translateY(-2px);
+        }
+        .banner{
+            position: relative;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
+        .banner img{
+            width: 100%;
+            height: 100%;
+            display: block; /*remove extra spaces around the image*/
+            object-fit: cover;
+        }
+        .overlay-content{
+            position: absolute;
+            display: flex;
+            flex-direction: column;
+            top: 0;
+            left: 0;
+        }
+        .logo img{
+            width: 60%;
+            height: 50%;
+        }
+        .companyDescription{
+            padding-left: 200px;
+            color: white;
+        }
+        .companyDescription h1{
+            margin-top: 0;
+            font-size: 80px;
+            font-weight: bold;
+        }
+        .companyDescription p{
+            margin-bottom: 70px;
+            font-size: 20px;
+        }
+        .join{
+            background-color: white;
+            color: #d3a029;
+            padding: 20px 25px;
+            border-radius: 10px;
+        }
+        .overlay-nav{
+            position: absolute;
+            display: flex;
+            gap: 50px;
+            top: 50px;
+            left: 400px;
+        }
+        .overlay-nav a{
+            text-decoration: none;
+            color: white;
+            font-size: larger;
+        }
+        .overlay-nav a:hover{
+            border-radius: 25px;
+            background-color: rgba(255,255,255,0.2);
+        }
+        .main-info{
+            display: flex;
+            flex-direction: column;
+            text-align: center;
+        }
+        .main-info section{
+            margin: 30px 0;
+        }
+        .team-member div{
+            display: inline-block;
+            text-align: center;
+        }
+        .team-member img{
+            width: 250px;
+            height: 250px;
+            border-radius: 50%;
+            padding: 30px;
+        }
+        .team-member p{
+            font-size: smaller;
+        }
+        .aboutus img, .approach img{
+            border-radius: 10px;
+        }
+        .aboutus img{
+            width: 200px;
+            height: auto;
+        }
+    </style>
 </head>
 <body>
 <header>
@@ -87,135 +219,4 @@
 <footer>
 
 </footer>
-<style>
-    body{
-        background-color: #F5EEDC;
-        margin: 0;
-        font-family: Arial, sans-serif;
-    }
-    .navbar{
-        display: flex;
-        justify-content: space-between;
-        padding: 15px 20px;
-        background-color: #5C4033;
-    }
-    .social-media{
-        display: flex;
-        gap: 10px;
-    }
-    .social-media a{
-        color: white;
-        font-size: 20px;
-        text-decoration: none;
-    }
-    .nav-links{
-        display: flex;
-        gap: 30px;
-    }
-    .roundButton{
-        padding: 8px 20px;
-        border-radius: 25px;
-        text-decoration: none;
-        font-weight: bold;
-    }
-    .login{
-        background-color: white;
-        color: #d3a029;
-        font-size: smaller;
-    }
-    .signup{
-        background-color: #d3a029;
-        color: white;
-        font-size: smaller;
-    }
-    .login:hover, .signup:hover{
-        transform: translateY(-2px);
-    }
-    .banner{
-        position: relative;
-        width: 100%;
-        height: 100%;
-        overflow: hidden;
-    }
-    .banner img{
-        width: 100%;
-        height: 100%;
-        display: block; /*remove extra spaces around the image*/
-        object-fit: cover;
-    }
-    .overlay-content{
-        position: absolute;
-        display: flex;
-        flex-direction: column;
-        top: 0;
-        left: 0;
-    }
-    .logo img{
-        width: 60%;
-        height: 50%;
-    }
-    .companyDescription{
-        padding-left: 200px;
-        color: white;
-    }
-    .companyDescription h1{
-        margin-top: 0;
-        font-size: 80px;
-        font-weight: bold;
-    }
-    .companyDescription p{
-        margin-bottom: 70px;
-        font-size: 20px;
-    }
-    .join{
-        background-color: white;
-        color: #d3a029;
-        padding: 20px 25px;
-        border-radius: 10px;
-    }
-    .overlay-nav{
-        position: absolute;
-        display: flex;
-        gap: 50px;
-        top: 50px;
-        left: 400px;
-    }
-    .overlay-nav a{
-        text-decoration: none;
-        color: white;
-        font-size: larger;
-    }
-    .overlay-nav a:hover{
-        border-radius: 25px;
-        background-color: rgba(255,255,255,0.2);
-    }
-    .main-info{
-        display: flex;
-        flex-direction: column;
-        text-align: center;
-    }
-    .main-info section{
-        margin: 30px 0;
-    }
-    .team-member div{
-        display: inline-block;
-        text-align: center;
-    }
-    .team-member img{
-        width: 250px;
-        height: 250px;
-        border-radius: 50%;
-        padding: 30px;
-    }
-    .team-member p{
-        font-size: smaller;
-    }
-    .aboutus img, .approach img{
-        border-radius: 10px;
-    }
-    .aboutus img{
-        width: 200px;
-        height: auto;
-    }
-</style>
 </html>

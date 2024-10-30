@@ -3,6 +3,39 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Events Page</title>
+    <style>
+        body{
+            background-color: #F5EEDC;
+            margin: 0;
+            font-family: Arial, sans-serif;
+        }
+        .navbar{
+            padding: 15px 20px;
+            background-color: #5C4033;
+        }
+        .main-links{
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+        }
+        .main-links a{
+            text-decoration: none;
+            color: white;
+        }
+        .admin-dashboard{
+
+        }
+        .stats{
+            background-color: #C5B4A5;
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            gap: 100px;
+        }
+        .stats p{
+            text-align: center;
+        }
+    </style>
 </head>
 <body>
 <header>
@@ -72,37 +105,4 @@
     </section>
 </main>
 </body>
-<style>
-    body{
-        background-color: #F5EEDC;
-        margin: 0;
-        font-family: Arial, sans-serif;
-    }
-    .navbar{
-        padding: 15px 20px;
-        background-color: #5C4033;
-    }
-    .main-links{
-        display: flex;
-        justify-content: center;
-        gap: 40px;
-    }
-    .main-links a{
-        text-decoration: none;
-        color: white;
-    }
-    .admin-dashboard{
-
-    }
-    .stats{
-        background-color: #C5B4A5;
-        display: flex;
-        flex-direction: row;
-        justify-content: center;
-        gap: 100px;
-    }
-    .stats p{
-        text-align: center;
-    }
-</style>
 </html>

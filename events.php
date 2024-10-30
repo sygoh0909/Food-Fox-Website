@@ -3,7 +3,59 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Events Page</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <style>
+        body{
+            background-color: #F5EEDC;
+            margin: 0;
+            font-family: Arial, sans-serif;
+        }
+        .navbar{
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+            background-color: #5C4033;
+        }
+        .social-media{
+            display: flex;
+            gap: 10px;
+        }
+        .social-media a{
+            color: white;
+            font-size: 20px;
+            text-decoration: none;
+        }
+        .nav-links{
+            display: flex;
+            gap: 30px;
+        }
+        .roundButton{
+            padding: 8px 20px;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        .main{
+            color: white;
+        }
+        .login{
+            background-color: white;
+            color: #d3a029;
+            font-size: smaller;
+        }
+        .signup{
+            background-color: #d3a029;
+            color: white;
+            font-size: smaller;
+        }
+        .login:hover, .signup:hover{
+            transform: translateY(-2px);
+        }
+        .events{
+            text-align: center;
+        }
+    </style>
 </head>
 <body>
 <header>
@@ -62,56 +114,4 @@
     </section>
 </main>
 </body>
-<style>
-    body{
-        background-color: #F5EEDC;
-        margin: 0;
-        font-family: Arial, sans-serif;
-    }
-    .navbar{
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 15px 20px;
-        background-color: #5C4033;
-    }
-    .social-media{
-        display: flex;
-        gap: 10px;
-    }
-    .social-media a{
-        color: white;
-        font-size: 20px;
-        text-decoration: none;
-    }
-    .nav-links{
-        display: flex;
-        gap: 30px;
-    }
-    .roundButton{
-        padding: 8px 20px;
-        border-radius: 25px;
-        text-decoration: none;
-        font-weight: bold;
-    }
-    .main{
-        color: white;
-    }
-    .login{
-        background-color: white;
-        color: #d3a029;
-        font-size: smaller;
-    }
-    .signup{
-        background-color: #d3a029;
-        color: white;
-        font-size: smaller;
-    }
-    .login:hover, .signup:hover{
-        transform: translateY(-2px);
-    }
-    .events{
-        text-align: center;
-    }
-</style>
 </html>
