@@ -9,7 +9,7 @@
 <header>
     <nav>
         <div class="navbar">
-            <div class="socialmedia">
+            <div class="social-media">
                 <a href="https://facebook.com" class="fa fa-facebook"></a>
                 <a href="https://instagram.com" class="fa fa-instagram"></a>
                 <a href="https://youtube.com" class="fa fa-youtube"></a>
@@ -42,13 +42,56 @@
                 </div>
             </div>
         </div>
+        <div class="main-info">
+            <section class="aboutus">
+                <h2>About Us</h2>
+                <p>xxx</p>
+                <img src="aboutus1.png" alt="About Us 1">
+                <img src="aboutus2.png" alt="About Us 2">
+            </section>
+            <section class="team-member">
+                <h2>Our Team</h2>
+                <div class="team-member1">
+                    <img src="logo.png" alt="Team Member 1">
+                    <p><b>Goh Shu Yi</b></p>
+                    <p>xxx</p>
+                </div>
+                <div class="team-member2">
+                    <img src="logo.png" alt="Team Member 2">
+                    <p><b>Tiong Jia Yi</b></p>
+                    <p>xxx</p>
+                </div>
+                <div class="team-member3">
+                    <img src="logo.png" alt="Team Member 3">
+                    <p><b>Yim Sook Xin</b></p>
+                    <p>xxx</p>
+                </div>
+                <div class="team-member4">
+                    <img src="logo.png" alt="Team Member 4">
+                    <p><b>Phang Pei Mei</b></p>
+                    <p>xxx</p>
+                </div>
+            </section>
+            <section class="approach">
+                <h2>Our Approach</h2>
+                <p>Food Fox is a Malaysian based non-profit organisation focused on providing food to the underprivileged community who striuggle to put food on the table everyday.</p>
+            </section>
+            <section class="getinvolved">
+                <h2>Get Involved</h2>
+                <p>xxx</p>
+                <img src="getinvolved.png" alt="Get Involved">
+            </section>
+        </div>
     </main>
 </body>
+<footer>
+
+</footer>
 <style>
     body{
-        background-color: burlywood;
+        background-color: #F5EEDC;
         margin: 0;
-        font-family: Arial;
+        font-family: Arial, sans-serif;
     }
     .navbar{
         display: flex;
@@ -56,28 +99,34 @@
         padding: 15px 20px;
         background-color: #5C4033;
     }
-    .socialmedia{
+    .social-media{
         display: flex;
         gap: 10px;
     }
+    .social-media a{
+        color: white;
+        font-size: 20px;
+        text-decoration: none;
+    }
     .nav-links{
         display: flex;
-        gap: 20px;
+        gap: 30px;
     }
     .roundButton{
         padding: 8px 20px;
         border-radius: 25px;
         text-decoration: none;
         font-weight: bold;
-        font-size: smaller;
     }
     .login{
         background-color: white;
         color: #d3a029;
+        font-size: smaller;
     }
     .signup{
         background-color: #d3a029;
         color: white;
+        font-size: smaller;
     }
     .login:hover, .signup:hover{
         transform: translateY(-2px);
@@ -90,7 +139,7 @@
     }
     .banner img{
         width: 100%;
-        height: auto;
+        height: 100%;
         display: block; /*remove extra spaces around the image*/
         object-fit: cover;
     }
@@ -106,28 +155,30 @@
         height: 50%;
     }
     .companyDescription{
-        padding-left: 50px;
+        padding-left: 200px;
         color: white;
     }
     .companyDescription h1{
+        margin-top: 0;
         font-size: 80px;
         font-weight: bold;
     }
     .companyDescription p{
-        margin-bottom: 50px;
+        margin-bottom: 70px;
         font-size: 20px;
     }
     .join{
         background-color: white;
         color: #d3a029;
-        padding: 10px 20px;
+        padding: 20px 25px;
+        border-radius: 10px;
     }
     .overlay-nav{
         position: absolute;
         display: flex;
         gap: 50px;
         top: 50px;
-        left: 700px;
+        left: 400px;
     }
     .overlay-nav a{
         text-decoration: none;
@@ -137,6 +188,34 @@
     .overlay-nav a:hover{
         border-radius: 25px;
         background-color: rgba(255,255,255,0.2);
+    }
+    .main-info{
+        display: flex;
+        flex-direction: column;
+        text-align: center;
+    }
+    .main-info section{
+        margin: 30px 0;
+    }
+    .team-member div{
+        display: inline-block;
+        text-align: center;
+    }
+    .team-member img{
+        width: 250px;
+        height: 250px;
+        border-radius: 50%;
+        padding: 30px;
+    }
+    .team-member p{
+        font-size: smaller;
+    }
+    .aboutus img, .approach img{
+        border-radius: 10px;
+    }
+    .aboutus img{
+        width: 200px;
+        height: auto;
     }
 </style>
 </html>
