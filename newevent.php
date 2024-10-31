@@ -27,7 +27,7 @@
 <body>
 <main>
     <h2>Add New Event</h2>
-    <form method="POST" enctype="multipart/form-data">
+    <form method="POST" enctype="multipart/form-data" onsubmit="return validateForm()">
         <p>Event Image:</p>
         <label><input type="file" accept="image/*" onchange="previewEventImage(event)">
             <img id="eventImagePreview" class="event-image-preview" alt="Event Image Preview" style="display: none">
@@ -53,15 +53,15 @@
         <p>Event Highlights:</p>
         <div id="highlights-container">
             <div class="dynamic-inputs">
-                <label><input type="text" placeholder="Enter event highlights..."></label>
+                <label><input type="text" name="highlights[]" placeholder="Enter event highlights..."></label>
                 <button type="button" onclick="addHighlights()">+</button>
             </div>
         </div>
 
         <p>Event Schedule:</p>
-        <div class="schedule-container">
+        <div id="schedule-container">
             <div class="dynamic-inputs">
-                <label><input type="text" placeholder="Enter event schedule..."></label>
+                <label><input type="text" name="schedules[]" placeholder="Enter event schedules..."></label>
                 <button type="button" onclick="addSchedule()">+</button>
             </div>
         </div>
@@ -94,19 +94,34 @@
         guestImagePreview.style.display = 'block';
     }
 
+    function addHighlights(){
+        const container = document.getElementById('highlights-container');
+        const newInput = document.createElement('div');
+        newInput.classList.add('dynamic-inputs');
+        newInput.innerHTML = `<label><input type="text" name="highlights[]" placeholder="Enter event highlights..."></label>
+                              <button type="button" onclick="removeRow(this)">-</button>`;
+        container.appendChild(newInput);
+    }
+
+    function addSchedule(){
+        const container = document.getElementById('schedule-container');
+        const newInput = document.createElement('div');
+        newInput.classList.add('dynamic-inputs'); /*add css styles to here*/
+        newInput.innerHTML = `<label><input type="text" name="schedules[]" placeholder="Enter event schedules..."></label>
+                              <button type="button" onclick="removeRow(this)">-</button>`;
+        container.appendChild(newInput);
+    }
+
+    function removeRow(button){
+        button.parentElement.remove();
+    }
+
+    function validateForm(){
+        const requiredFields = ['eventName', 'startDate', 'endDate', 'startTime', 'endTime', 'location', 'registrationsNeeded'];
+
+    }
+
     function addEvent(){
-        /*form validation, and add events to database*/
-        <?php
-        $dbhost = 'localhost';
-        $dbuser = 'root';
-        $dbpass = '';
-        $dbname = 'foodfoxdb';
-        $conn = new mysqli($dbhost, $dbuser, $dbpass, $dbname);
-        if ($conn->connect_error) {
-            die ("Connection failed: " . $conn->connect_error);
-        }
-        ?>
-        alert('Event added successfully!')
     }
 </script>
 </body>
