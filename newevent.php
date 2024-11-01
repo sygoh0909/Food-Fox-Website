@@ -34,21 +34,21 @@
         </label>
 
         <p>Event Name:</p>
-        <label><input type="text" placeholder="Enter event name..."></label>
+        <label><input type="text" name="eventName" placeholder="Enter event name..."></label>
 
         <p>Event Date:</p>
-        <label>Start Date: <input type="date"></label>
-        <label>End Date: <input type="date"></label>
+        <label>Start Date: <input type="date" name="startDate"></label>
+        <label>End Date: <input type="date" name="endDate"></label>
 
         <p>Event Time:</p>
-        <label>Start Time: <input type="time"></label>
-        <label>End Time: <input type="time"></label>
+        <label>Start Time: <input type="time" name="startTime"></label>
+        <label>End Time: <input type="time" name="endTime"></label>
 
         <p>Event Location:</p>
-        <label><input type="text" placeholder="Enter event location..."></label>
+        <label><input type="text" name="location" placeholder="Enter event location..."></label>
 
         <p>Event Details:</p>
-        <label><input type="text" placeholder="Enter brief event details..."></label>
+        <label><input type="text" name="details" placeholder="Enter brief event details..."></label>
 
         <p>Event Highlights:</p>
         <div id="highlights-container">
@@ -73,11 +73,11 @@
         <label><input type="text" placeholder="Enter guests bio..."></label>
 
         <p>Registrations Needed:</p>
-        <label><input type="text" placeholder="Enter Registrations needed..."></label>
+        <label><input type="text" name="registrationsNeeded" placeholder="Enter Registrations needed..."></label>
 
         <div class="button">
             <button type="button" onclick="addEvent()">Add</button>
-            <button type="button" onclick="window.location.href='admin_events.php">Cancel</button>
+            <button type="button" onclick="window.location.href='admin_events.php'">Cancel</button>
         </div>
     </form>
 </main>
@@ -122,6 +122,17 @@
     }
 
     function addEvent(){
+        <?php
+        $dbhost = "localhost";
+        $dbuser = "root";
+        $dbpass = "";
+        $dbname = "foodfoxdb";
+        $conn = new mysqli($dbhost, $dbuser, $dbpass, $dbname);
+
+        if (mysqli_connect_errno()) {
+            die("Database connection failed: " . mysqli_connect_error());
+        }
+        ?>
     }
 </script>
 </body>
