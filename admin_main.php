@@ -102,6 +102,9 @@
             <p>
                 Total Registrations/Participants/Volunteers?
             </p>
+            <p>
+                Total Donations
+            </p>
         </div>
     </section>
 </main>
