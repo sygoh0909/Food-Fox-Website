@@ -27,6 +27,18 @@
 <body>
 <main>
     <h2>Add New Event</h2>
+
+    <?php
+    $dbhost = "localhost";
+    $dbuser = "root";
+    $dbpass = "";
+    $dbname = "foodfoxdb";
+    $conn = new mysqli($dbhost, $dbuser, $dbpass, $dbname);
+    if ($conn->connect_error) {
+        die("Connection failed: " . $conn->connect_error);
+    }
+    ?>
+
     <form method="POST" enctype="multipart/form-data" onsubmit="return validateForm()">
         <p>Event Image:</p>
         <label><input type="file" accept="image/*" onchange="previewEventImage(event)">
@@ -77,7 +89,7 @@
 
         <div class="button">
             <button type="button" onclick="addEvent()">Add</button>
-            <button type="button" onclick="window.location.href='admin_events.php'">Cancel</button>
+            <a href="admin_events.php"><button id="button1">Cancel</button></a>
         </div>
     </form>
 </main>
@@ -122,17 +134,7 @@
     }
 
     function addEvent(){
-        <?php
-        $dbhost = "localhost";
-        $dbuser = "root";
-        $dbpass = "";
-        $dbname = "foodfoxdb";
-        $conn = new mysqli($dbhost, $dbuser, $dbpass, $dbname);
 
-        if (mysqli_connect_errno()) {
-            die("Database connection failed: " . mysqli_connect_error());
-        }
-        ?>
     }
 </script>
 </body>

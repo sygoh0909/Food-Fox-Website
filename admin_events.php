@@ -90,7 +90,7 @@
         <div style="text-align: center;">
             <label><input type="text" placeholder="Search events..."></label>
             <button>Search</button>
-            <button id="button1">Add New Event</button>
+            <a href="newevent.php"><button id="button1">Add New Event</button></a>
         </div>
         <div class="upcoming-events-table">
             <table>
@@ -127,12 +127,42 @@
                 ?>
             </table>
         </div>
+        <div class="past-events-table">
+            <table>
+                <tr>
+                    <th>Past Event ID</th>
+                    <th>Past Event Name</th>
+                    <th>Total Registrations</th>
+                    <th>Actions</th>
+                </tr>
+                <?php
+                $dbhost = "localhost";
+                $dbuser = "root";
+                $dbpass = "";
+                $dbname = "foodfoxdb";
+                $conn = new mysqli($dbhost, $dbuser, $dbpass, $dbname);
+                if ($conn->connect_error) {
+                    die("Connection failed: " . $conn->connect_error);
+                }
+                $sql = "SELECT e.eventID, e.eventName, COUNT(r.registrationID) AS totalRegistrations FROM events e LEFT JOIN registrations r ON e.eventID = r.eventID WHERE e.eventStatus='Past' GROUP BY e.eventID, e.eventName";
+                $result = $conn->query($sql);
+                if ($result->num_rows > 0) {
+                    while($row = $result->fetch_assoc()) {
+                        echo "<tr>";
+                        echo "<td>" . $row["eventID"] . "</td>";
+                        echo "<td>" . $row["eventName"] . "</td>";
+                        echo "<td>" . $row["totalRegistrations"] . "</td>";
+                        echo "<td><button>Edit</button><button>Delete</button><button>View Registrations</button></td>";
+                        echo "</tr>";
+                    }
+                } else {
+                    echo "<tr><td colspan='4' class='no-results'>No upcoming events found.</td></tr>";
+                }
+                $conn->close();
+                ?>
+            </table>
+        </div>
     </section>
 </main>
-<script>
-    document.getElementById("button1").onclick = function (){
-        window.location.href = "newevent.php";
-    };
-</script>
 </body>
 </html>
