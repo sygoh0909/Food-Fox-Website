@@ -19,6 +19,7 @@
 <body>
 
 <?php
+session_start();
 $dbhost = "localhost";
 $dbuser = "root";
 $dbpass = "";
@@ -70,7 +71,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         if (mysqli_query($conn, $query)) {
             $memberId = mysqli_insert_id($conn); // Get the new member ID
+            $_SESSION['memberID'] = $memberId;
             echo "<p>Registration successful. Your Member ID is: $memberId</p>";
+            echo "<form method='POST' action='mainpage.php'><button type='submit'>OK</button></form>";
         }
         else{
             echo "<p>Error: " . mysqli_error($conn) . "</p>";
@@ -113,7 +116,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <button type="submit">Sign Up</button>
     </form>
 
-    <p class="signin-link">Already have an account? <a href="signin.php">Sign in now!</a></p>
+    <p class="login-link">Already have an account? <a href="login.php">Sign in now!</a></p>
 
 </div>
 </body>

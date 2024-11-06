@@ -139,6 +139,9 @@
     </style>
 </head>
 <body>
+<?php
+session_start();
+?>
 <header>
     <nav>
         <div class="navbar">
@@ -149,8 +152,15 @@
             </div>
 
             <div class="nav-links">
-                <a href="login.php" class="roundButton login">Login</a>
-                <a href="signup.php" class="roundButton signup">Sign Up</a>
+                <?php
+                if (isset($_SESSION['memberID'])) {
+                    $memberID = $_SESSION['memberID'];
+                    echo "<a href='profile.php?id=$memberID'>Member ID: $memberID</a>";
+                } else {
+                    echo "<a href='login.php' class='roundButton login'>Login</a>";
+                    echo "<a href='signup.php' class='roundButton signup'>Sign Up</a>";
+                }
+                ?>
             </div>
         </div>
     </nav>

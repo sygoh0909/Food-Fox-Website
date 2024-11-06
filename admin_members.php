@@ -125,7 +125,6 @@
                 } else {
                     echo "<tr><td colspan='4' class='no-results'>No members found.</td></tr>";
                 }
-                $conn->close();
                 ?>
             </table>
         </div>
