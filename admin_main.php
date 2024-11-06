@@ -44,8 +44,8 @@
         <div class="navbar">
             <div class="main-links">
                 <a href="admin_main.php">Home</a>
+                <a href="admin_members.php">Members</a>
                 <a href="admin_events.php">Events</a>
-                <a href="damin_volunteers.php">Volunteers</a>
                 <a href="admin_donations.php">Donation</a>
             </div>
         </div>

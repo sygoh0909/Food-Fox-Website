@@ -37,7 +37,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     //regular expressions
     $namePattern = '/^[a-zA-Z]+$/';
-    $emailPattern = '/^[\w\-\.]+@[a-zA-Z]+\.[a-zA-Z]{.2,}$/';
+    $emailPattern = '/^[\w\-\.]+@[a-zA-Z]+\.[a-zA-Z]{2,}$/';
     $passwordPattern = '/^(?=.*[a-zA-z])(?=.*\d)[A-Za-z\d]{8,}$/';
 
     //validation
@@ -60,10 +60,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     elseif (!preg_match($passwordPattern, $password)) {
         $errors[] = "Password must at least be 8 characters long, with at least one letter and one number.";
     }
-    if (empty($confirmPassword)) {
-        $errors[] = "Confirm Password is required";
-    }
-    elseif (!preg_match($confirmPassword, $confirmPassword)) {
+    if ($password !== $confirmPassword) {
         $errors[] = "Passwords do not match.";
     }
     //if no errors, save to database
@@ -72,7 +69,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $query = "INSERT INTO members (memberName, email, password) VALUES ('$name', '$email', '$hashedPassword')";
 
         if (mysqli_query($conn, $query)) {
-            echo "<p>Registration successful.</p>";
+            $memberId = mysqli_insert_id($conn); // Get the new member ID
+            echo "<p>Registration successful. Your Member ID is: $memberId</p>";
         }
         else{
             echo "<p>Error: " . mysqli_error($conn) . "</p>";
