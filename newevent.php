@@ -46,10 +46,8 @@
         $details = $_POST['details'];
         $registrationsNeeded = $_POST['registrationsNeeded'];
         $eventStatus = $_POST['eventStatus'];
-        $highlights = $_POST['highlights'];
-        $schedules = $_POST['schedules'];
-        $highlights = implode(", ", $_POST['highlights']);
-        $schedules = implode(", ", $_POST['schedules']);
+        $highlights[] = implode(", ", $_POST['highlights']);
+        $schedules[] = implode(", ", $_POST['schedules']);
 
         $startDateTime = $startDate . " " . $startTime;
         $endDateTime = $endDate . " " . $endTime;
@@ -98,22 +96,29 @@
         }
 
         if (empty($errors)){
-            $query = "INSERT INTO events (eventName, start_dateTime, end_dateTime, location, details, highlights, schedules, registrationsNeeded, eventStatus, eventImage, guestImage) 
-            VALUES ('$eventName', '$startDateTime', '$endDateTime', '$location', '$details', '$highlights', '$schedules', '$registrationsNeeded', '$eventStatus', '$eventImagePath', '$guestImagePath')";
+            $query = "INSERT INTO events (eventName, start_dateTime, end_dateTime, location, details, registrationsNeeded, eventStatus, eventPic) 
+            VALUES ('$eventName', '$startDateTime', '$endDateTime', '$location', '$details', '$registrationsNeeded', '$eventStatus', '$eventImagePath')";
 
             if ($conn->query($query) === TRUE) {
-                echo "New event added successfully";
-            } else {
-                echo "Error: " . $query . "<br>" . $conn->error;
+                $eventID = $conn->insert_id;
+
+                foreach ($schedules as $schedule) { //foreach used for arrays, means loop through the array
+                    $scheduleQuery = "INSERT INTO eventschedules (eventID, scheduleDateTime, activityDescription)"
+                        . "VALUES ('$eventID', '$schedule', '$schedule')";
+                    $conn->query($scheduleQuery);
+                }
+
+                foreach ($highlights as $highlight) {
+                    $highlightQuery = "INSERT INTO eventhighlights (eventID, highlights)"
+                        . "VALUES ('$eventID', '$highlight')";
+                    $conn->query($highlightQuery);
+                }
+
+                //event guest
             }
+            echo "New event added successfully";
         }
-        if (!empty($errors)) {
-            echo '<ul>';
-            foreach ($errors as $error) {
-                echo "<li>$error</li>";
-            }
-            echo '</ul>';
-        }
+        //error message
     }
     ?>
 
@@ -151,7 +156,7 @@
         <p>Event Schedule:</p>
         <div id="schedule-container">
             <div class="dynamic-inputs">
-                <label><input type="text" name="schedules[]" placeholder="Enter event schedules..."></label>
+                <label><input type="text" name="schedules[]" placeholder="Enter date/time, activity description..."></label>
                 <button type="button" onclick="addSchedule()">+</button>
             </div>
         </div>
@@ -199,7 +204,7 @@
         const container = document.getElementById('schedule-container');
         const newInput = document.createElement('div');
         newInput.classList.add('dynamic-inputs'); /*add css styles to here*/
-        newInput.innerHTML = `<label><input type="text" name="schedules[]" placeholder="Enter event schedules..."></label>
+        newInput.innerHTML = `<label><input type="text" name="schedules[]" placeholder="Enter date/time, activity description..."></label>
                               <button type="button" onclick="removeRow(this)">-</button>`;
         container.appendChild(newInput);
     }
