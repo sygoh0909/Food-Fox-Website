@@ -21,7 +21,6 @@
         h2{
             text-align: center;
         }
-
     </style>
 </head>
 <body>
@@ -37,11 +36,90 @@
     if ($conn->connect_error) {
         die("Connection failed: " . $conn->connect_error);
     }
+    if ($_SERVER["REQUEST_METHOD"] == "POST") {
+        $eventName = $_POST['eventName'];
+        $startDate = $_POST['startDate'];
+        $endDate = $_POST['endDate'];
+        $startTime = $_POST['startTime'];
+        $endTime = $_POST['endTime'];
+        $location = $_POST['location'];
+        $details = $_POST['details'];
+        $registrationsNeeded = $_POST['registrationsNeeded'];
+        $eventStatus = $_POST['eventStatus'];
+        $highlights = $_POST['highlights'];
+        $schedules = $_POST['schedules'];
+        $highlights = implode(", ", $_POST['highlights']);
+        $schedules = implode(", ", $_POST['schedules']);
+
+        $startDateTime = $startDate . " " . $startTime;
+        $endDateTime = $endDate . " " . $endTime;
+
+        $errors = [];
+        $eventImagePath = '';
+        $guestImagePath = '';
+
+        //validation
+        if (empty($eventName)) {
+            $errors[] = "Event Name is required";
+        }
+        if (empty($startDate)) {
+            $errors[] = "Start Date is required";
+        }
+        if (empty($endDate)) {
+            $errors[] = "End Date is required";
+        }
+        if (empty($startTime)) {
+            $errors[] = "Start Time is required";
+        }
+        if (empty($endTime)) {
+            $errors[] = "End Time is required";
+        }
+        if (empty($location)) {
+            $errors[] = "Location is required";
+        }
+        if (empty($registrationsNeeded)) {
+            $errors[] = "Registrations Needed is required";
+        }
+        if (empty($eventStatus)) {
+            $errors[] = "Event Status is required";
+        }
+
+        //handle image upload
+        if (isset($_FILES['eventImage']) && $_FILES['eventImage']['error'] == 0) {
+            $target_dir = "uploads/";
+            $eventImagePath = $target_dir . basename($_FILES["eventImage"]["name"]);
+            move_uploaded_file($_FILES["eventImage"]["tmp_name"], $eventImagePath);
+        }
+
+        if (isset($_FILES['guestImage']) && $_FILES['guestImage']['error'] == 0) {
+            $target_dir = "uploads/";
+            $guestImagePath = $target_dir . basename($_FILES["guestImage"]["name"]);
+            move_uploaded_file($_FILES["guestImage"]["tmp_name"], $guestImagePath);
+        }
+
+        if (empty($errors)){
+            $query = "INSERT INTO events (eventName, start_dateTime, end_dateTime, location, details, highlights, schedules, registrationsNeeded, eventStatus, eventImage, guestImage) 
+            VALUES ('$eventName', '$startDateTime', '$endDateTime', '$location', '$details', '$highlights', '$schedules', '$registrationsNeeded', '$eventStatus', '$eventImagePath', '$guestImagePath')";
+
+            if ($conn->query($query) === TRUE) {
+                echo "New event added successfully";
+            } else {
+                echo "Error: " . $query . "<br>" . $conn->error;
+            }
+        }
+        if (!empty($errors)) {
+            echo '<ul>';
+            foreach ($errors as $error) {
+                echo "<li>$error</li>";
+            }
+            echo '</ul>';
+        }
+    }
     ?>
 
-    <form method="POST" enctype="multipart/form-data" onsubmit="return validateForm()">
+    <form method="POST" enctype="multipart/form-data"">
         <p>Event Image:</p>
-        <label><input type="file" accept="image/*" onchange="previewEventImage(event)">
+        <label><input type="file" name="eventImage" accept="image/*" onchange='previewEventImage()'">
             <img id="eventImagePreview" class="event-image-preview" alt="Event Image Preview" style="display: none">
         </label>
 
@@ -79,16 +157,18 @@
         </div>
 
         <p>Featured Speaker/Event Guests:</p>
-        <label><input type="file" accept="image/*" onchange="previewGuestImage(event)">
-            <img id="guestImagePreview" class="guest-image-preview" alt="Guest Image Preview" style="display: none">
-        </label>
+        <label><input type="file" name="guestImage" accept="image/*" onchange="previewGuestImage()">
+            <img id="guestImagePreview" class="guest-image-preview" alt="Guest Image Preview" style="display: none"></label>
         <label><input type="text" placeholder="Enter guests bio..."></label>
 
         <p>Registrations Needed:</p>
         <label><input type="text" name="registrationsNeeded" placeholder="Enter Registrations needed..."></label>
 
+        <p>Event Status:</p>
+        <label><input type="text" name="eventStatus" placeholder="Enter Event Type..." </label>
+
         <div class="button">
-            <button type="button" onclick="addEvent()">Add</button>
+            <button type="submit">Add</button>
             <a href="admin_events.php"><button id="button1">Cancel</button></a>
         </div>
     </form>
@@ -126,15 +206,6 @@
 
     function removeRow(button){
         button.parentElement.remove();
-    }
-
-    function validateForm(){
-        const requiredFields = ['eventName', 'startDate', 'endDate', 'startTime', 'endTime', 'location', 'registrationsNeeded'];
-
-    }
-
-    function addEvent(){
-
     }
 </script>
 </body>

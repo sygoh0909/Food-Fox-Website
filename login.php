@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sign Up Page</title>
+    <title>Login Page</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <style>
         body {
@@ -46,8 +46,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         if (password_verify($password, $user['password'])){
             session_start();
             $_SESSION['memberID'] = $user['memberID'];
-            $_SESSION['email'] = $user['email'];
-            echo "Login Successful";
+            echo "Login Successful! Redirecting to main page...";
+            sleep(2); //delay 2 seconds before navigating
+            header ("Location: mainpage.php");
+            exit();
         }
     }
     else{
