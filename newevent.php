@@ -46,8 +46,8 @@
         $details = $_POST['details'];
         $registrationsNeeded = $_POST['registrationsNeeded'];
         $eventStatus = $_POST['eventStatus'];
-        $highlights[] = implode(", ", $_POST['highlights']);
-        $schedules[] = implode(", ", $_POST['schedules']);
+        $highlights = $_POST['highlights'];
+        $schedules = $_POST['schedules'];
 
         $startDateTime = $startDate . " " . $startTime;
         $endDateTime = $endDate . " " . $endTime;
@@ -102,6 +102,8 @@
             if ($conn->query($query) === TRUE) {
                 $eventID = $conn->insert_id;
 
+                //save each schedule/highlight as a new row in table (now is split by comma)
+                
                 foreach ($schedules as $schedule) { //foreach used for arrays, means loop through the array
                     $scheduleQuery = "INSERT INTO eventschedules (eventID, scheduleDateTime, activityDescription)"
                         . "VALUES ('$eventID', '$schedule', '$schedule')";
@@ -115,10 +117,15 @@
                 }
 
                 //event guest
+                $guestName = $_POST['guestName'];
+                $guestBio = $_POST['guestBio'];
+                if (!empty($guestName)){
+                    $guestQuery = "INSERT INTO eventguests (eventID, guestName, guestBio, guestProfilePic)". "VALUES ('$eventID', '$guestName', '$guestBio', '$guestImagePath')";
+                    $conn->query($guestQuery);
+                }
             }
             echo "New event added successfully";
         }
-        //error message
     }
     ?>
 
@@ -148,7 +155,7 @@
         <p>Event Highlights:</p>
         <div id="highlights-container">
             <div class="dynamic-inputs">
-                <label><input type="text" name="highlights[]" placeholder="Enter event highlights..."></label>
+                <label><input type="text" name="highlights" placeholder="Enter event highlights..."></label>
                 <button type="button" onclick="addHighlights()">+</button>
             </div>
         </div>
@@ -156,15 +163,17 @@
         <p>Event Schedule:</p>
         <div id="schedule-container">
             <div class="dynamic-inputs">
-                <label><input type="text" name="schedules[]" placeholder="Enter date/time, activity description..."></label>
+                <label><input type="text" name="schedules" placeholder="Enter date/time, activity description..."></label>
                 <button type="button" onclick="addSchedule()">+</button>
             </div>
         </div>
 
         <p>Featured Speaker/Event Guests:</p>
         <label><input type="file" name="guestImage" accept="image/*" onchange="previewGuestImage()">
-            <img id="guestImagePreview" class="guest-image-preview" alt="Guest Image Preview" style="display: none"></label>
-        <label><input type="text" placeholder="Enter guests bio..."></label>
+            <img id="guestImagePreview" class="guest-image-preview" alt="Guest Image Preview" style="display: none">
+            <input type="text" name="guestName" placeholder="Enter guests name...">
+            <input type="text" name="guestBio" placeholder="Enter guests bio...">
+        </label>
 
         <p>Registrations Needed:</p>
         <label><input type="text" name="registrationsNeeded" placeholder="Enter Registrations needed..."></label>

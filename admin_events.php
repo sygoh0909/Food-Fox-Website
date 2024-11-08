@@ -156,7 +156,7 @@
                         echo "</tr>";
                     }
                 } else {
-                    echo "<tr><td colspan='4' class='no-results'>No upcoming events found.</td></tr>";
+                    echo "<tr><td colspan='4' class='no-results'>No past events found.</td></tr>";
                 }
                 $conn->close();
                 ?>
