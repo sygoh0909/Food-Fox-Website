@@ -117,7 +117,7 @@
                         echo "<td>" . $row["eventID"] . "</td>";
                         echo "<td>" . $row["eventName"] . "</td>";
                         echo "<td>" . $row["totalRegistrations"] . "</td>";
-                        echo "<td><button>Edit</button><button>Delete</button><button>View Registrations</button></td>";
+                        echo "<td><button type='submit' >Edit</button><button>Delete</button><button>View Registrations</button></td>";
                         echo "</tr>";
                     }
                 } else {

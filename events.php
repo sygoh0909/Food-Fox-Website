@@ -103,6 +103,7 @@
                     echo "<div class='event-card'>";
                     echo "<img src='" . $row['eventPic'] . "' alt='" . $row['eventName'] . "'>";
                     echo "<h3>" . $row['eventName'] . "</h3>";
+                    echo "<a href='upcomingEventInfo.php'><button>View more info</button></a>";
                     echo "</div>";
                 }
             } else {
