@@ -57,6 +57,7 @@
     }
 
     else{
+        //add event
         echo "<h2>Add New Event</h2>";
     }
 
