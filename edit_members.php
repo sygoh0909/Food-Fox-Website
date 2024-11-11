@@ -73,10 +73,40 @@
     elseif ($action == "delete"){
         echo "<h2>Delete Member Info</h2>";
     }
-    elseif ($action == "view"){
-        echo "<h2>View Member Info</h2>";
+    else{
+        //error message
     }
     ?>
+
+    <form method="POST" enctype="multipart/form-data">
+        <p>Member Profile:</p>
+        <label><input type="file" accept="image/*" onchange='previewMemberProfile()'
+        <img id="memberProfilePreview" class="member-profile-preview" alt="Member Profile Preview" style="display: none">
+        </label>
+
+        <p>Member ID:</p> <!--edit member id because maybe member id not provided/assigned???)-->
+
+        <p>Member Name:</p>
+        <label><input type="text" name="memberName" value="<?php echo isset($memberData['memberName']) ? $memberData['memberName']:'';?>"</label>
+
+        <p>Email:</p>
+        <label><input type="text" name="email" value="<?php echo isset($memberData['email']) ? $memberData['email']:'';?>"</label>
+
+        <p>Password:</p>
+        <label><input type="text" name="password" value=""</label> <!--unhashed password-->
+
+        <p>Phone Number:</p>
+
+        <p>Bio:</p>
+
+        <p>Join Date:</p>
+
+    </form>
 </main>
 </body>
+<script>
+    function previewMemberProfile(){
+        const memberProfilePreview = document.getElementById('memberProfilePreview')
+    }
+</script>
 </html>

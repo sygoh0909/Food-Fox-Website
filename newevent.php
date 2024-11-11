@@ -37,13 +37,16 @@
     }
     //check for event id presence
     $eventID = isset($_GET['eventID']) ? $_GET['eventID'] : null;
+    $action = isset($_GET['action']) ? $_GET['action'] : null;
     $eventData = null;
 
-    if ($eventID != null) {
-        echo "<h2>Update Event</h2>";
-        $sql = "SELECT * FROM events WHERE eventID = '$eventID'";
-        $result = $conn->query($sql);
-        $eventData = $result->fetch_assoc(); //retrieves the data as an associative array
+    if ($eventID) {
+        if ($action == "edit"){
+            echo "<h2>Update Event</h2>";
+            $sql = "SELECT * FROM events WHERE eventID = '$eventID'";
+            $result = $conn->query($sql);
+            $eventData = $result->fetch_assoc(); //retrieves the data as an associative array
+        }
     }
 
     else{
@@ -114,7 +117,7 @@
         }
 
         //update event
-        if ($eventID){
+        if ($eventID && $action=="edit"){ //need this condition twice?
             if (empty($errors)){
                 $updateQuery = "UPDATE events SET eventName = '$eventName', start_dateTime = '$startDateTime', end_dateTime = '$endDateTime', location = '$location', details = '$details', registrationsNeeded = '$registrationsNeeded', eventStatus = '$eventStatus', eventPic = '$eventImagePath' WHERE eventID = '$eventID'";
 
@@ -189,7 +192,7 @@
 
     <form method="POST" enctype="multipart/form-data">
         <p>Event Image:</p>
-        <label><input type="file" name="eventImage" accept="image/*" onchange='previewEventImage()'">
+        <label><input type="file" name="eventImage" accept="image/*" onchange='previewEventImage()'>
             <img id="eventImagePreview" class="event-image-preview" alt="Event Image Preview" style="display: none">
         </label>
 

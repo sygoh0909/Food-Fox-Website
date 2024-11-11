@@ -119,7 +119,7 @@
                         echo "<td>" . $row["memberName"] . "</td>";
                         echo "<td>" . $row["email"] . "</td>";
                         echo "<td>" . $row["joinDate"] . "</td>";
-                        echo "<td><a href='edit_members.php?memberID=1&action=edit" .$row['memberID']. "'<button>Edit</button><a href='edit_members.php?memberID=1&action=delete'" .$row['memberID']. "'<button>Delete</button><a href='edit_members.php?memberID=1&action=view'" . $row['memberID']."'<button>View Full Details</button></td>";
+                        echo "<td><a href='edit_members.php?memberID=1&action=edit" .$row['memberID']. "'<button>Edit</button><a href='edit_members.php?memberID=1&action=delete'" .$row['memberID']. "'<button>Delete</button></td>";
                         echo "</tr>";
                     }
                 } else {

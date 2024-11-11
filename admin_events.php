@@ -154,7 +154,7 @@
                         echo "<td>" . $row["eventID"] . "</td>";
                         echo "<td>" . $row["eventName"] . "</td>";
                         echo "<td>" . $row["totalRegistrations"] . "</td>";
-                        echo "<td><a href='newevent.php?eventID=" .$row['eventID']. "'<button>Edit</button><button>Delete</button><button>View Registrations</button></td>";
+                        echo "<td><a href='newevent.php?eventID=1action=edit" .$row['eventID']. "'<button>Edit</button><a href='newevent.php?memberID=1action=delete'<button>Delete</button><a href='admin_registrations.php?memberID='<button>View Registrations</button></td>";
                         echo "</tr>";
                     }
                 } else {
