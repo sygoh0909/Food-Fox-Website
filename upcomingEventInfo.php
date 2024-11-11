@@ -97,12 +97,20 @@
     if ($eventID){
         $sql = "SELECT * FROM `events` WHERE `eventID` = $eventID";
         $result = $conn->query($sql);
-        $eventData = $result->fetch_assoc();
+        if ($result->num_rows > 0) {
+            while($row = $result->fetch_assoc()) {
+                $eventData = $row;
+                echo "<div class='events'>";
+                echo "$eventData";
+                echo "</div>";
+                echo "<a href='eventRegistrations.php?eventID=" .$row['eventID']."'><button>Register Now!</button></a>";
+            }
+        }
     }
+
     ?>
     <p>Event Name: <?php echo isset($eventData['eventName'])? $eventData['eventName']:'';?></p>
     <!--display all info related to the event-->
-    <a href='eventRegistrations.php'
 </main>
 </body>
 </html>
