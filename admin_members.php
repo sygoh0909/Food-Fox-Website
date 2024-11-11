@@ -90,7 +90,10 @@
         <div style="text-align: center;">
             <label><input type="text" placeholder="Search members..."></label>
             <button>Search</button>
-            <a href="newmember.php"><button id="button1">Add New Member</button></a>
+            <!--search feature-->
+
+            <!--no need add members gua?-->
+            <a href="edit_members.php"><button id="button1">Add New Member</button></a>
         </div>
         <div class="member-table">
             <table>
@@ -119,7 +122,7 @@
                         echo "<td>" . $row["memberName"] . "</td>";
                         echo "<td>" . $row["email"] . "</td>";
                         echo "<td>" . $row["joinDate"] . "</td>";
-                        echo "<td><a href='edit_members.php?memberID=1&action=edit" .$row['memberID']. "'<button>Edit</button><a href='edit_members.php?memberID=1&action=delete'" .$row['memberID']. "'<button>Delete</button></td>";
+                        echo "<td><a href='edit_members.php?memberID=" .$row['memberID']. "&action=edit'><button>Edit</button></a><a href='edit_members.php?memberID=" .$row['memberID']. "&action=delete'><button>Delete</button></a></td>";
                         echo "</tr>";
                     }
                 } else {

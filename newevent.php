@@ -47,6 +47,13 @@
             $result = $conn->query($sql);
             $eventData = $result->fetch_assoc(); //retrieves the data as an associative array
         }
+        elseif ($action == "delete"){
+            echo "<h2>Delete Event</h2>";
+            $sql = "DELETE FROM events WHERE eventID = '$eventID'";
+            if ($conn->query($sql) === TRUE) {
+                echo "Event deleted successfully";
+            }
+        }
     }
 
     else{

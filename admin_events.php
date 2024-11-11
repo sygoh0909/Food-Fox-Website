@@ -89,7 +89,7 @@
         <h2>Events Management</h2>
         <div style="text-align: center;">
             <label><input type="text" placeholder="Search events..."></label>
-            <button>Search</button>
+            <button>Search</button> <!--search feature-->
             <a href="newevent.php"><button id="button1">Add New Event</button></a>
         </div>
         <div class="upcoming-events-table">
@@ -118,7 +118,7 @@
                         echo "<td>" . $row["eventID"] . "</td>";
                         echo "<td>" . $row["eventName"] . "</td>";
                         echo "<td>" . $row["totalRegistrations"] . "</td>";
-                        echo "<td><a href='newevent.php?eventID=" .$row['eventID']. "'<button>Edit</button></a><button>Delete</button><button>View Registrations</button></td>";
+                        echo "<td><a href='newevent.php?eventID=" .$row['eventID']. "&action=edit'><button>Edit</button></a><a href='newevent.php?eventID=" .$row['eventID']. "&action=delete'><button>Delete</button></a><button>View Registrations</button></td>";
                         echo "</tr>";
                     }
                 } else {
@@ -154,7 +154,7 @@
                         echo "<td>" . $row["eventID"] . "</td>";
                         echo "<td>" . $row["eventName"] . "</td>";
                         echo "<td>" . $row["totalRegistrations"] . "</td>";
-                        echo "<td><a href='newevent.php?eventID=1action=edit" .$row['eventID']. "'<button>Edit</button><a href='newevent.php?memberID=1action=delete'<button>Delete</button><a href='admin_registrations.php?memberID='<button>View Registrations</button></td>";
+                        echo "<td><a href='newevent.php?eventID=" .$row['eventID']. "&action=edit'><button>Edit</button></a><a href='newevent.php?eventID=" .$row['eventID']. "&action=delete'><button>Delete</button></a><button>View Registrations</button></td>";
                         echo "</tr>";
                     }
                 } else {
