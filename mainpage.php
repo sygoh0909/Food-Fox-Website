@@ -1,3 +1,7 @@
+<?php
+include('cookie.php');
+$visitCount = cookie();
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -139,9 +143,6 @@
     </style>
 </head>
 <body>
-<?php
-session_start();
-?>
 <header>
     <nav>
         <div class="navbar">
@@ -156,9 +157,11 @@ session_start();
                 if (isset($_SESSION['memberID'])) {
                     $memberID = $_SESSION['memberID'];
                     echo "<a href='profile.php?id=$memberID'>Member ID: $memberID</a>";
+                    echo "<p>Welcome back! This is your visit number $visitCount.</p>";
                 } else {
                     echo "<a href='login.php' class='roundButton login'>Login</a>";
                     echo "<a href='signup.php' class='roundButton signup'>Sign Up</a>";
+                    echo "<p>This is your visit number $visitCount.</p>";
                 }
                 ?>
             </div>
