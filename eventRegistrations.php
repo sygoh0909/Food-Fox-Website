@@ -12,6 +12,7 @@ if ($conn->connect_error) {
 }
 $eventID = isset($_GET['eventID']) ? $_GET['eventID'] : null;
 $eventData = null;
+//not done yet
 
 ?>
 <html>

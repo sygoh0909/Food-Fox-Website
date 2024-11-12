@@ -101,7 +101,7 @@
             while($row = $result->fetch_assoc()) {
                 $eventData = $row;
                 echo "<div class='events'>";
-                echo "$eventData";
+                echo "Event Name: $eventData[eventName]";
                 echo "</div>";
                 echo "<a href='eventRegistrations.php?eventID=" .$row['eventID']."'><button>Register Now!</button></a>";
             }
@@ -109,7 +109,6 @@
     }
 
     ?>
-    <p>Event Name: <?php echo isset($eventData['eventName'])? $eventData['eventName']:'';?></p>
     <!--display all info related to the event-->
 </main>
 </body>
