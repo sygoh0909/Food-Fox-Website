@@ -1,3 +1,7 @@
+<?php
+include ('cookie.php');
+$visitCount = cookie();
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -90,6 +94,7 @@
 
     </div>
     <h2>Make a Donation</h2>
+
     <h2>Our Collective Impact</h2>
     <h2>Community Feedback</h2>
 </main>

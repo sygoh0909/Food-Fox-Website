@@ -19,7 +19,9 @@
 <body>
 
 <?php
-session_start();
+include('cookie.php');
+$visitCount = cookie(); //dunno need or not
+
 $dbhost = "localhost";
 $dbuser = "root";
 $dbpass = "";

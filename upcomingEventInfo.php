@@ -1,3 +1,7 @@
+<?php
+include ('cookie.php');
+$visitCount = cookie();
+?>
 <html>
 <head>
     <meta charset="UTF-8">
@@ -104,6 +108,7 @@
                 echo "Event Name: $eventData[eventName]";
                 echo "</div>";
                 echo "<a href='eventRegistrations.php?eventID=" .$row['eventID']."'><button>Register Now!</button></a>";
+                //check user is member or not, if not display a message and jump to sign up page
             }
         }
     }
