@@ -51,7 +51,6 @@ $visitCount = cookie();
             $sql = "SELECT * FROM registrations WHERE registrationID = $registrationID";
             $result = mysqli_query($conn, $sql);
             $registrationInfo = mysqli_fetch_assoc($result);
-            //volunteer/participant info
         }
         elseif ($action == "delete"){
             $sql = "DELETE FROM registrations WHERE registrationID = $registrationID";
@@ -65,6 +64,12 @@ $visitCount = cookie();
             $dietaryRestrictions = $_POST["dietaryRestrictions"];
 
             $errors = [];
+
+            if (empty($errors)){
+                if ($action == "edit"){
+                    //participant/volunteer info some not same, what if wan to change register type hmm
+                }
+            }
 
             }
     }
