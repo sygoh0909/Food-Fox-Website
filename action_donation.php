@@ -29,6 +29,40 @@ $visitCount = cookie();
 </head>
 <body>
 <main>
+    <?php
+    $dbhost = "localhost";
+    $dbuser = "root";
+    $dbpass = "";
+    $dbname = "foodfoxdb";
+    $conn = new mysqli($dbhost, $dbuser, $dbpass, $dbname);
+    if ($conn->connect_error) {
+        die("Connection failed: " . $conn->connect_error);
+    }
+    $donationID = isset($_GET["donationID"])?$_GET["donationID"]:null;
+    $donationDetails = null;
+
+    if ($donationID){
+        $sql = "SELECT * FROM `donations` WHERE `donationID` = $donationID";
+        $result = $conn->query($sql);
+        $donationDetails = $result->fetch_assoc();
+    }
+    ?>
+    <form method="POST" enctype="multipart/form-data">
+        <p>Donation ID</p>
+        <?php echo $donationDetails["donationID"]; ?> <!--should donation id and member id can edit by admin?-->
+
+        <p>Member ID</p>
+        <?php echo $donationDetails["memberID"]; ?>
+
+        <p>Donation Amount</p>
+        <label><input type="text" name="amount" value="<?php echo isset($donationDetails['amount'])?$donationDetails['amount']:'';?>"></label>
+
+        <p>Donation Date</p>
+        <?php echo $donationDetails["donationDate"]; ?>
+
+        <p>Feedback</p>
+
+    </form>
 </main>
 </body>
 </html>
