@@ -36,6 +36,9 @@ $visitCount = cookie();
             margin-bottom: 20px;
             text-align: center;
         }
+        .search{
+            text-align: center
+        }
         input[type="text"] {
             padding: 10px;
             border: 1px solid #ccc;
@@ -91,7 +94,7 @@ $visitCount = cookie();
 <main>
     <section class="events">
         <h2>Events Management</h2>
-        <div style="text-align: center;">
+        <div class="search">
             <label><input type="text" placeholder="Search events..."></label>
             <button>Search</button> <!--search feature-->
             <a href="newevent.php"><button id="button1">Add New Event</button></a>

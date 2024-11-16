@@ -140,7 +140,8 @@ $visitCount = cookie();
         <label><input type="text" name="email" value="<?php echo isset($memberData['email']) ? $memberData['email']:'';?>"></label>
 
         <p>Password:</p>
-        <label><input type="text" name="password" ></label> <!--to display password?-->
+        <label><input type="text" name="password" placeholder="Enter a new password if you want to change it..."></label>
+        <p>Leave blank to keep the existing password.</p>
 
         <p>Phone Number:</p>
         <label><input type="text" name="phoneNum" value="<?php echo isset($memberData['phoneNum']) ? $memberData['phoneNum']:'';?>"></label>
@@ -149,6 +150,7 @@ $visitCount = cookie();
         <label><input type="text" name="bio" value="<?php echo isset($memberData['bio'])?$memberData['bio']:'';?>"></label>
 
         <p>Join Date:</p>
+        <?php echo $memberData['joinDate'];?> <br>
 
         <button type="submit"><?php echo $memberID & $action=='edit'?'Update member info':'Delete Member Info'?></button>
         <a href="admin_members.php"><button>Cancel</button></a>
