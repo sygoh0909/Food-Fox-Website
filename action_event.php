@@ -1,3 +1,7 @@
+<?php
+include ('cookie.php');
+$visitCount = cookie();
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -200,7 +204,7 @@
 
     <form method="POST" enctype="multipart/form-data">
         <p>Event Image:</p>
-        <label><input type="file" name="eventImage" accept="image/*" onchange='previewEventImage()'>
+        <label><input type="file" name="eventImage" accept="image/*" onchange='previewEventImage()'> <!--show the image saved in database-->
             <img id="eventImagePreview" class="event-image-preview" alt="Event Image Preview" style="display: none">
         </label>
 

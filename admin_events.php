@@ -1,3 +1,7 @@
+<?php
+include ('cookie.php');
+$visitCount = cookie();
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -118,7 +122,7 @@
                         echo "<td>" . $row["eventID"] . "</td>";
                         echo "<td>" . $row["eventName"] . "</td>";
                         echo "<td>" . $row["totalRegistrations"] . "</td>";
-                        echo "<td><a href='newevent.php?eventID=" .$row['eventID']. "&action=edit'><button>Edit</button></a><a href='newevent.php?eventID=" .$row['eventID']. "&action=delete'><button>Delete</button></a><button>View Registrations</button></td>";
+                        echo "<td><a href='action_event.php?eventID=" .$row['eventID']. "&action=edit'><button>Edit</button></a><a href='action_event.php?eventID=" .$row['eventID']. "&action=delete'><button>Delete</button></a><a href='admin_registrations.php?eventID=" .$row['eventID']."'><button>View Registrations</button></a></td>";
                         echo "</tr>";
                     }
                 } else {
