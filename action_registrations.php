@@ -74,6 +74,9 @@ $visitCount = cookie();
             }
     }
     ?>
+    <form method="POST" enctype="multipart/form-data">
+
+    </form>
 </main>
 </body>
 </html>
