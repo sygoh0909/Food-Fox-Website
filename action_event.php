@@ -53,13 +53,13 @@ $visitCount = cookie();
         }
         elseif ($action == "delete"){
             echo "<h2>Delete Event</h2>";
+            //when button clicked only delete
             $sql = "DELETE FROM events WHERE eventID = '$eventID'";
             if ($conn->query($sql) === TRUE) {
                 echo "Event deleted successfully";
             }
         }
     }
-
     else{
         //add event
         echo "<h2>Add New Event</h2>";
@@ -82,6 +82,9 @@ $visitCount = cookie();
 
         $startDateTime = $startDate . " " . $startTime;
         $endDateTime = $endDate . " " . $endTime;
+
+        //regular expressions
+
 
         $errors = [];
         $eventImagePath = '';

@@ -133,7 +133,7 @@ $visitCount = cookie();
                             echo "<td>" . $row["registerType"] . "</td>";
                             echo "<td>" . $row["registrationDate"] . "</td>";
                             //idk the attendance
-                            echo "<td><a href='action_registrations?registrationID=" .$row['registrationID']." &action=edit'><button>Edit</button></a><a href='action_registrations.php?registrationID=" .$row['registrationID']." &action=delete'><button>Delete</button></a></td>";
+                            echo "<td><a href='action_registrations.php?registrationID=" .$row['registrationID']." &action=edit'><button>Edit</button></a><a href='action_registrations.php?registrationID=" .$row['registrationID']." &action=delete'><button>Delete</button></a></td>";
                             echo "</tr>";
                         }
                     }

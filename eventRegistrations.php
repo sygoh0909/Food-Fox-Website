@@ -27,10 +27,10 @@ while ($row = mysqli_fetch_assoc($result)) {
 }
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $registerType = $_POST["registrations"]; //register type not saved in database
+    $registerType = $_POST["registrations"];
     $dietaryRestrictions = $_POST["dietaryRestrictions"];
 
-    $errors = [];
+    $errors = []; //check for errors
 
     if (empty($errors)){
         //need event id, and member id also
@@ -41,7 +41,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             if ($registerType == "Participant"){
                 $specialAccommodation = $_POST["specialAccommodation"];
                 $sizes = $_POST["sizes"];
-                $sql = "INSERT INTO participants (registrationID, specialAccommodation, dietaryRestrictions) VALUES ('$registrationID', '$sizes', '$dietaryRestrictions')";
+                $sql = "INSERT INTO participants (registrationID, specialAccommodation) VALUES ('$registrationID', '$sizes')";
                 mysqli_query($conn, $sql);
             }
             else if ($registerType == "Volunteer"){

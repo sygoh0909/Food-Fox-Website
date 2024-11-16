@@ -1,1 +1,75 @@
 <?php
+include ('cookie.php');
+$visitCount = cookie();
+?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit/Delete Member Page</title>
+
+    <style>
+        body {
+            background-color: #F5EEDC;
+            margin: 0;
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+        }
+        main{
+            background-color: #C5B4A5;
+            padding: 20px 40px;
+            border-radius: 20px;
+        }
+        h2{
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+<main>
+    <?php
+    $dbhost = "localhost";
+    $dbuser = "root";
+    $dbpass = "";
+    $dbname = "foodfoxdb";
+    $conn = mysqli_connect($dbhost, $dbuser, $dbpass, $dbname);
+    if ($conn->connect_error) {
+        die ("Connection failed: " . $conn->connect_error);
+    }
+    $registrationID = isset($_GET['registrationID']) ? $_GET['registrationID'] : null;
+    $action = isset($_GET['action']) ? $_GET['action'] : null;
+    $registrationInfo = null;
+
+    if ($registrationID){
+        $sql = "SELECT * FROM registrations WHERE registrationID = $registrationID";
+        $result = mysqli_query($conn, $sql);
+        $registrationInfo = mysqli_fetch_assoc($result);
+
+        if ($action == "edit"){
+            $sql = "SELECT * FROM registrations WHERE registrationID = $registrationID";
+            $result = mysqli_query($conn, $sql);
+            $registrationInfo = mysqli_fetch_assoc($result);
+            //volunteer/participant info
+        }
+        elseif ($action == "delete"){
+            $sql = "DELETE FROM registrations WHERE registrationID = $registrationID";
+            if ($conn->query($sql) === TRUE) {
+                echo "Registration deleted successfully";
+            }
+        }
+
+        if ($_SERVER["REQUEST_METHOD"] == "POST"){
+            $registerType = $_POST["registrations"];
+            $dietaryRestrictions = $_POST["dietaryRestrictions"];
+
+            $errors = [];
+
+            }
+    }
+    ?>
+</main>
+</body>
+</html>
+
