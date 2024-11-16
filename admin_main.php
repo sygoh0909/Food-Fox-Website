@@ -1,3 +1,7 @@
+<?php
+include ('cookie.php');
+$visitCount = cookie();
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -99,7 +103,26 @@
                 ?>
             </p>
             <p>
-                Total Registrations/Participants/Volunteers?
+                Total Registrations <br>
+                <?php
+                $dbhost = "localhost";
+                $dbuser = "root";
+                $dbpass = "";
+                $dbname = "foodfoxdb";
+                $conn = new mysqli($dbhost, $dbuser, $dbpass, $dbname);
+                if ($conn->connect_error) {
+                    echo "Connection failed: " . $conn->connect_error;
+                }
+                $sql = "SELECT COUNT(*) AS total_registrations FROM registrations";
+                $result = $conn->query($sql);
+                if ($result->num_rows > 0) {
+                    $row = $result->fetch_assoc();
+                    echo $row["total_registrations"];
+                }
+                else{
+                    echo "0";
+                }
+                ?>
             </p>
             <p>
                 Total Donations

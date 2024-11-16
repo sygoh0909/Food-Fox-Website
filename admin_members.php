@@ -1,3 +1,7 @@
+<?php
+include ('cookie.php');
+$visitCount = cookie();
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -93,7 +97,7 @@
             <!--search feature-->
 
             <!--no need add members gua?-->
-            <a href="edit_members.php"><button id="button1">Add New Member</button></a>
+
         </div>
         <div class="member-table">
             <table>
@@ -122,7 +126,7 @@
                         echo "<td>" . $row["memberName"] . "</td>";
                         echo "<td>" . $row["email"] . "</td>";
                         echo "<td>" . $row["joinDate"] . "</td>";
-                        echo "<td><a href='edit_members.php?memberID=" .$row['memberID']. "&action=edit'><button>Edit</button></a><a href='edit_members.php?memberID=" .$row['memberID']. "&action=delete'><button>Delete</button></a></td>";
+                        echo "<td><a href='action_members.php?memberID=" .$row['memberID']. "&action=edit'><button>Edit</button></a><a href='action_members.php?memberID=" .$row['memberID']. "&action=delete'><button>Delete</button></a></td>";
                         echo "</tr>";
                     }
                 } else {

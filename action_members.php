@@ -1,3 +1,7 @@
+<?php
+include ('cookie.php');
+$visitCount = cookie();
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -41,7 +45,6 @@
     if ($memberID){
         if ($action == "edit"){
             echo "<h2>Edit Member Info</h2>";
-
             }
 
         elseif ($action == "delete"){
@@ -59,7 +62,6 @@
                 $password = $_POST["password"];
                 $phoneNum = $_POST["phoneNum"];
                 $bio = $_POST["bio"];
-
                 $memberProfilePath = '';
 
                 if (isset($_FILES['memberProfile']) && $_FILES['memberProfile']['error'] == 0) {
@@ -68,26 +70,50 @@
                     move_uploaded_file($_FILES["memberProfile"]["tmp_name"], $memberProfilePath);
                 }
 
+                //regular expressions
+                $namePattern = '/^[a-zA-Z]+$/';
+                $emailPattern = '/^[\w\-\.]+@[a-zA-Z]+\.[a-zA-Z]{2,}$/';
+                $passwordPattern = '/^(?=.*[a-zA-z])(?=.*\d)[A-Za-z\d]{8,}$/'; //password format maybe need change
+
                 //validation
                 $errors = [];
 
-                if ($action == "edit"){
+                //need to include if edit only need check these errors???
+                if (empty($memberName)) {
+                    $errors[] = "Member Name is required";
+                }
+                elseif (!preg_match($namePattern, $memberName)) {
+                    $errors[] = "Name can contain only letters and spaces";
+                }
+                if (empty($email)) {
+                    $errors[] = "Email is required";
+                }
+                elseif (!preg_match($emailPattern, $email)) {
+                    $errors[] = "Enter a valid email address.";
+                }
+                if (empty($password)) {
+                    $errors[] = "Password is required";
+                }
+                elseif (!preg_match($passwordPattern, $password)) {
+                    $errors[] = "Password must at least be 8 characters long, with at least one letter and one number.";
+                }
+
+                if ($action == "edit"){ //do we really need to let admin can edit user password?
                     //update event
                     if (empty($errors)){
-                        $hashedPassword = password_hash($password, PASSWORD_DEFAULT); //this idk
+                        $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
                         $sql = "UPDATE members SET memberName = '$memberName', email = '$email', password = '$hashedPassword', phoneNum = '$phoneNum', bio = '$bio', memberProfile = '$memberProfilePath' WHERE memberID = $memberID";
 
                         if ($conn->query($sql) === TRUE) {
-                            echo "Updated successfully";
+                            echo "<script>alert('Member Info Updated Successfully');</script>";
                         }
                     }
                 }
                 elseif ($action == "delete"){
-                    if (empty($errors)){
-                        $sql = "DELETE FROM members WHERE memberID = $memberID";
-                        if ($conn->query($sql) === TRUE) {
-                            echo "Deleted successfully";
-                        }
+                    $sql = "DELETE FROM members WHERE memberID = $memberID";
+                    if ($conn->query($sql) === TRUE) {
+                        echo "<script>alert('Member Info Deleted Successfully');</script>";
+                        //a pop up message then press ok and jump back to admin member?
                     }
                 }
             }
@@ -99,7 +125,7 @@
 
     <form method="POST" enctype="multipart/form-data">
 
-        <p>Member ID:</p> <!--edit member id because maybe member id not provided/assigned???)-->
+        <p>Member ID:</p> <!--can edit member id or no?-->
         <?php echo $memberData["memberID"]; ?>
 
         <p>Member Profile:</p>
@@ -114,7 +140,7 @@
         <label><input type="text" name="email" value="<?php echo isset($memberData['email']) ? $memberData['email']:'';?>"></label>
 
         <p>Password:</p>
-        <label><input type="text" name="password" ></label>
+        <label><input type="text" name="password" ></label> <!--to display password?-->
 
         <p>Phone Number:</p>
         <label><input type="text" name="phoneNum" value="<?php echo isset($memberData['phoneNum']) ? $memberData['phoneNum']:'';?>"></label>
