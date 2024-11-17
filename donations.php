@@ -80,9 +80,9 @@ $visitCount = cookie();
         }
     </style>
 </head>
-<body>
+<body onload="updateProgress()">
 <?php
-$fundraisingGoal = 1000;
+$fundraisingGoal = 170;
 $conn = connection();
 
 $sql = "SELECT SUM(amount) AS total_donations FROM donations";
