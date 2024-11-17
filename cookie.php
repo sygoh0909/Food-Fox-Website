@@ -26,7 +26,6 @@ function loginSection(){
         echo "<a href='signup.php' class='roundButton signup'>Sign Up</a>";
         echo "<p>This is your visit number $visitCount.</p>";
     }
-    return $memberID;
 }
 
 function connection(){

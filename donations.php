@@ -83,15 +83,7 @@ $visitCount = cookie();
 
             <div class="nav-links">
                 <?php
-                if (isset($_SESSION['memberID'])) {
-                    $memberID = $_SESSION['memberID'];
-                    echo "<a href='profile.php?id=$memberID'>Member ID: $memberID</a>";
-                    echo "<p>Welcome back! This is your visit number $visitCount.</p>"; //testing
-                } else {
-                    echo "<a href='login.php' class='roundButton login'>Login</a>";
-                    echo "<a href='signup.php' class='roundButton signup'>Sign Up</a>";
-                    echo "<p>This is your visit number $visitCount.</p>";
-                }
+                loginSection();
                 ?>
             </div>
         </div>
@@ -104,11 +96,8 @@ $visitCount = cookie();
 
     <h2>Make a Donation</h2>
     <?php
-    $dbhost = 'localhost';
-    $dbuser = 'root';
-    $dbpass = '';
-    $dbname = 'foodfoxdb';
-    $conn = mysqli_connect($dbhost, $dbuser, $dbpass, $dbname);
+    $conn = connection();
+    $memberID = isset($_SESSION['memberID']) ? $_SESSION['memberID'] : "";
 
     if ($conn->connect_error) {
         die("Connection failed: " . $conn->connect_error);
@@ -141,15 +130,8 @@ $visitCount = cookie();
 
     <h2>Community Feedback</h2>
     <?php
-    $dbhost = 'localhost';
-    $dbuser = 'root';
-    $dbpass = '';
-    $dbname = 'foodfoxdb';
-    $conn = mysqli_connect($dbhost, $dbuser, $dbpass, $dbname);
+    $conn = connection();
 
-    if ($conn->connect_error) {
-        die("Connection failed: " . $conn->connect_error);
-    }
     $sql = "SELECT feedback FROM donations";
     $result = $conn->query($sql);
     if ($result->num_rows > 0) {

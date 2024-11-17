@@ -5,7 +5,7 @@ $visitCount = cookie();
 $conn = connection();
 $selectedEventID = isset($_GET['eventID']) ? $_GET['eventID'] : null;
 $selectedEventData = null;
-$memberID = $_SESSION['memberID'];
+$memberID = isset ($_GET['memberID']) ? $_GET['memberID'] : null;
 
 if ($selectedEventID){
     $sql = "SELECT eventName FROM events WHERE eventID = '$selectedEventID'";
@@ -125,15 +125,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
             <div class="nav-links">
                 <?php
-                if (isset($_SESSION['memberID'])) {
-                    $memberID = $_SESSION['memberID'];
-                    echo "<a href='profile.php?id=$memberID'>Member ID: $memberID</a>";
-                    echo "<p>Welcome back! This is your visit number $visitCount.</p>"; //testing
-                } else {
-                    echo "<a href='login.php' class='roundButton login'>Login</a>";
-                    echo "<a href='signup.php' class='roundButton signup'>Sign Up</a>";
-                    echo "<p>This is your visit number $visitCount.</p>";
-                }
+                loginSection();
                 ?>
             </div>
         </div>
