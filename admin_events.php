@@ -144,14 +144,7 @@ $visitCount = cookie();
                     <th>Actions</th>
                 </tr>
                 <?php
-                $dbhost = "localhost";
-                $dbuser = "root";
-                $dbpass = "";
-                $dbname = "foodfoxdb";
-                $conn = new mysqli($dbhost, $dbuser, $dbpass, $dbname);
-                if ($conn->connect_error) {
-                    die("Connection failed: " . $conn->connect_error);
-                }
+                $conn = connection();
                 $sql = "SELECT e.eventID, e.eventName, COUNT(r.registrationID) AS totalRegistrations FROM events e LEFT JOIN registrations r ON e.eventID = r.eventID WHERE e.eventStatus='Past' GROUP BY e.eventID, e.eventName";
                 $result = $conn->query($sql);
 

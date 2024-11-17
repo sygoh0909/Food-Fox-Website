@@ -1,8 +1,7 @@
 <?php
 include ('cookie.php');
-$visitCount = cookie();
 ?>
-<html>
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -80,15 +79,7 @@ $visitCount = cookie();
 
             <div class="nav-links">
                 <?php
-                if (isset($_SESSION['memberID'])) {
-                    $memberID = $_SESSION['memberID'];
-                    echo "<a href='profile.php?id=$memberID'>Member ID: $memberID</a>";
-                    echo "<p>Welcome back! This is your visit number $visitCount.</p>"; //testing
-                } else {
-                    echo "<a href='login.php' class='roundButton login'>Login</a>";
-                    echo "<a href='signup.php' class='roundButton signup'>Sign Up</a>";
-                    echo "<p>This is your visit number $visitCount.</p>";
-                }
+                loginSection();
                 ?>
             </div>
         </div>
@@ -99,16 +90,7 @@ $visitCount = cookie();
         <h2>Upcoming Events</h2>
         <div class="upcoming-events">
             <?php
-            /*connect to database*/
-            $dbhost = 'localhost';
-            $dbuser = 'root';
-            $dbpass = '';
-            $dbname = 'foodfoxdb';
-            $conn = mysqli_connect($dbhost, $dbuser, $dbpass, $dbname);
-
-            if ($conn->connect_error) {
-                die("Connection failed: " . $conn->connect_error);
-            }
+            $conn = connection();
             $sql = "SELECT * FROM events WHERE eventStatus='Upcoming'";
             $result = $conn->query($sql);
             if ($result->num_rows > 0) {
@@ -121,6 +103,26 @@ $visitCount = cookie();
                 }
             } else {
                 echo "<p>No upcoming events</p>";
+            }
+            $conn->close();
+            ?>
+        </div>
+        <h2>Past Events</h2>
+        <div class="past-events">
+            <?php
+            $conn = connection();
+            $sql = "SELECT * FROM events WHERE eventStatus='Past'";
+            $result = $conn->query($sql);
+            if ($result->num_rows > 0) {
+                while ($row = $result->fetch_assoc()) {
+                    echo "<div class='event-card'>";
+                    echo "<img src='" . $row['eventPic'] . "' alt='" . $row['eventPic'] . "'>";
+                    echo "<h3>" . $row['eventName'] . "</h3>";
+                    echo "<a href='pastEventInfo.php?eventID=" .$row['eventID']."'><button>View more info</button></a>"; //upcoming and past same page different info?
+                    echo "</div>";
+                }
+            } else {
+                echo "<p>No past events</p>";
             }
             $conn->close();
             ?>

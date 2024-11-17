@@ -109,14 +109,7 @@ $visitCount = cookie();
                     <th>Actions</th>
                 </tr>
                 <?php
-                $dbhost = "localhost";
-                $dbuser = "root";
-                $dbpass = "";
-                $dbname = "foodfoxdb";
-                $conn = mysqli_connect($dbhost, $dbuser, $dbpass, $dbname);
-                if ($conn->connect_error) {
-                    die ("Connection failed: " . $conn->connect_error);
-                }
+                $conn = connection();
                 $eventID = isset($_GET['eventID']) ? $_GET['eventID'] : null;
                 $registrationID = null;
 

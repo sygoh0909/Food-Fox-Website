@@ -1,6 +1,6 @@
 <?php
-include('cookie.php');
-$visitCount = cookie();
+ob_start(); //better to not use this
+include ('cookie.php');
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -140,6 +140,88 @@ $visitCount = cookie();
             width: 200px;
             height: auto;
         }
+        footer {
+            background-color: #5C4033;
+            color: white;
+            padding: 40px 20px;
+            margin-top: 20px;
+            font-size: 14px;
+        }
+
+        .footer-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            gap: 30px;
+        }
+
+        .footer-section {
+            flex: 1 1 200px; /* Ensures flexibility across screen sizes */
+            max-width: 300px;
+        }
+
+        .footer-section h4 {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        .footer-section p {
+            margin: 5px 0;
+            line-height: 1.6;
+        }
+
+        .footer-section ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .footer-section ul li {
+            margin: 5px 0;
+        }
+
+        .footer-section ul li a {
+            text-decoration: none;
+            color: white;
+            transition: color 0.3s ease;
+        }
+
+        .footer-section ul li a:hover {
+            color: #d3a029;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 15px;
+        }
+
+        .social-links a {
+            color: white;
+            font-size: 20px;
+            text-decoration: none;
+            transition: transform 0.3s ease;
+        }
+
+        .social-links a:hover {
+            transform: scale(1.2);
+        }
+
+        .footer-bottom {
+            text-align: center;
+            margin-top: 30px;
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+            padding-top: 20px;
+            font-size: 13px;
+        }
+
+        .footer-bottom a {
+            color: #d3a029;
+            text-decoration: none;
+        }
+
+        .footer-bottom a:hover {
+            text-decoration: underline;
+        }
     </style>
 </head>
 <body>
@@ -154,15 +236,7 @@ $visitCount = cookie();
 
             <div class="nav-links">
                 <?php
-                if (isset($_SESSION['memberID'])) {
-                    $memberID = $_SESSION['memberID'];
-                    echo "<a href='profile.php?id=$memberID'>Member ID: $memberID</a>";
-                    echo "<p>Welcome back! This is your visit number $visitCount.</p>"; //testing
-                } else {
-                    echo "<a href='login.php' class='roundButton login'>Login</a>";
-                    echo "<a href='signup.php' class='roundButton signup'>Sign Up</a>";
-                    echo "<p>This is your visit number $visitCount.</p>";
-                }
+                loginSection();
                 ?>
             </div>
         </div>
@@ -231,6 +305,39 @@ $visitCount = cookie();
     </main>
 </body>
 <footer>
-
+    <div class="footer-container">
+        <div class="footer-section">
+            <h4>About Us</h4>
+            <p>Food Fox is a Malaysian-based non-profit organization focused on providing food to the underprivileged community.</p>
+        </div>
+        <div class="footer-section">
+            <h4>Quick Links</h4>
+            <ul>
+                <li><a href="mainpage.php">Home</a></li>
+                <li><a href="events.php">Events</a></li>
+                <li><a href="volunteers.php">Volunteers</a></li>
+                <li><a href="donations.php">Donations</a></li>
+                <li><a href="contact.php">Contact Us</a></li>
+            </ul>
+        </div>
+        <div class="footer-section">
+            <h4>Follow Us</h4>
+            <div class="social-links">
+                <a href="https://facebook.com" class="fa fa-facebook"></a>
+                <a href="https://instagram.com" class="fa fa-instagram"></a>
+                <a href="https://youtube.com" class="fa fa-youtube"></a>
+            </div>
+        </div>
+        <div class="footer-section">
+            <h4>Contact Info</h4>
+            <p>Email: info@foodfox.org</p>
+            <p>Phone: +6012-345-6789</p>
+            <p>Address: 123 Food Fox Lane, Kuala Lumpur, Malaysia</p>
+        </div>
+    </div>
+    <div class="footer-bottom">
+        <p>&copy; 2024 Food Fox. All rights reserved. | Powered by <a href="https://yourorganization.com" target="_blank">Your Organization</a></p>
+    </div>
 </footer>
+
 </html>

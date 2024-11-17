@@ -2,14 +2,7 @@
 include("cookie.php");
 $visitCount = cookie();
 
-$dbhost = "localhost";
-$dbuser = "root";
-$dbpass = "";
-$dbname = "foodfoxdb";
-$conn = mysqli_connect($dbhost, $dbuser, $dbpass, $dbname);
-if ($conn->connect_error) {
-    echo "Connection failed: " . $conn->connect_error;
-}
+$conn = connection();
 $selectedEventID = isset($_GET['eventID']) ? $_GET['eventID'] : null;
 $selectedEventData = null;
 $memberID = $_SESSION['memberID'];

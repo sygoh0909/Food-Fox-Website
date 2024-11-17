@@ -109,14 +109,7 @@ $visitCount = cookie();
                     <th>Actions</th>
                 </tr>
                 <?php
-                $dbhost = "localhost";
-                $dbuser = "root";
-                $dbpass = "";
-                $dbname = "foodfoxdb";
-                $conn = new mysqli($dbhost, $dbuser, $dbpass, $dbname);
-                if ($conn->connect_error) {
-                    die("Connection failed: " . $conn->connect_error);
-                }
+                $conn = connection();
                 $sql = "SELECT memberID, memberName, email, joinDate FROM members";
                 $result = $conn->query($sql);
                 if ($result->num_rows > 0) {
