@@ -125,7 +125,7 @@ $visitCount = cookie();
 
     <form method="POST" enctype="multipart/form-data">
 
-        <p>Member ID:</p> <!--can edit member id or no?-->
+        <p>Member ID:</p> <!--should display member id?-->
         <?php echo $memberData["memberID"]; ?>
 
         <p>Member Profile:</p>

@@ -122,7 +122,7 @@ $visitCount = cookie();
                 if ($result->num_rows > 0) {
                     while($row = $result->fetch_assoc()) {
                         echo "<tr>";
-                        echo "<td>" . $row["eventID"] . "</td>";
+                        echo "<td data-event-id='" .htmlspecialchars($row["eventID"]) ."'>" .str_repeat('*', strlen($row["eventID"]))."</td>";
                         echo "<td>" . $row["eventName"] . "</td>";
                         echo "<td>" . $row["totalRegistrations"] . "</td>";
                         echo "<td><a href='action_event.php?eventID=" .$row['eventID']. "&action=edit'><button>Edit</button></a><a href='action_event.php?eventID=" .$row['eventID']. "&action=delete'><button>Delete</button></a><a href='admin_registrations.php?eventID=" .$row['eventID']."'><button>View Registrations</button></a></td>";
@@ -158,7 +158,7 @@ $visitCount = cookie();
                 if ($result->num_rows > 0) {
                     while($row = $result->fetch_assoc()) {
                         echo "<tr>";
-                        echo "<td>" . $row["eventID"] . "</td>";
+                        echo "<td data-event-id='" .htmlspecialchars($row["eventID"]) ."'>" .str_repeat('*', strlen($row["eventID"]))."</td>";
                         echo "<td>" . $row["eventName"] . "</td>";
                         echo "<td>" . $row["totalRegistrations"] . "</td>";
                         echo "<td><a href='action_event.php?eventID=" .$row['eventID']. "&action=edit'><button>Edit</button></a><a href='action_event.php?eventID=" .$row['eventID']. "&action=delete'><button>Delete</button></a><a href='admin_registrations.php?eventID=" .$row['eventID']."'><button>View Registrations</button></a></td>";

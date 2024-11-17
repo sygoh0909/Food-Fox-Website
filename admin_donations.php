@@ -103,7 +103,7 @@ $visitCount = cookie();
             <table>
                 <tr>
                     <th>Donation ID</th>
-                    <th>Member ID</th>
+                    <th>Member Name</th>
                     <th>Amount</th>
                     <th>Donation Date</th>
                     <th>Actions</th>
@@ -117,13 +117,13 @@ $visitCount = cookie();
                 if ($conn->connect_error) {
                     die("Connection failed: " . $conn->connect_error);
                 }
-                $sql = "SELECT * FROM donations";
+                $sql = "SELECT d.*, m.memberName FROM donations d, members m WHERE d.memberID = m.memberID";
                 $result = $conn->query($sql);
                 if ($result->num_rows > 0) {
                     while($row = $result->fetch_assoc()) {
                         echo "<tr>";
-                        echo "<td>" . $row["donationID"] . "</td>";
-                        echo "<td>" . $row["memberID"] . "</td>";
+                        echo "<td data-donation-id='" .htmlspecialchars($row["donationID"]) ."'>" .str_repeat('*', strlen($row["donationID"]))."</td>";
+                        echo "<td>" . $row["memberName"] . "</td>";
                         echo "<td>" . $row["amount"] . "</td>";
                         echo "<td>" . $row["donationDate"] . "</td>";
                         echo "<td><a href='action_donation.php?donationID=" . $row["donationID"] . "&action=edit '><button>Edit</button></a><a href='action_donation.php?donationID=" . $row["donationID"] . "&action=delete '><button>Delete</button></a></td>";

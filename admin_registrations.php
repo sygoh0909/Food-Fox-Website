@@ -102,8 +102,8 @@ $visitCount = cookie();
             <table>
                 <tr>
                     <th>Registration ID</th>
-                    <th>Event ID</th>
-                    <th>Member ID</th>
+                    <th>Event Name</th>
+                    <th>Member Name</th>
                     <th>Register Type</th>
                     <th>Registration Date</th> <!--include attendance???-->
                     <th>Actions</th>
@@ -121,15 +121,15 @@ $visitCount = cookie();
                 $registrationID = null;
 
                 if ($eventID){
-                    $sql = "SELECT * FROM registrations WHERE eventID = '$eventID'";
+                    $sql = "SELECT r.*, e.eventName, m.memberName from registrations r, events e, members m WHERE r.eventID = e.eventID AND r.memberID = m.memberID AND r.eventID = '$eventID'";
                     $result = mysqli_query($conn, $sql);
 
                     if ($result->num_rows > 0) {
                         while($row = $result->fetch_assoc()) {
                             echo "<tr>";
-                            echo "<td>" . $row["registrationID"] . "</td>";
-                            echo "<td>" . $row["eventID"] . "</td>";
-                            echo "<td>" . $row["memberID"] . "</td>";
+                            echo "<td data-registration-id='" .htmlspecialchars($row["registrationID"]) ."'>" .str_repeat('*', strlen($row["registrationID"]))."</td>";
+                            echo "<td>" . $row["eventName"] . "</td>";
+                            echo "<td>" . $row["memberName"] . "</td>";
                             echo "<td>" . $row["registerType"] . "</td>";
                             echo "<td>" . $row["registrationDate"] . "</td>";
                             //idk the attendance
