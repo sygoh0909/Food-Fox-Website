@@ -361,7 +361,6 @@ include ('cookie.php');
             <ul>
                 <li><a href="mainpage.php">Home</a></li>
                 <li><a href="events.php">Events</a></li>
-                <li><a href="dashboard.php">Volunteers</a></li>
                 <li><a href="donations.php">Donations</a></li>
                 <li><a href="contact.php">Contact Us</a></li>
             </ul>
@@ -376,8 +375,8 @@ include ('cookie.php');
         </div>
         <div class="footer-section">
             <h4>Contact Info</h4>
-            <p>Email: info@foodfox.org</p>
-            <p>Phone: +6012-345-6789</p>
+            <p>Email: foodfox@gmail.com</p>
+            <p>Phone: +6019-235-7586</p>
             <p>Address: 123 Food Fox Lane, Kuala Lumpur, Malaysia</p>
         </div>
     </div>
