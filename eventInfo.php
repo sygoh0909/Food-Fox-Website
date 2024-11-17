@@ -1,6 +1,5 @@
 <?php
 include ('cookie.php');
-$visitCount = cookie();
 ?>
 <html>
 <head>
@@ -74,21 +73,13 @@ $visitCount = cookie();
             <div class="main-links">
                 <a href="mainpage.php" class="roundButton main">Home</a>
                 <a href="events.php" class="roundButton main">Events</a>
-                <a href="volunteers.php" class="roundButton main">Volunteers</a>
                 <a href="donations.php" class="roundButton main">Donation</a>
+                <a href="contact.php" class="roundButton main">Contact</a>
             </div>
 
             <div class="nav-links">
                 <?php
-                if (isset($_SESSION['memberID'])) {
-                    $memberID = $_SESSION['memberID'];
-                    echo "<a href='profile.php?id=$memberID'>Member ID: $memberID</a>";
-                    echo "<p>Welcome back! This is your visit number $visitCount.</p>"; //testing
-                } else {
-                    echo "<a href='login.php' class='roundButton login'>Login</a>";
-                    echo "<a href='signup.php' class='roundButton signup'>Sign Up</a>";
-                    echo "<p>This is your visit number $visitCount.</p>";
-                }
+                loginSection();
                 ?>
             </div>
         </div>
@@ -96,14 +87,8 @@ $visitCount = cookie();
 </header>
 <main>
     <?php
-    $dbhost = "localhost";
-    $dbuser = "root";
-    $dbpass = "";
-    $dbname = "foodfoxdb";
-    $conn = new mysqli($dbhost, $dbuser, $dbpass, $dbname);
-    if ($conn->connect_error) {
-        die("Connection failed: " . $conn->connect_error);
-    }
+    $conn = connection();
+
     $eventID = isset($_GET['eventID']) ? $_GET['eventID'] : null;
     $eventData = null;
 
@@ -117,7 +102,7 @@ $visitCount = cookie();
                 echo "Event Name: $eventData[eventName]";
                 echo "</div>";
                 echo "<a href='eventRegistrations.php?eventID=" .$row['eventID']."'><button>Register Now!</button></a>";
-                //check user is member or not, if not display a message and jump to sign up page
+                //check user is member/login or not, if not display a message and jump to sign up page
             }
         }
     }

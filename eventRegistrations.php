@@ -119,8 +119,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <div class="main-links">
                 <a href="mainpage.php" class="roundButton main">Home</a>
                 <a href="events.php" class="roundButton main">Events</a>
-                <a href="volunteers.php" class="roundButton main">Volunteers</a>
                 <a href="donations.php" class="roundButton main">Donation</a>
+                <a href="contact.php" class="roundButton main">Contact</a>
             </div>
 
             <div class="nav-links">

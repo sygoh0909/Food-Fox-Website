@@ -112,33 +112,79 @@ include ('cookie.php');
             border-radius: 25px;
             background-color: rgba(255,255,255,0.2);
         }
-        .main-info{
+        .main-info {
             display: flex;
             flex-direction: column;
-            text-align: center;
+            gap: 50px;
+            padding: 30px;
         }
-        .main-info section{
-            margin: 30px 0;
-        }
-        .team-member div{
-            display: inline-block;
-            text-align: center;
-        }
-        .team-member img{
-            width: 250px;
-            height: 250px;
-            border-radius: 50%;
-            padding: 10px;
-        }
-        .team-member p{
-            font-size: smaller;
-        }
-        .aboutus img, .approach img{
+
+        .main-info section {
+            padding: 40px 20px;
             border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin: 0 auto;
+            width: 90%;
+            background-color: #fdfdfd;
         }
-        .aboutus img{
+
+        .main-info section:nth-child(odd) {
+            background-color: #f7f1e3;
+        }
+
+        .main-info section h2 {
+            font-size: 2rem;
+            color: #5C4033;
+            margin-bottom: 20px;
+            text-align: center;
+            border-bottom: 2px solid #d3a029;
+            display: inline-block;
+            padding-bottom: 10px;
+        }
+
+        .main-info section p {
+            font-size: 1.1rem;
+            color: #333;
+            line-height: 1.6;
+            text-align: justify;
+        }
+
+        .team-member {
+            text-align: center;
+        }
+
+        .team-member div {
+            display: inline-block;
+            margin: 15px;
+            text-align: center;
+        }
+
+        .team-member img {
             width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+        }
+
+        .team-member img:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        .team-member p {
+            margin-top: 10px;
+            color: #5C4033;
+            font-size: 1rem;
+            font-weight: bold;
+        }
+
+        .getinvolved img,
+        .approach img,
+        .aboutus img {
+            max-width: 100%;
             height: auto;
+            border-radius: 10px;
+            margin: 10px 0;
         }
         footer {
             background-color: #5C4033;
@@ -255,10 +301,10 @@ include ('cookie.php');
                     <a href="signup.php" class="roundButton join">Join Us Now!</a>
                 </div>
                 <div class="overlay-nav">
-                    <a href="mainpage.php" class="roundButton">Home</a>
-                    <a href="events.php" class="roundButton">Events</a>
-                    <a href="volunteers.php" class="roundButton">Volunteers</a>
-                    <a href="donations.php" class="roundButton">Donation</a>
+                    <a href="mainpage.php" class="roundButton main">Home</a>
+                    <a href="events.php" class="roundButton main">Events</a>
+                    <a href="donations.php" class="roundButton main">Donation</a>
+                    <a href="contact.php" class="roundButton main">Contact</a>
                 </div>
             </div>
         </div>
@@ -315,7 +361,7 @@ include ('cookie.php');
             <ul>
                 <li><a href="mainpage.php">Home</a></li>
                 <li><a href="events.php">Events</a></li>
-                <li><a href="volunteers.php">Volunteers</a></li>
+                <li><a href="dashboard.php">Volunteers</a></li>
                 <li><a href="donations.php">Donations</a></li>
                 <li><a href="contact.php">Contact Us</a></li>
             </ul>

@@ -55,8 +55,71 @@ include ('cookie.php');
         .login:hover, .signup:hover{
             transform: translateY(-2px);
         }
-        .events{
+        .events {
+            padding: 20px;
+            background-color: #F5EEDC;
+        }
+
+        .events h2 {
+            font-size: 2rem;
+            color: #5C4033;
             text-align: center;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #d3a029;
+            display: inline-block;
+            padding-bottom: 10px;
+        }
+
+        .upcoming-events, .past-events {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .event-card {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            max-width: 300px;
+            text-align: center;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .event-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+        }
+
+        .event-card img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+
+        .event-card h3 {
+            font-size: 1.5rem;
+            color: #5C4033;
+            margin: 15px 10px;
+        }
+
+        .event-card button {
+            background-color: #d3a029;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 15px;
+            font-size: 1rem;
+            cursor: pointer;
+            margin-bottom: 15px;
+            transition: background-color 0.3s, transform 0.3s;
+        }
+
+        .event-card button:hover {
+            background-color: #a17e23;
+            transform: scale(1.05);
         }
     </style>
 </head>
@@ -73,8 +136,8 @@ include ('cookie.php');
             <div class="main-links">
                 <a href="mainpage.php" class="roundButton main">Home</a>
                 <a href="events.php" class="roundButton main">Events</a>
-                <a href="volunteers.php" class="roundButton main">Volunteers</a>
                 <a href="donations.php" class="roundButton main">Donation</a>
+                <a href="contact.php" class="roundButton main">Contact</a>
             </div>
 
             <div class="nav-links">
@@ -98,7 +161,7 @@ include ('cookie.php');
                     echo "<div class='event-card'>";
                     echo "<img src='" . $row['eventPic'] . "' alt='" . $row['eventPic'] . "'>";
                     echo "<h3>" . $row['eventName'] . "</h3>";
-                    echo "<a href='upcomingEventInfo.php?eventID=" .$row['eventID']."'><button>View more info</button></a>";
+                    echo "<a href='eventInfo.php?eventID=" .$row['eventID']." &action=upcoming'><button>View more info</button></a>";
                     echo "</div>";
                 }
             } else {
@@ -118,7 +181,7 @@ include ('cookie.php');
                     echo "<div class='event-card'>";
                     echo "<img src='" . $row['eventPic'] . "' alt='" . $row['eventPic'] . "'>";
                     echo "<h3>" . $row['eventName'] . "</h3>";
-                    echo "<a href='pastEventInfo.php?eventID=" .$row['eventID']."'><button>View more info</button></a>"; //upcoming and past same page different info?
+                    echo "<a href='eventInfo.php?eventID=" .$row['eventID']."action=past'><button>View more info</button></a>"; //upcoming and past same page different info?
                     echo "</div>";
                 }
             } else {
