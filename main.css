@@ -42,6 +42,11 @@ body{
 .login:hover, .signup:hover{
     transform: translateY(-2px);
 }
+.roundButton.member{
+    background-color: white;
+    color: #d3a029;
+    font-size: smaller;
+}
 .popup {
     display: none;
     position: absolute;

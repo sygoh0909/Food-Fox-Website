@@ -31,7 +31,7 @@ function loginSection(){
 
         echo "
         <div class='profile-container'>
-        <a href='#' onclick='togglePopup(event)' class='round-button member'>Member ID: $memberID</a>
+        <a href='#' onclick='togglePopup(event)' class='roundButton member'>Member ID: $memberID</a>
         <div id='profile-popup' class='popup'>
         <p>{$memberInfo['memberProfile']}</p> <!--display profile as a circle-->
         <p>Member ID: {$memberInfo['memberID']}</p>
@@ -40,6 +40,8 @@ function loginSection(){
         <a href='profile.php?memberID=". $memberInfo['memberID']."'><button>Check out more!</button></a>
         <p>Points: </p>
         <a href='rewards.php'><button>Rewards</button></a>
+        <!--log out and jump to main page with no member id-->
+        <button>Log Out</button>
 </div>
         </div>
         ";

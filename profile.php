@@ -1,1 +1,4 @@
 <?php
+include ('cookie.php');
+
+?>
