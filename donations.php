@@ -10,58 +10,6 @@ $visitCount = cookie();
     <title>Donation Page</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <style>
-        body{
-            background-color: #F5EEDC;
-            margin: 0;
-            font-family: Arial, sans-serif;
-        }
-        body{
-            background-color: #F5EEDC;
-            margin: 0;
-            font-family: Arial, sans-serif;
-        }
-        .navbar{
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 15px 20px;
-            background-color: #5C4033;
-        }
-        .social-media{
-            display: flex;
-            gap: 10px;
-        }
-        .social-media a{
-            color: white;
-            font-size: 20px;
-            text-decoration: none;
-        }
-        .nav-links{
-            display: flex;
-            gap: 30px;
-        }
-        .roundButton{
-            padding: 8px 20px;
-            border-radius: 25px;
-            text-decoration: none;
-            font-weight: bold;
-        }
-        .main{
-            color: white;
-        }
-        .login{
-            background-color: white;
-            color: #d3a029;
-            font-size: smaller;
-        }
-        .signup{
-            background-color: #d3a029;
-            color: white;
-            font-size: smaller;
-        }
-        .login:hover, .signup:hover{
-            transform: translateY(-2px);
-        }
         .progress-container {
             width: 100%;
             height: 30px;
@@ -82,7 +30,7 @@ $visitCount = cookie();
 </head>
 <body onload="updateProgress()">
 <?php
-$fundraisingGoal = 170;
+$fundraisingGoal = 150;
 $conn = connection();
 
 $sql = "SELECT SUM(amount) AS total_donations FROM donations";
@@ -91,6 +39,11 @@ $totalDonations = ($result->num_rows>0) ? $result->fetch_assoc()['total_donation
 
 if (isset($_GET['action']) && $_GET['action'] == 'getProgress') {
     $progressPercentage = $totalDonations / $fundraisingGoal * 100;
+
+    if ($totalDonations >= $fundraisingGoal) {
+        $processPercentage = 100;
+    }
+
     echo json_encode([
         'totalDonations' => $totalDonations,
         'progressPercentage' => $progressPercentage
@@ -127,8 +80,8 @@ if (isset($_GET['action']) && $_GET['action'] == 'getProgress') {
     <h2>Our Fundraising Goal</h2>
     <p id="progressText">Raised: $<?=$totalDonations?> / $<?=$fundraisingGoal?></p>
     <div class="progress-container">
-        <div id="progress-bar" class="progress-bar" style="width:<?=($totalDonations/$fundraisingGoal)*100?>%;">
-            <?=round($totalDonations/$fundraisingGoal)*100?>%
+        <div id="progress-bar" class="progress-bar" style="width:<?= round(($totalDonations / $fundraisingGoal) * 100) ?>%;">
+            <?= round(($totalDonations / $fundraisingGoal) * 100) ?>%
         </div>
     </div>
 
@@ -190,11 +143,45 @@ if (isset($_GET['action']) && $_GET['action'] == 'getProgress') {
                 const progressText = document.getElementById('progressText');
 
                 progressBar.style.width = `${data.progressPercentage}%`;
-                progressBar.textContent = `${Math.round(data.progressPercentage)}%`;
+                progressBar.textContent = `${data.progressPercentage}%`;
 
                 progressText.textContent = `Raised: $${data.totalDonations} / $<?= $fundraisingGoal ?>`;
             })
     }
     setInterval(updateProgress, 5000) //refresh every 5 seconds
 </script>
+<footer>
+    <div class="footer-container">
+        <div class="footer-section">
+            <h4>About Us</h4>
+            <p>Food Fox is a Malaysian-based non-profit organization focused on providing food to the underprivileged community.</p>
+        </div>
+        <div class="footer-section">
+            <h4>Quick Links</h4>
+            <ul>
+                <li><a href="mainpage.php">Home</a></li>
+                <li><a href="events.php">Events</a></li>
+                <li><a href="donations.php">Donations</a></li>
+                <li><a href="contact.php">Contact Us</a></li>
+            </ul>
+        </div>
+        <div class="footer-section">
+            <h4>Follow Us</h4>
+            <div class="social-links">
+                <a href="https://facebook.com" class="fa fa-facebook"></a>
+                <a href="https://instagram.com" class="fa fa-instagram"></a>
+                <a href="https://youtube.com" class="fa fa-youtube"></a>
+            </div>
+        </div>
+        <div class="footer-section">
+            <h4>Contact Info</h4>
+            <p>Email: info@foodfox.org.my</p>
+            <p>Phone Number: +603-0929 0501</p>
+            <p>Food Fox Headquarters: 51, Jalan Binjai, KLCC, KL City Centre, Kuala Lumpur</p>
+        </div>
+    </div>
+    <div class="footer-bottom">
+        <p>&copy; 2024 Food Fox. All rights reserved. | Powered by <a href="https://foodfox.com" target="_blank">Food Fox</a></p>
+    </div>
+</footer>
 </html>

@@ -87,4 +87,38 @@ include ('cookie.php');
 
 </main>
 </body>
+<footer>
+    <div class="footer-container">
+        <div class="footer-section">
+            <h4>About Us</h4>
+            <p>Food Fox is a Malaysian-based non-profit organization focused on providing food to the underprivileged community.</p>
+        </div>
+        <div class="footer-section">
+            <h4>Quick Links</h4>
+            <ul>
+                <li><a href="mainpage.php">Home</a></li>
+                <li><a href="events.php">Events</a></li>
+                <li><a href="donations.php">Donations</a></li>
+                <li><a href="contact.php">Contact Us</a></li>
+            </ul>
+        </div>
+        <div class="footer-section">
+            <h4>Follow Us</h4>
+            <div class="social-links">
+                <a href="https://facebook.com" class="fa fa-facebook"></a>
+                <a href="https://instagram.com" class="fa fa-instagram"></a>
+                <a href="https://youtube.com" class="fa fa-youtube"></a>
+            </div>
+        </div>
+        <div class="footer-section">
+            <h4>Contact Info</h4>
+            <p>Email: info@foodfox.org.my</p>
+            <p>Phone Number: +603-0929 0501</p>
+            <p>Food Fox Headquarters: 51, Jalan Binjai, KLCC, KL City Centre, Kuala Lumpur</p>
+        </div>
+    </div>
+    <div class="footer-bottom">
+        <p>&copy; 2024 Food Fox. All rights reserved. | Powered by <a href="https://foodfox.com" target="_blank">Food Fox</a></p>
+    </div>
+</footer>
 </html>

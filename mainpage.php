@@ -9,51 +9,8 @@ include ('cookie.php');
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Main Page</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="main.css">
     <style>
-        body{
-            background-color: #F5EEDC;
-            margin: 0;
-            font-family: Arial, sans-serif;
-        }
-        .navbar{
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 15px 20px;
-            background-color: #5C4033;
-        }
-        .social-media{
-            display: flex;
-            gap: 10px;
-        }
-        .social-media a{
-            color: white;
-            font-size: 20px;
-            text-decoration: none;
-        }
-        .nav-links{
-            display: flex;
-            gap: 30px;
-        }
-        .roundButton{
-            padding: 8px 20px;
-            border-radius: 25px;
-            text-decoration: none;
-            font-weight: bold;
-        }
-        .login{
-            background-color: white;
-            color: #d3a029;
-            font-size: smaller;
-        }
-        .signup{
-            background-color: #d3a029;
-            color: white;
-            font-size: smaller;
-        }
-        .login:hover, .signup:hover{
-            transform: translateY(-2px);
-        }
         .banner{
             position: relative;
             width: 100%;
@@ -186,88 +143,6 @@ include ('cookie.php');
             border-radius: 10px;
             margin: 10px 0;
         }
-        footer {
-            background-color: #5C4033;
-            color: white;
-            padding: 40px 20px;
-            margin-top: 20px;
-            font-size: 14px;
-        }
-
-        .footer-container {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: space-between;
-            gap: 30px;
-        }
-
-        .footer-section {
-            flex: 1 1 200px; /* Ensures flexibility across screen sizes */
-            max-width: 300px;
-        }
-
-        .footer-section h4 {
-            font-size: 18px;
-            font-weight: bold;
-            margin-bottom: 15px;
-        }
-
-        .footer-section p {
-            margin: 5px 0;
-            line-height: 1.6;
-        }
-
-        .footer-section ul {
-            list-style: none;
-            padding: 0;
-        }
-
-        .footer-section ul li {
-            margin: 5px 0;
-        }
-
-        .footer-section ul li a {
-            text-decoration: none;
-            color: white;
-            transition: color 0.3s ease;
-        }
-
-        .footer-section ul li a:hover {
-            color: #d3a029;
-        }
-
-        .social-links {
-            display: flex;
-            gap: 15px;
-        }
-
-        .social-links a {
-            color: white;
-            font-size: 20px;
-            text-decoration: none;
-            transition: transform 0.3s ease;
-        }
-
-        .social-links a:hover {
-            transform: scale(1.2);
-        }
-
-        .footer-bottom {
-            text-align: center;
-            margin-top: 30px;
-            border-top: 1px solid rgba(255, 255, 255, 0.2);
-            padding-top: 20px;
-            font-size: 13px;
-        }
-
-        .footer-bottom a {
-            color: #d3a029;
-            text-decoration: none;
-        }
-
-        .footer-bottom a:hover {
-            text-decoration: underline;
-        }
     </style>
 </head>
 <body>
@@ -375,13 +250,13 @@ include ('cookie.php');
         </div>
         <div class="footer-section">
             <h4>Contact Info</h4>
-            <p>Email: foodfox@gmail.com</p>
-            <p>Phone: +6019-235-7586</p>
-            <p>Address: 123 Food Fox Lane, Kuala Lumpur, Malaysia</p>
+            <p>Email: info@foodfox.org.my</p>
+            <p>Phone Number: +603-0929 0501</p>
+            <p>Food Fox Headquarters: 51, Jalan Binjai, KLCC, KL City Centre, Kuala Lumpur</p>
         </div>
     </div>
     <div class="footer-bottom">
-        <p>&copy; 2024 Food Fox. All rights reserved. | Powered by <a href="https://yourorganization.com" target="_blank">Your Organization</a></p>
+        <p>&copy; 2024 Food Fox. All rights reserved. | Powered by <a href="https://foodfox.com" target="_blank">Food Fox</a></p>
     </div>
 </footer>
 
