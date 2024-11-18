@@ -32,22 +32,37 @@ $visitCount = cookie();
         }
     </style>
 </head>
-<body onload="updateProgress()">
+<body>
 <?php
-$fundraisingGoal = 150;
+$fundraisingGoal = 1000;
 $conn = connection();
 
 $sql = "SELECT SUM(amount) AS total_donations FROM donations";
 $result = $conn->query($sql);
 $totalDonations = ($result->num_rows>0) ? $result->fetch_assoc()['total_donations'] : 0;
 
+$mealsProvided = floor($totalDonations / 10);
+
+$count = "SELECT COUNT(*) AS total_people FROM donations";
+$result = $conn->query($count);
+if ($result->num_rows > 0) {
+    $row  = $result->fetch_assoc();
+}
+
+$peopleSupported = $row['total_people'];
+
 if (isset($_GET['action']) && $_GET['action'] == 'getProgress') {
     $progressPercentage = $totalDonations / $fundraisingGoal * 100;
-    //max 100%
+
+    if ($progressPercentage > 100) {
+        $progressPercentage = 100;
+    }
 
     echo json_encode([
         'totalDonations' => $totalDonations,
-        'progressPercentage' => $progressPercentage
+        'progressPercentage' => $progressPercentage,
+        'mealsProvided' => $mealsProvided,
+        'peopleSupported' => $peopleSupported,
     ]);
     exit;
 }
@@ -82,7 +97,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'getProgress') {
     <p id="progressText">Raised: $<?=$totalDonations?> / $<?=$fundraisingGoal?></p>
     <div class="progress-container">
         <div id="progress-bar" class="progress-bar" style="width:<?= round(($totalDonations / $fundraisingGoal) * 100) ?>%;">
-            <?= round(($totalDonations / $fundraisingGoal) * 100) ?>%
+            <?= floor(($totalDonations / $fundraisingGoal) * 100) ?>%
         </div>
     </div>
 
@@ -118,8 +133,18 @@ if (isset($_GET['action']) && $_GET['action'] == 'getProgress') {
         <!--after donate successfully, ask if they wan to leave feedback-->
     </form>
 
+    <h2>Where your donations goes?</h2>
+
     <h2>Our Collective Impact</h2>
-    <!--a chart displaying-->
+    <div class="impact-container">
+        <div class="chart-container">
+            <canvas id="impactChart" width="400" height="200"></canvas>
+        </div>
+        <div class="info-container">
+            <p id="mealsText">Meals Provided: <?=$mealsProvided?></p>
+            <p id="peopleText">People Supported: <?=$peopleSupported?></p>
+        </div>
+    </div>
 
     <h2>Community Feedback</h2>
     <?php
@@ -135,19 +160,79 @@ if (isset($_GET['action']) && $_GET['action'] == 'getProgress') {
     ?>
 </main>
 </body>
+<script src="https://cdn.jsdelivr.net/npm.chart.js"></script>
 <script>
+    //chart
+    const ctx = document.getElementById('impactChart').getContext('2d');
+    const impactChart = new Chart(ctx, {
+        type: 'bar',
+        data:{
+            labels: ['Meals Provided', 'People Supported'],
+            datasets: [{
+                label: 'Meals Provided',
+                data: [0],
+                backgroundColor: '#4caf50',
+                borderColor: '#388e3c',
+                borderWidth: 1
+            },{
+                label: 'People Supported',
+                data: [0],
+                backgroundColor: '#2196f3'
+                borderColor: '#1976d2',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    max: 100, //0-100%
+                    ticks: {
+                        callback: function (value){
+                            return value % 20 === 0 ? `${value}%` : '';
+                        }
+                    }
+                }
+            },
+            plugins: {
+                tooltip: {
+                    callbacks:{
+                        label: function(tooltipItem){
+                            if (tooltipItem.datasetIndex === 0) {
+                                return `${tooltipItem.dataset.label}: ${tooltipItem.raw}%`;
+                            } else if (tooltipItem.datasetIndex === 1) {
+                                return `${tooltipItem.dataset.label}: ${tooltipItem.raw} people`;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    })
+
     function updateProgress(){
         fetch (window.location.href + '?action=getProgress')
             .then(response => response.json())
             .then(data => {
                 const progressBar = document.getElementById('progress-bar');
                 const progressText = document.getElementById('progressText');
+                const mealsText = document.getElementById('mealsText')
+                const peopleText = document.getElementById('peopleText');
 
                 progressBar.style.width = `${data.progressPercentage}%`;
                 progressBar.textContent = `${data.progressPercentage}%`;
 
                 progressText.textContent = `Raised: $${data.totalDonations} / $<?= $fundraisingGoal ?>`;
+
+                mealsText.textContent = `Meals Provided: ${data.mealsProvided}`;
+                peopleText.textContent = `People Supported: ${data.peopleSupported}`;
+
+                impactChart.data.datasets[0].data = [data.progressPercentage]; // Meals as %
+                impactChart.data.datasets[1].data = [data.peopleSupported];   // People Supported
+                impactChart.update();
             })
+            .catch(error => console.error('Error fetching progress:', error));
     }
     setInterval(updateProgress, 5000) //refresh every 5 seconds
 </script>
