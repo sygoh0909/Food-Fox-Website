@@ -7,24 +7,10 @@ $visitCount = cookie();
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="form.css">
     <title>Edit/Delete Member Page</title>
 
     <style>
-        body {
-            background-color: #F5EEDC;
-            margin: 0;
-            font-family: Arial, sans-serif;
-            display: flex;
-            justify-content: center;
-        }
-        main{
-            background-color: #C5B4A5;
-            padding: 20px 40px;
-            border-radius: 20px;
-        }
-        h2{
-            text-align: center;
-        }
     </style>
 </head>
 <body>
@@ -122,9 +108,8 @@ $visitCount = cookie();
         <?php echo $memberData["memberID"]; ?>
 
         <p>Member Profile:</p>
-        <label><input type="file" name="memberProfile" accept="image/*" onchange='previewMemberProfile()'></label>
-        <img id="memberProfilePreview" class="member-profile-preview" alt="Member Profile Preview" style="display: none">
-        </label>
+        <input type="file" name="memberProfile" accept="image/*" onchange="previewMemberProfile(event)">
+        <img id="memberProfilePreview" alt="Member Profile Preview" style="display: none;">
 
         <p>Member Name:</p>
         <label><input type="text" name="memberName" value="<?php echo isset($memberData['memberName']) ? $memberData['memberName']:'';?>"></label>
@@ -152,10 +137,17 @@ $visitCount = cookie();
 </main>
 </body>
 <script>
-    function previewMemberProfile(){
-        const memberProfilePreview = document.getElementById('memberProfilePreview')
-        memberProfilePreview.src = URL.createObjectURL(members.target.files[0]);
-        memberProfilePreview.style.display = 'block';
+    function previewMemberProfile(event) {
+        const memberProfilePreview = document.getElementById('memberProfilePreview');
+        const file = event.target.files[0];
+
+        if (file) {
+            memberProfilePreview.src = URL.createObjectURL(file);
+            memberProfilePreview.style.display = 'block';
+        } else {
+            memberProfilePreview.style.display = 'none';
+        }
     }
+
 </script>
 </html>

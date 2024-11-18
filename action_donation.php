@@ -7,6 +7,7 @@ $visitCount = cookie();
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="form.css">
     <title>Edit/Delete Donation Page</title>
 
     <style>
@@ -54,6 +55,7 @@ $visitCount = cookie();
         <?php echo $donationDetails["donationDate"]; ?>
 
         <p>Feedback</p>
+        <?php echo $donationDetails['feedback'];?>
 
     </form>
 </main>
