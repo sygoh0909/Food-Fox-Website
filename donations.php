@@ -9,7 +9,11 @@ $visitCount = cookie();
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Donation Page</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="main.css">
     <style>
+        .main{
+            color: white;
+        }
         .progress-container {
             width: 100%;
             height: 30px;
@@ -39,10 +43,7 @@ $totalDonations = ($result->num_rows>0) ? $result->fetch_assoc()['total_donation
 
 if (isset($_GET['action']) && $_GET['action'] == 'getProgress') {
     $progressPercentage = $totalDonations / $fundraisingGoal * 100;
-
-    if ($totalDonations >= $fundraisingGoal) {
-        $processPercentage = 100;
-    }
+    //max 100%
 
     echo json_encode([
         'totalDonations' => $totalDonations,
