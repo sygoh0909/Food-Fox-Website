@@ -33,7 +33,7 @@ $visitCount = cookie();
             $registrationInfo = mysqli_fetch_assoc($result);
         }
         elseif ($action == "delete"){
-            $sql = "DELETE FROM registrations WHERE registrationID = $registrationID"; //press delete only delete lahhh
+            $sql = "DELETE FROM registrations WHERE registrationID = $registrationID";
             if ($conn->query($sql) === TRUE) {
                 echo "Registration deleted successfully";
             }

@@ -112,6 +112,7 @@ $visitCount = cookie();
             //update event
             if (empty($errors)){
                 if ($action=="edit"){
+                    //update pics???
                     $updateQuery = "UPDATE events SET eventName = '$eventName', start_dateTime = '$startDateTime', end_dateTime = '$endDateTime', location = '$location', details = '$details', registrationsNeeded = '$registrationsNeeded', eventStatus = '$eventStatus', eventPic = '$eventImagePath' WHERE eventID = '$eventID'";
 
                     if ($conn->query($updateQuery) === TRUE) {
@@ -143,13 +144,14 @@ $visitCount = cookie();
                                 $conn->query($guestUpdate);
                             }
                         }
-                        echo "Event Updated";
+                        echo "<script>alert('Event Updated'); window.location.href='admin_events.php';</script>";
+                    }
                     }
                 }
                 elseif ($action == "delete"){
                     $sql = "DELETE FROM events WHERE eventID = '$eventID'";
                     if ($conn->query($sql) === TRUE) {
-                        echo "Event deleted successfully";
+                        echo "<script>alert('Event Deleted'); window.location.href='admin_events.php';</script>";
                     }
                 }
                 //add new event
@@ -181,12 +183,10 @@ $visitCount = cookie();
                                 }
                             }
                         }
-                        echo "<script>alert('New event added successfully.')
-                    window.location.href = 'admin_events.php';</script>";
+                        echo "<script>alert('New Event Added'); window.location.href='admin_events.php';</script>";
                     }
                 }
             }
-        }
         if ($action == "edit"){
             echo "<h2>Update Event</h2>";
         }

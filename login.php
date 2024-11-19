@@ -82,6 +82,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     </form>
 
     <p class="signup-link">xxx <a href="signup.php">Sign Up now!</a></p>
+    <a href="login_admin.php"><button>Sign in as admin</button></a>
 
 </div>
 </body>
