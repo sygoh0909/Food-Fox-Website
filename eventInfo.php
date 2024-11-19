@@ -47,19 +47,36 @@ include ('cookie.php');
     $conn = connection();
 
     $eventID = isset($_GET['eventID']) ? $_GET['eventID'] : null;
+    $action = isset($_GET['action']) ? $_GET['action'] : null;
     $eventData = null;
 
     if ($eventID){
-        $sql = "SELECT * FROM `events` WHERE `eventID` = $eventID";
-        $result = $conn->query($sql);
-        if ($result->num_rows > 0) {
-            while($row = $result->fetch_assoc()) {
-                $eventData = $row;
-                echo "<div class='events'>";
-                echo "Event Name: $eventData[eventName]";
-                echo "</div>";
-                echo "<a href='eventRegistrations.php?eventID=" .$row['eventID']."'><button>Register Now!</button></a>";
-                //check user is member/login or not, if not display a message and jump to sign up page
+        if ($action == "Upcoming"){
+            $sql = "SELECT * FROM events WHERE eventID = $eventID AND eventStatus='Upcoming' ";
+            $result = $conn->query($sql);
+            if ($result->num_rows > 0) {
+                while($row = $result->fetch_assoc()) {
+                    $eventData = $row;
+                    echo "<div class='events'>";
+                    echo "Event Name: $eventData[eventName]";
+                    echo "</div>";
+                    echo "<a href='eventRegistrations.php?eventID=" .$row['eventID']."'><button>Register Now!</button></a>";
+                    //check user is member/login or not, if not display a message and jump to sign up page
+                }
+            }
+        }
+        elseif ($action == "Past"){
+            $sql = "SELECT * FROM events e, pastevents p WHERE e.eventID = $eventID AND e.eventID = p.eventID AND e.eventStatus='Past' ";
+            $result = $conn->query($sql);
+            if ($result->num_rows > 0) {
+                while($row = $result->fetch_assoc()) {
+                    $eventData = $row;
+                    echo "<div class='events'>";
+                    echo "Event Name: $eventData[eventName]";
+                    echo "</div>";
+                    echo "<a href='eventRegistrations.php?eventID=" .$row['eventID']."'><button>Register Now!</button></a>";
+                    //check user is member/login or not, if not display a message and jump to sign up page
+                }
             }
         }
     }

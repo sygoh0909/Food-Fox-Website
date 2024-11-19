@@ -22,6 +22,76 @@ $visitCount = cookie();
     $memberData = null;
 
     if ($memberID){
+        $sql = "SELECT * FROM members WHERE memberID = '$memberID'";
+        $result = $conn->query($sql);
+        $memberData = $result->fetch_assoc();
+
+        if ($_SERVER["REQUEST_METHOD"] == "POST") {
+            $memberName = $_POST["memberName"];
+            $email = $_POST["email"];
+            $password = $_POST["password"];
+            $phoneNum = $_POST["phoneNum"];
+            $bio = $_POST["bio"];
+            $memberProfilePath = '';
+
+            if (isset($_FILES['memberProfile']) && $_FILES['memberProfile']['error'] == 0) {
+                $target_dir = "uploads/";
+                $memberProfilePath = $target_dir . basename($_FILES["memberProfile"]["name"]);
+                move_uploaded_file($_FILES["memberProfile"]["tmp_name"], $memberProfilePath);
+            }
+
+            //regular expressions
+            $namePattern = '/^[a-zA-Z]+$/';
+            $emailPattern = '/^[\w\-\.]+@[a-zA-Z]+\.[a-zA-Z]{2,}$/';
+            $passwordPattern = '/^(?=.*[a-zA-z])(?=.*\d)[A-Za-z\d]{8,}$/'; //password format maybe need change
+
+            //validation
+            $errors = [];
+
+            //need to include if edit only need check these errors???
+            if (empty($memberName)) {
+                $errors[] = "Member Name is required";
+            }
+            elseif (!preg_match($namePattern, $memberName)) {
+                $errors[] = "Name can contain only letters and spaces";
+            }
+            if (empty($email)) {
+                $errors[] = "Email is required";
+            }
+            elseif (!preg_match($emailPattern, $email)) {
+                $errors[] = "Enter a valid email address.";
+            }
+            if (empty($password)) {
+                $errors[] = "Password is required";
+            }
+            elseif (!preg_match($passwordPattern, $password)) {
+                $errors[] = "Password must at least be 8 characters long, with at least one letter and one number.";
+            }
+
+            if (empty($errors)){
+                //update event
+                if ($action == "edit"){
+                    $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
+                    $sql = "UPDATE members SET memberName = '$memberName', email = '$email', password = '$hashedPassword', phoneNum = '$phoneNum', bio = '$bio', memberProfile = '$memberProfilePath' WHERE memberID = $memberID";
+
+//                    if ($password == ''){
+//                        $sql = "UPDATE members SET memberName = '$memberName', email = '$email', password = '$password', phoneNum = '$phoneNum', bio = '$bio', memberProfile = '$memberProfilePath' WHERE memberID = $memberID";
+//                    }
+
+                    if ($conn->query($sql) === TRUE) {
+                        echo "<script>alert('Member Info Updated Successfully');
+                        window.location.href='admin_members.php';</script>";
+                        }
+                    }
+                    elseif ($action == "delete"){
+                        $sql = "DELETE FROM members WHERE memberID = $memberID";
+                        if ($conn->query($sql) === TRUE) {
+                            echo "<script>alert('Member Info Deleted Successfully');
+                            window.location.href='admin_members.php';</script>";
+                        }
+                }
+                }
+            }
 
         if ($action == "edit"){
             echo "<h2>Edit Member Info</h2>";
@@ -30,78 +100,6 @@ $visitCount = cookie();
         elseif ($action == "delete"){
             echo "<h2>Delete Member Info</h2>";
         }
-
-        $sql = "SELECT * FROM members WHERE memberID = '$memberID'";
-            $result = $conn->query($sql);
-            $memberData = $result->fetch_assoc();
-
-            if ($_SERVER["REQUEST_METHOD"] == "POST") {
-                $memberName = $_POST["memberName"];
-                $email = $_POST["email"];
-                $password = $_POST["password"];
-                $phoneNum = $_POST["phoneNum"];
-                $bio = $_POST["bio"];
-                $memberProfilePath = '';
-
-                if (isset($_FILES['memberProfile']) && $_FILES['memberProfile']['error'] == 0) {
-                    $target_dir = "uploads/";
-                    $memberProfilePath = $target_dir . basename($_FILES["memberProfile"]["name"]);
-                    move_uploaded_file($_FILES["memberProfile"]["tmp_name"], $memberProfilePath);
-                }
-
-                //regular expressions
-                $namePattern = '/^[a-zA-Z]+$/';
-                $emailPattern = '/^[\w\-\.]+@[a-zA-Z]+\.[a-zA-Z]{2,}$/';
-                $passwordPattern = '/^(?=.*[a-zA-z])(?=.*\d)[A-Za-z\d]{8,}$/'; //password format maybe need change
-
-                //validation
-                $errors = [];
-
-                //need to include if edit only need check these errors???
-                if (empty($memberName)) {
-                    $errors[] = "Member Name is required";
-                }
-                elseif (!preg_match($namePattern, $memberName)) {
-                    $errors[] = "Name can contain only letters and spaces";
-                }
-                if (empty($email)) {
-                    $errors[] = "Email is required";
-                }
-                elseif (!preg_match($emailPattern, $email)) {
-                    $errors[] = "Enter a valid email address.";
-                }
-                if (empty($password)) {
-                    $errors[] = "Password is required";
-                }
-                elseif (!preg_match($passwordPattern, $password)) {
-                    $errors[] = "Password must at least be 8 characters long, with at least one letter and one number.";
-                }
-
-                if (empty($errors)){
-                    //update event
-                    if ($action == "edit"){
-                        $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
-                        $sql = "UPDATE members SET memberName = '$memberName', email = '$email', password = '$hashedPassword', phoneNum = '$phoneNum', bio = '$bio', memberProfile = '$memberProfilePath' WHERE memberID = $memberID";
-
-                        if ($conn->query($sql) === TRUE) {
-                            echo "<script>alert('Member Info Updated Successfully');</script>";
-                            sleep(2);
-                            header("Location: admin_members.php");
-                            exit();
-
-                        }
-                    }
-                    elseif ($action == "delete"){
-                        $sql = "DELETE FROM members WHERE memberID = $memberID";
-                        if ($conn->query($sql) === TRUE) {
-                            echo "<script>alert('Member Info Deleted Successfully');</script>";
-                            sleep(2);
-                            header("Location: admin_members.php");
-                            exit();
-                        }
-                }
-                }
-            }
     }
     else{
         //error message
@@ -136,7 +134,7 @@ $visitCount = cookie();
         <p>Join Date:</p>
         <?php echo $memberData['joinDate'];?> <br>
 
-        <button type="submit"><?php echo $memberID & $action=='edit'?'Update member info':'Delete Member Info'?></button>
+        <button type="submit"><?php echo $memberID && $action=='edit'?'Update member info': 'Delete Member Info'?></button>
         <a href="admin_members.php"><button>Cancel</button></a>
 
     </form>

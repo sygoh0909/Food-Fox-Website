@@ -50,19 +50,23 @@ $visitCount = cookie();
 
             if (empty($errors)){
                 if ($action == "edit"){
-                    $sql = "UPDATE donations SET amount = $amount, feedback = $feedback WHERE donationID = $donationID";
+                    $sql = "UPDATE donations SET amount = '$amount', feedback = '$feedback' WHERE donationID = $donationID";
                     if ($conn->query($sql) === TRUE){
-                        echo "<script>alert('Donation Info Updated Successfully')</script>";
-                        sleep(2);
-                        header("Location: admin_donation.php");
+                        echo "<script>
+                              alert('Donation Info Updated Successfully');
+                              window.location.href = 'admin_donations.php';
+                        </script>";
+                        exit;
                     }
                 }
                 if ($action == "delete"){
                     $sql = "DELETE FROM `donations` WHERE `donationID` = $donationID";
-                    if ($conn->query($sql) === TRUE){
-                        echo "<script>alert('Donation Info Deleted Successfully')</script>";
-                        sleep(2);
-                        header("Location: admin_donation.php");
+                    if ($conn->query($sql) === TRUE) {
+                        echo "<script>
+                              alert('Donation Info Deleted Successfully');
+                              window.location.href = 'admin_donations.php';
+                        </script>";
+                        exit;
                     }
                 }
             }
@@ -77,7 +81,7 @@ $visitCount = cookie();
     ?>
     <form method="POST" enctype="multipart/form-data">
         <p>Donation ID</p>
-        <?php echo $donationDetails["donationID"]; ?> <!--hide this-->
+        <?php echo str_repeat('*', strlen($donationDetails["donationID"]));?>
 
         <p>Member Name</p>
         <?php echo $memberName; ?> <!--show member name-->
@@ -91,7 +95,7 @@ $visitCount = cookie();
         <p>Feedback</p>
         <label><input type="text" name="feedback" value="<?php echo $donationDetails['feedback'];?>"</label>
 
-        <button type="submit"><?php echo $donationID & $action=="edit"?'Update donation details':'Delete donation details'?></button>
+        <button type="submit"><?php echo $donationID && $action=="edit"?'Update donation details':'Delete donation details'?></button>
 
     </form>
 </main>

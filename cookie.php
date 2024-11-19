@@ -16,7 +16,8 @@ function cookie(){
 }
 
 function loginSection(){
-    $visitCount = cookie();
+//    $visitCount = cookie();
+    cookie();
 
     if (isset($_SESSION['memberID'])) {
         $memberID = $_SESSION['memberID'];
@@ -26,14 +27,14 @@ function loginSection(){
             $conn = connection();
             $sql = "SELECT * FROM members WHERE memberID = $memberID";
             $result = $conn->query($sql);
-            $memberInfo = $result->fetch_assoc();
-        }
+            if ($result->num_rows > 0) {
+                $memberInfo = $result->fetch_assoc();
 
-        echo "
+            echo "
         <div class='profile-container'>
         <a href='#' onclick='togglePopup(event)' class='roundButton member'>Member ID: $memberID</a>
         <div id='profile-popup' class='popup'>
-        <p>{$memberInfo['memberProfile']}</p> <!--display profile as a circle-->
+        <p><img src='{$memberInfo['memberProfile']}' class='roundImage'></p><!--display profile as a circle-->
         <p>Member ID: {$memberInfo['memberID']}</p>
         <p>Member Name: {$memberInfo['memberName']}</p>
         <p>Join Date: {$memberInfo['joinDate']}</p>
@@ -41,13 +42,14 @@ function loginSection(){
         <p>Points: </p>
         <a href='rewards.php'><button>Rewards</button></a>
         <!--log out and jump to main page with no member id-->
-        <button>Log Out</button>
+        <button type='submit'>Log Out</button>
 </div>
         </div>
         ";
-
-//        echo "<p>Welcome back! This is your visit number $visitCount.</p>"; //testing
-    } else {
+            }
+//            echo "<p>Welcome back! This is your visit number $visitCount.</p>"; //testing
+        }
+        }else {
         echo "<a href='login.php' class='roundButton login'>Login</a>";
         echo "<a href='signup.php' class='roundButton signup'>Sign Up</a>";
 //        echo "<p>This is your visit number $visitCount.</p>";
@@ -68,10 +70,3 @@ function connection(){
     return $conn;
 }
 ?>
-<script>
-    function togglePopup(event) {
-        event.preventDefault();
-        const popup = document.getElementById('profile-popup');
-        popup.style.display = popup.style.display === 'block' ? 'none' : 'block';
-    }
-</script>

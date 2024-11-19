@@ -69,6 +69,12 @@ body{
 .popup a:hover {
     text-decoration: underline;
 }
+.roundImage {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    object-fit: cover;
+}
 footer {
     background-color: #5C4033;
     color: white;

@@ -125,3 +125,32 @@ $visitCount = cookie();
                 }
                 ?>
             </table>
+        </div>
+        <div class="feedback-table">
+            <h2>Feedback Management</h2>
+            <table>
+                <tr>
+                    <th>Member Name</th>
+                    <th>Feedback</th>
+                    <th>Actions</th>
+                </tr>
+                <?php
+                $conn = connection();
+                $sql = "SELECT d.feedback, m.memberName FROM donations d, members m WHERE d.memberID = m.memberID";
+                $result = $conn->query($sql);
+                if ($result->num_rows > 0) {
+                    while($row = $result->fetch_assoc()) {
+                        echo "<tr>";
+                        echo "<td>" . $row["memberName"] . "</td>";
+                        echo "<td>" . $row["feedback"] . "</td>";
+                        echo "<td><button>Delete</button>"; //delete - pop up - comfirm delete - delete feedback from donation
+                        echo "</tr>";
+                    }
+                }
+                ?>
+            </table>
+        </div>
+    </section>
+</main>
+</body>
+</html>
