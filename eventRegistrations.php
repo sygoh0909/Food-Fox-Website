@@ -5,7 +5,7 @@ $visitCount = cookie();
 $conn = connection();
 $selectedEventID = isset($_GET['eventID']) ? $_GET['eventID'] : null;
 $selectedEventData = null;
-$memberID = isset ($_GET['memberID']) ? $_GET['memberID'] : null;
+$memberID = $_SESSION['memberID']; //is there way to retrieve from cookie idk
 
 if ($selectedEventID){
     $sql = "SELECT eventName FROM events WHERE eventID = '$selectedEventID'";
@@ -101,7 +101,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <?php endforeach; ?>
     </select>
 
-    <?php if (isset($_SESSION['memberID'])) {
+    <?php
+    if ($memberID) {
         $sql = "SELECT email, phoneNum FROM members WHERE memberID = $memberID";
         $result = mysqli_query($conn, $sql);
         $memberData = mysqli_fetch_assoc($result);

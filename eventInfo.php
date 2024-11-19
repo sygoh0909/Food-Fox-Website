@@ -51,7 +51,7 @@ include ('cookie.php');
     $eventData = null;
 
     if ($eventID){
-        if ($action == "Upcoming"){
+        if ($action == "upcoming"){
             $sql = "SELECT * FROM events WHERE eventID = $eventID AND eventStatus='Upcoming' ";
             $result = $conn->query($sql);
             if ($result->num_rows > 0) {
@@ -65,7 +65,7 @@ include ('cookie.php');
                 }
             }
         }
-        elseif ($action == "Past"){
+        elseif ($action == "past"){
             $sql = "SELECT * FROM events e, pastevents p WHERE e.eventID = $eventID AND e.eventID = p.eventID AND e.eventStatus='Past' ";
             $result = $conn->query($sql);
             if ($result->num_rows > 0) {
