@@ -29,12 +29,12 @@ $visitCount = cookie();
 
         if ($_SERVER["REQUEST_METHOD"] == "POST"){
             //details like member email edit through another page not here
-            $eventName = $_POST["eventName"];
-            $registerType = $_POST["registerType"];
-            $dietaryRestrictions = $_POST["dietaryRestrictions"];
-            $sizes = $_POST["sizes"];
-            $specialAccommodation = $_POST["specialAccommodation"];
-            $skills = $_POST["skills"];
+            $eventName = $_POST['eventName'];
+            $registerType = $_POST['registerType'];
+            $dietaryRestrictions = $_POST['dietaryRestrictions'];
+            $sizes = $_POST['sizes'];
+            $specialAccommodation = $_POST['specialAccommodation'];
+            $skills = $_POST['skills'];
         }
 
         $errors = [];

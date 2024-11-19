@@ -1,3 +1,6 @@
+<?php
+include ('cookie.php');
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -19,11 +22,7 @@
 <body>
 
 <?php
-$dbhost = "localhost";
-$dbuser = "root";
-$dbpass = "";
-$dbname = "foodfoxdb";
-$conn = mysqli_connect($dbhost, $dbuser, $dbpass, $dbname);
+$conn = connection();
 
 if($conn->connect_error){
     die ("Connection failed ".$conn->connect_error);
@@ -46,10 +45,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         if (password_verify($password, $user['password'])){
             session_start();
             $_SESSION['memberID'] = $user['memberID'];
-            echo "Login Successful! Redirecting to main page...";
-            sleep(2); //delay 2 seconds before navigating
-            header ("Location: mainpage.php");
-            exit();
+            echo "<script> alert('Login Successfully!'); window.location.href='mainpage.php'; </script>";
         }
     }
     else{
