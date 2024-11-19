@@ -7,7 +7,7 @@ $visitCount = cookie();
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Events Page</title>
+    <title>Admin Main Page</title>
     <style>
         body {
             background-color: #F5EEDC;

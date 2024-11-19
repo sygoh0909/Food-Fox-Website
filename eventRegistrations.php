@@ -107,6 +107,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $memberData = mysqli_fetch_assoc($result);
     }?>
 
+        <!--sync info from profile, if user havent fill or wanna change, direct them to profile-->
     <p>Email:</p>
     <label><input type="text" name="email" value="<?php echo isset($memberData['email']) ? $memberData['email']: '';?>"></label>
 
