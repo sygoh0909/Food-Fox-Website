@@ -33,20 +33,54 @@ $visitCount = cookie();
     <?php
     $conn = connection();
     $donationID = isset($_GET["donationID"])?$_GET["donationID"]:null;
+    $action = isset($_GET["action"])?$_GET["action"]:null;
+    $memberName = isset($_GET["memberName"])?$_GET["memberName"]:null;
     $donationDetails = null;
 
     if ($donationID){
         $sql = "SELECT * FROM `donations` WHERE `donationID` = $donationID";
         $result = $conn->query($sql);
         $donationDetails = $result->fetch_assoc();
+
+        if ($_SERVER["REQUEST_METHOD"] == "POST"){
+            $amount = $_POST["amount"];
+            $feedback = $_POST["feedback"];
+
+            $errors = [];
+
+            if (empty($errors)){
+                if ($action == "edit"){
+                    $sql = "UPDATE donations SET amount = $amount, feedback = $feedback WHERE donationID = $donationID";
+                    if ($conn->query($sql) === TRUE){
+                        echo "<script>alert('Donation Info Updated Successfully')</script>";
+                        sleep(2);
+                        header("Location: admin_donation.php");
+                    }
+                }
+                if ($action == "delete"){
+                    $sql = "DELETE FROM `donations` WHERE `donationID` = $donationID";
+                    if ($conn->query($sql) === TRUE){
+                        echo "<script>alert('Donation Info Deleted Successfully')</script>";
+                        sleep(2);
+                        header("Location: admin_donation.php");
+                    }
+                }
+            }
+        }
+        if ($action == "edit"){
+            echo "<h2>Update Donation</h2>";
+        }
+        elseif ($action == "delete"){
+            echo "<h2>Delete Donation</h2>";
+        }
     }
     ?>
     <form method="POST" enctype="multipart/form-data">
         <p>Donation ID</p>
-        <?php echo $donationDetails["donationID"]; ?> <!--should donation id and member id can edit by admin?-->
+        <?php echo $donationDetails["donationID"]; ?> <!--hide this-->
 
-        <p>Member ID</p>
-        <?php echo $donationDetails["memberID"]; ?>
+        <p>Member Name</p>
+        <?php echo $memberName; ?> <!--show member name-->
 
         <p>Donation Amount</p>
         <label><input type="text" name="amount" value="<?php echo isset($donationDetails['amount'])?$donationDetails['amount']:'';?>"></label>
@@ -55,7 +89,9 @@ $visitCount = cookie();
         <?php echo $donationDetails["donationDate"]; ?>
 
         <p>Feedback</p>
-        <?php echo $donationDetails['feedback'];?>
+        <label><input type="text" name="feedback" value="<?php echo $donationDetails['feedback'];?>"</label>
+
+        <button type="submit"><?php echo $donationID & $action=="edit"?'Update donation details':'Delete donation details'?></button>
 
     </form>
 </main>

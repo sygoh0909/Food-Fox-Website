@@ -22,16 +22,16 @@ $visitCount = cookie();
     $memberData = null;
 
     if ($memberID){
+
         if ($action == "edit"){
             echo "<h2>Edit Member Info</h2>";
-            }
+        }
 
         elseif ($action == "delete"){
             echo "<h2>Delete Member Info</h2>";
         }
 
-
-    $sql = "SELECT * FROM members WHERE memberID = '$memberID'";
+        $sql = "SELECT * FROM members WHERE memberID = '$memberID'";
             $result = $conn->query($sql);
             $memberData = $result->fetch_assoc();
 
@@ -77,23 +77,29 @@ $visitCount = cookie();
                     $errors[] = "Password must at least be 8 characters long, with at least one letter and one number.";
                 }
 
-                if ($action == "edit"){ //do we really need to let admin can edit user password?
+                if (empty($errors)){
                     //update event
-                    if (empty($errors)){
+                    if ($action == "edit"){
                         $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
                         $sql = "UPDATE members SET memberName = '$memberName', email = '$email', password = '$hashedPassword', phoneNum = '$phoneNum', bio = '$bio', memberProfile = '$memberProfilePath' WHERE memberID = $memberID";
 
                         if ($conn->query($sql) === TRUE) {
                             echo "<script>alert('Member Info Updated Successfully');</script>";
+                            sleep(2);
+                            header("Location: admin_members.php");
+                            exit();
+
                         }
                     }
+                    elseif ($action == "delete"){
+                        $sql = "DELETE FROM members WHERE memberID = $memberID";
+                        if ($conn->query($sql) === TRUE) {
+                            echo "<script>alert('Member Info Deleted Successfully');</script>";
+                            sleep(2);
+                            header("Location: admin_members.php");
+                            exit();
+                        }
                 }
-                elseif ($action == "delete"){
-                    $sql = "DELETE FROM members WHERE memberID = $memberID";
-                    if ($conn->query($sql) === TRUE) {
-                        echo "<script>alert('Member Info Deleted Successfully');</script>";
-                        //a pop up message then press ok and jump back to admin member?
-                    }
                 }
             }
     }

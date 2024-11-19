@@ -38,20 +38,16 @@ $visitCount = cookie();
     $eventData = null;
 
     if ($eventID) {
-        if ($action == "edit"){
-            echo "<h2>Update Event</h2>";
-            $sql = "SELECT * FROM events WHERE eventID = '$eventID'";
-            $result = $conn->query($sql);
-            $eventData = $result->fetch_assoc(); //retrieves the data as an associative array
+        $sql = "SELECT * FROM events WHERE eventID = '$eventID'";
+        $result = $conn->query($sql);
+        $eventData = $result->fetch_assoc(); //retrieves the data as an associative array
         }
-        elseif ($action == "delete"){
-            echo "<h2>Delete Event</h2>";
-            //when button clicked only delete
-            $sql = "DELETE FROM events WHERE eventID = '$eventID'";
-            if ($conn->query($sql) === TRUE) {
-                echo "Event deleted successfully";
-            }
-        }
+
+    if ($action == "edit"){
+        echo "<h2>Update Event</h2>";
+    }
+    elseif ($action == "delete"){
+        echo "<h2>Delete Event</h2>";
     }
     else{
         //add event
@@ -160,6 +156,12 @@ $visitCount = cookie();
                     }
                     echo "Event Updated";
                 }
+            }
+        }
+        elseif ($eventID && $action == "delete"){
+            $sql = "DELETE FROM events WHERE eventID = '$eventID'";
+            if ($conn->query($sql) === TRUE) {
+                echo "Event deleted successfully";
             }
         }
         //add new event
