@@ -185,6 +185,9 @@ $visitCount = cookie();
                         }
                         echo "<script>alert('New Event Added'); window.location.href='admin_events.php';</script>";
                     }
+                    foreach ($errors as $error) {
+                        echo "<p style='color:red;'>$error</p>";
+                    }
                 }
             }
         if ($action == "edit"){

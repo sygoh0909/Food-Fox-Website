@@ -54,6 +54,9 @@ $visitCount = cookie();
                 }
             }
         }
+        foreach ($errors as $error) {
+            echo "<p style='color:red;'>$error</p>";
+        }
     }
     ?>
     <form method="POST" enctype="multipart/form-data">
