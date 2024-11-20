@@ -30,13 +30,18 @@ $visitCount = cookie();
 </head>
 <body>
 <main>
-
     <?php
     $conn = connection();
     //check for event id presence
     $eventID = isset($_GET['eventID']) ? $_GET['eventID'] : null;
     $action = isset($_GET['action']) ? $_GET['action'] : null;
     $eventData = null;
+
+    if ($eventID && ($action == "edit" || $action == "delete")) {
+        $sql = "SELECT * FROM events WHERE eventID = '$eventID'";
+        $result = $conn->query($sql);
+        $eventData = $result->fetch_assoc(); //retrieves the data as an associative array
+    }
 
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $eventName = $_POST['eventName'];
@@ -103,48 +108,43 @@ $visitCount = cookie();
             $guestImagePath = $target_dir . basename($_FILES["guestImage"]["name"]);
             move_uploaded_file($_FILES["guestImage"]["tmp_name"], $guestImagePath);
         }
-        if ($eventID) {
-            $sql = "SELECT * FROM events WHERE eventID = '$eventID'";
-            $result = $conn->query($sql);
-            $eventData = $result->fetch_assoc(); //retrieves the data as an associative array
 
-            //update event
-            if (empty($errors)){
-                if ($action=="edit"){
-                    //update pics??? display pics that saved???
-                    $updateQuery = "UPDATE events SET eventName = '$eventName', start_dateTime = '$startDateTime', end_dateTime = '$endDateTime', location = '$location', details = '$details', registrationsNeeded = '$registrationsNeeded', eventStatus = '$eventStatus', eventPic = '$eventImagePath' WHERE eventID = '$eventID'";
+        //update event
+        if (empty($errors)){
+            if ($action=="edit"){
+                //update pics??? display pics that saved???
+                $updateQuery = "UPDATE events SET eventName = '$eventName', start_dateTime = '$startDateTime', end_dateTime = '$endDateTime', location = '$location', details = '$details', registrationsNeeded = '$registrationsNeeded', eventStatus = '$eventStatus', eventPic = '$eventImagePath' WHERE eventID = '$eventID'";
 
-                    if ($conn->query($updateQuery) === TRUE) {
-                        $deleteScheduleQuery = "DELETE FROM eventschedules WHERE eventID = '$eventID'";
-                        $conn->query($deleteScheduleQuery);
+                if ($conn->query($updateQuery) === TRUE) {
+                    $deleteScheduleQuery = "DELETE FROM eventschedules WHERE eventID = '$eventID'";
+                    $conn->query($deleteScheduleQuery);
 
-                        foreach ($schedules as $schedule) {
-                            $scheduleUpdate = "INSERT INTO eventschedules(eventID, scheduleDateTime, activityDescription)".
-                                " VALUES ('$eventID', '$schedule', '$schedule')";
-                            $conn->query($scheduleUpdate);
-                        }
-
-                        $deleteHighlightQuery = "DELETE FROM eventhighlights WHERE eventID = '$eventID'";
-                        $conn->query($deleteHighlightQuery);
-
-                        foreach ($highlights as $highlight) {
-                            $highlightUpdate = "INSERT INTO eventhighlights(eventID, highlights)".
-                                " VALUES ('$eventID', '$highlight')";
-                            $conn->query($highlightUpdate);
-                        }
-
-                        $deleteGuestQuery = "DELETE FROM eventguests WHERE eventID = '$eventID'";
-                        $conn->query($deleteGuestQuery);
-
-                        foreach ($guestName as $name) {
-                            foreach ($guestBio as $bio) {
-                                $guestUpdate = "INSERT INTO eventguests(eventID, guestName, guestBio, guestProfilePic)".
-                                    " VALUES ('$eventID', '$name', '$bio', '$guestImagePath')";
-                                $conn->query($guestUpdate);
-                            }
-                        }
-                        echo "<script>alert('Event Updated'); window.location.href='admin_events.php';</script>";
+                    foreach ($schedules as $schedule) {
+                        $scheduleUpdate = "INSERT INTO eventschedules(eventID, scheduleDateTime, activityDescription)".
+                            " VALUES ('$eventID', '$schedule', '$schedule')";
+                        $conn->query($scheduleUpdate);
                     }
+
+                    $deleteHighlightQuery = "DELETE FROM eventhighlights WHERE eventID = '$eventID'";
+                    $conn->query($deleteHighlightQuery);
+
+                    foreach ($highlights as $highlight) {
+                        $highlightUpdate = "INSERT INTO eventhighlights(eventID, highlights)".
+                            " VALUES ('$eventID', '$highlight')";
+                        $conn->query($highlightUpdate);
+                    }
+
+                    $deleteGuestQuery = "DELETE FROM eventguests WHERE eventID = '$eventID'";
+                    $conn->query($deleteGuestQuery);
+
+                    foreach ($guestName as $name) {
+                        foreach ($guestBio as $bio) {
+                            $guestUpdate = "INSERT INTO eventguests(eventID, guestName, guestBio, guestProfilePic)".
+                                " VALUES ('$eventID', '$name', '$bio', '$guestImagePath')";
+                            $conn->query($guestUpdate);
+                        }
+                    }
+                    echo "<script>alert('Event Updated'); window.location.href='admin_events.php';</script>";
                 }
             }
             elseif ($action == "delete"){
@@ -153,44 +153,41 @@ $visitCount = cookie();
                     echo "<script>alert('Event Deleted'); window.location.href='admin_events.php';</script>";
                 }
             }
+            //add new event
             else{
-                //error
-            }
-        }
-        //add new event
-        if (empty($errors)){
-            $query = "INSERT INTO events (eventName, start_dateTime, end_dateTime, location, details, registrationsNeeded, eventStatus, eventPic) VALUES ('$eventName', '$startDateTime', '$endDateTime', '$location', '$details', '$registrationsNeeded', '$eventStatus', '$eventImagePath')";
+                if (empty($errors)){
+                    $query = "INSERT INTO events (eventName, start_dateTime, end_dateTime, location, details, registrationsNeeded, eventStatus, eventPic) VALUES ('$eventName', '$startDateTime', '$endDateTime', '$location', '$details', '$registrationsNeeded', '$eventStatus', '$eventImagePath')";
 
-            if ($conn->query($query) === TRUE) {
-                $eventID = $conn->insert_id;
+                    if ($conn->query($query) === TRUE) {
+                        $eventID = $conn->insert_id;
 
-                foreach ($schedules as $schedule) { //foreach used for arrays, means loop through the array
-                    $scheduleQuery = "INSERT INTO eventschedules (eventID, scheduleDateTime, activityDescription)"
-                        . "VALUES ('$eventID', '$schedule', '$schedule')";
-                    $conn->query($scheduleQuery);
-                }
+                        foreach ($schedules as $schedule) { //foreach used for arrays, means loop through the array
+                            $scheduleQuery = "INSERT INTO eventschedules (eventID, scheduleDateTime, activityDescription)"
+                                . "VALUES ('$eventID', '$schedule', '$schedule')";
+                            $conn->query($scheduleQuery);
+                        }
 
-                foreach ($highlights as $highlight) {
-                    $highlightQuery = "INSERT INTO eventhighlights (eventID, highlights)"
-                        . "VALUES ('$eventID', '$highlight')";
-                    $conn->query($highlightQuery);
-                }
+                        foreach ($highlights as $highlight) {
+                            $highlightQuery = "INSERT INTO eventhighlights (eventID, highlights)"
+                                . "VALUES ('$eventID', '$highlight')";
+                            $conn->query($highlightQuery);
+                        }
 
-                //event guest
-                foreach ($guestName as $name){
-                    foreach ($guestBio as $bio){
-                        $guestQuery = "INSERT INTO eventguests (eventID, guestName, guestBio, guestProfilePic)".
-                            "VALUES ('$eventID', '$name', '$bio', '$guestImagePath')";
-                        $conn->query($guestQuery);
+                        //event guest
+                        foreach ($guestName as $name){
+                            foreach ($guestBio as $bio){
+                                $guestQuery = "INSERT INTO eventguests (eventID, guestName, guestBio, guestProfilePic)".
+                                    "VALUES ('$eventID', '$name', '$bio', '$guestImagePath')";
+                                $conn->query($guestQuery);
+                            }
+                        }
                     }
+                    echo "<script>alert('New Event Added'); window.location.href='admin_events.php';</script>";
                 }
             }
-            echo "<script>alert('New Event Added'); window.location.href='admin_events.php';</script>";
         }
-        foreach ($errors as $error) {
-            echo "<p style='color:red;'>$error</p>";
-        }
-    }
+            }
+
         if ($action == "edit"){
             echo "<h2>Update Event</h2>";
         }
@@ -206,7 +203,7 @@ $visitCount = cookie();
     <form method="POST" enctype="multipart/form-data">
         <p>Event Image:</p>
         <label><input type="file" name="eventImage" accept="image/*" onchange='previewEventImage()'> <!--show the image saved in database-->
-            <img id="eventImagePreview" class="image-preview" alt="Event Image Preview" style="display: none">
+            <img id="eventImagePreview" class="event-image-preview" alt="Event Image Preview" style="display: none">
         </label>
 
         <p>Event Name:</p>
@@ -285,7 +282,20 @@ $visitCount = cookie();
         <label><input type="text" name="eventStatus" value="<?php echo isset ($eventData['eventStatus']) ? $eventData['eventStatus']: '';?>" placeholder="Enter Event Type..."></label>
 
         <div class="button">
-            <button type="submit"><?php echo $eventID && $action=='edit'? 'Update Event' : 'Add Event'; ?></button>
+            <?php
+            $buttonText = '';
+
+            if ($eventID and $action == "edit"){
+                $buttonText = "Update Event";
+            }
+            elseif ($eventID and $action == "delete"){
+                $buttonText = "Delete Event";
+            }
+            else{ //actually should set action for add
+                $buttonText = "Add Event";
+            }
+            echo "<button type='submit'>{$buttonText}</button>";
+            ?>
             <a href="admin_events.php"><button id="button1">Cancel</button></a>
         </div>
     </form>

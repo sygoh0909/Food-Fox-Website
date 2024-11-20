@@ -41,7 +41,7 @@ include ('cookie.php');
     </nav>
 </header>
 <main>
-    <div class="">
+    <div class="contact">
 
     </div>
 </main>

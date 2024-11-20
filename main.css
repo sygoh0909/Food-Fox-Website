@@ -43,8 +43,8 @@ body{
     transform: translateY(-2px);
 }
 .roundButton.member{
-    background-color: white;
-    color: #d3a029;
+    background-color: #d3a029;
+    color: white;
     font-size: smaller;
 }
 .popup {

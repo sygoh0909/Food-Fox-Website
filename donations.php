@@ -26,7 +26,7 @@ $visitCount = cookie();
 
         .progress-bar {
             height: 100%;
-            background-color: #C5B4A5;
+            background-color: #d3a029;
             text-align: center;
             line-height: 30px;
             color: white;
@@ -67,7 +67,7 @@ $visitCount = cookie();
 
         .donate-submit {
             padding: 10px 20px;
-            background-color: #C5B4A5;
+            background-color: #d3a029;
             color: white;
             border: none;
             border-radius: 5px;
