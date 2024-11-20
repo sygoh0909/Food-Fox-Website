@@ -23,13 +23,13 @@ $visitCount = cookie();
     $registrationInfo = null;
 
     if ($registrationID){
-        $sql = "SELECT r.*, m.email, m.phoneNum FROM registrations r, members m WHERE r.memberID = m.memberID AND registrationID = $registrationID";
+        $sql = "SELECT r.*, m.email, m.phoneNum, e.eventName FROM registrations r, members m, events e WHERE r.eventID = e.eventID AND r.memberID = m.memberID AND registrationID = $registrationID";
         $result = mysqli_query($conn, $sql);
         $registrationInfo = mysqli_fetch_assoc($result);
 
         if ($_SERVER["REQUEST_METHOD"] == "POST"){
             //details like member email edit through another page not here
-            $eventName = $_POST['events'];
+//            $eventName = $_POST['events'];
             $dietaryRestrictions = $_POST['dietaryRestrictions'];
             $sizes = $_POST['sizes'];
             $specialAccommodation = $_POST['specialAccommodation'];
@@ -43,18 +43,18 @@ $visitCount = cookie();
                 $sql = "UPDATE registrations SET dietaryRestrictions = '$dietaryRestrictions' WHERE registrationID = $registrationID";
 
                 if ($conn->query($sql) === TRUE){
+                        if ($registrationInfo['registerType'] == "Participant"){
+                            $sql = "UPDATE participants SET specialAccommodation = '$specialAccommodation', shirtSize = '$sizes' WHERE registrationID = $registrationID";
+                        }
+                        elseif ($registrationInfo['registerType'] == "Volunteer"){
+                            $sql = "UPDATE volunteers SET relevantSkills = '$skills' WHERE registrationID = $registrationID";
+                        }
+                        else{
+                            //error?
+                        }
+                        echo "<script>alert('Registration updated successfully!'); window.location.href='admin_registrations.php';</script>"; //jump back but with blank?
 
-                    if ($registrationInfo['registerType'] == "Participant"){
-                        $sql = "UPDATE participants SET specialAccommodation = '$specialAccommodation', shirtSize = '$sizes' WHERE registrationID = $registrationID";
                     }
-                    else if ($registrationInfo['registerType'] == "Volunteer"){
-                        $sql = "UPDATE volunteers SET skills = '$skills' WHERE registrationID = $registrationID";
-                    }
-                    else{
-                        //error?
-                    }
-                    echo "<script>alert('Registration updated successfully!'); window.location.href='admin_registrations.php';</script>"; //jump back but with blank?
-                }
             }
             elseif ($action == "delete"){
                 $sql = "DELETE FROM registrations WHERE registrationID = $registrationID";
@@ -70,17 +70,8 @@ $visitCount = cookie();
     }
     ?>
     <form method="POST" enctype="multipart/form-data">
-        <label for="events">Choose an event: </label>
-        <select name="events" id="events">
-            <?php
-            $sql = "SELECT eventName FROM events";
-            $result = mysqli_query($conn, $sql);
-            while ($event = mysqli_fetch_assoc($result)) {
-                $selectedEvent = ($event['eventName'] == $registrationInfo["eventName"]) ? "selected" : "";
-                echo "<option value='$event[eventName]' $selectedEvent>$event[eventName]</option>";
-            }
-            ?>
-        </select>
+        <label for="events">Event Name: </label>
+        <?php echo $registrationInfo['eventName']?>
 
         <p>Email:</p>
         <?php echo $registrationInfo['email']; ?>

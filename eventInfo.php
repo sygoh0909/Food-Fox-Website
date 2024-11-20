@@ -12,8 +12,47 @@ include ('cookie.php');
         .main{
             color: white;
         }
-        .events{
+        .events {
+            background-color: white;
+            padding: 20px;
+            margin: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             text-align: center;
+        }
+
+        .events h2 {
+            color: #C5B4A5;
+        }
+
+        .events p {
+            font-size: 18px;
+            color: #5C4033;
+        }
+
+        .events button {
+            background-color: #d3a029;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .events button:hover {
+            background-color: #7F6C54;
+        }
+
+        .note {
+            font-size: 16px;
+            color: #7F6C54;
+            margin-top: 10px;
+        }
+
+        .note strong {
+            color: #C5B4A5;
         }
     </style>
 </head>
@@ -42,6 +81,7 @@ include ('cookie.php');
         </div>
     </nav>
 </header>
+
 <main>
     <?php
     $conn = connection();
@@ -50,41 +90,52 @@ include ('cookie.php');
     $action = isset($_GET['action']) ? $_GET['action'] : null;
     $eventData = null;
 
-    if ($eventID){
-        if ($action == "upcoming"){
+    if ($eventID) {
+        if ($action == "upcoming") {
             $sql = "SELECT * FROM events WHERE eventID = $eventID AND eventStatus='Upcoming' ";
             $result = $conn->query($sql);
             if ($result->num_rows > 0) {
                 while($row = $result->fetch_assoc()) {
                     $eventData = $row;
                     echo "<div class='events'>";
-                    echo "Event Name: $eventData[eventName]";
+                    echo "<h2>Event Name: " . $eventData['eventName'] . "</h2>";
+                    echo "<img src='" . $row['eventPic'] . "' alt='" . $row['eventName'] . "' width='300' height='200'>";
+                    echo "<p><strong>Details:</strong> " . $eventData['details'] . "</p>";
+                    echo "<p><strong>Start Date & Time:</strong> " . $eventData['start_dateTime'] . "</p>";
+                    echo "<p><strong>End Date & Time:</strong> " . $eventData['end_dateTime'] . "</p>";
+                    echo "<p><strong>Location:</strong> " . $eventData['location'] . "</p>";
+                    echo "<p><strong>Registrations Needed:</strong> " . $eventData['participantsNeeded'] . "</p>";
+                    echo "<p><strong>Volunteers Needed:</strong> " . $eventData['volunteersNeeded'] . "</p>";
+                    echo "<p class='note'><strong>Note:</strong> Participants are those who will attend the event, while volunteers are individuals who help with event operations.</p>";
                     echo "</div>";
-                    echo "<a href='eventRegistrations.php?eventID=" .$row['eventID']."'><button>Register Now!</button></a>";
-                    //check user is member/login or not, if not display a message and jump to sign up page
+                    echo "<a href='eventRegistrations.php?eventID=" . $row['eventID'] . "'><button>Register Now!</button></a>";
                 }
             }
-        }
-        elseif ($action == "past"){
+        } elseif ($action == "past") {
             $sql = "SELECT * FROM events e, pastevents p WHERE e.eventID = $eventID AND e.eventID = p.eventID AND e.eventStatus='Past' ";
             $result = $conn->query($sql);
             if ($result->num_rows > 0) {
                 while($row = $result->fetch_assoc()) {
                     $eventData = $row;
                     echo "<div class='events'>";
-                    echo "Event Name: $eventData[eventName]";
+                    echo "<h2>Event Name: " . $eventData['eventName'] . "</h2>";
+                    echo "<img src='" . $row['eventPic'] . "' alt='" . $row['eventName'] . "' width='300' height='200'>";
+                    echo "<p><strong>Details:</strong> " . $eventData['details'] . "</p>";
+                    echo "<p><strong>Start Date & Time:</strong> " . $eventData['start_dateTime'] . "</p>";
+                    echo "<p><strong>End Date & Time:</strong> " . $eventData['end_dateTime'] . "</p>";
+                    echo "<p><strong>Location:</strong> " . $eventData['location'] . "</p>";
+                    echo "<p><strong>Participants Needed:</strong> " . $eventData['participantsNeeded'] . "</p>";
+                    echo "<p><strong>Volunteers Needed:</strong> " . $eventData['volunteersNeeded'] . "</p>";
+                    echo "<p class='note'><strong>Note:</strong> Participants are those who will attend the event, while volunteers are individuals who help with event operations.</p>";
                     echo "</div>";
-                    echo "<a href='eventRegistrations.php?eventID=" .$row['eventID']."'><button>Register Now!</button></a>";
-                    //check user is member/login or not, if not display a message and jump to sign up page
+                    echo "<a href='eventRegistrations.php?eventID=" . $row['eventID'] . "'><button>Register Now!</button></a>";
                 }
             }
         }
     }
-
     ?>
-    <!--display all info related to the event-->
 </main>
-</body>
+
 <footer>
     <div class="footer-container">
         <div class="footer-section">
@@ -119,4 +170,5 @@ include ('cookie.php');
         <p>&copy; 2024 Food Fox. All rights reserved. | Powered by <a href="https://foodfox.com" target="_blank">Food Fox</a></p>
     </div>
 </footer>
+</body>
 </html>

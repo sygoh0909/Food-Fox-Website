@@ -109,6 +109,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }?>
 
         <!--sync info from profile, if user havent fill or wanna change, direct them to profile-->
+        <!--name????-->
     <p>Email:</p>
     <label><input type="text" name="email" value="<?php echo isset($memberData['email']) ? $memberData['email']: '';?>"></label>
 
@@ -118,7 +119,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <?php
     if (empty($memberData['phoneNum'])) {
         echo "You haven't provide a phone number in your profile.";
-        echo "Update your profile? <a href='profile.php'><button>Yes</button></a><button>No</button>";
+        echo "Update your profile? <a href='profile.php'><button>Yes</button></a><button type='button'>No</button>";
     }
     ?>
 
