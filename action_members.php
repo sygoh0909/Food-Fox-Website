@@ -136,7 +136,7 @@ $visitCount = cookie();
         <?php echo $memberData['joinDate'];?> <br>
 
         <button type="submit"><?php echo $memberID && $action=='edit'?'Update member info': 'Delete Member Info'?></button>
-        <a href="admin_members.php"><button>Cancel</button></a>
+        <a href="admin_members.php"><button type="button">Cancel</button></a>
 
     </form>
 </main>

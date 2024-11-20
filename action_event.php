@@ -296,7 +296,7 @@ $visitCount = cookie();
             }
             echo "<button type='submit'>{$buttonText}</button>";
             ?>
-            <a href="admin_events.php"><button id="button1">Cancel</button></a>
+            <a href="admin_events.php"><button type="button">Cancel</button></a>
         </div>
     </form>
 </main>

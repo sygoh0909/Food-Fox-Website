@@ -99,7 +99,7 @@ $visitCount = cookie();
         <label><input type="text" name="feedback" value="<?php echo $donationDetails['feedback'];?>"</label>
 
         <button type="submit"><?php echo $donationID && $action=="edit"?'Update donation details':'Delete donation details'?></button>
-        <a href="admin_donations.php"><button>Cancel</button></a> <!--not updated successfully-->
+        <a href="admin_donations.php"><button type="button">Cancel</button></a> <!--not updated successfully-->
     </form>
 </main>
 </body>
