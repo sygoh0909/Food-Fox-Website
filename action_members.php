@@ -110,11 +110,11 @@ $visitCount = cookie();
     <form method="POST" enctype="multipart/form-data">
 
         <p>Member ID:</p> <!--should display member id?-->
-        <?php echo $memberData["memberID"]; ?>
+        <?php echo str_repeat('*', strlen($memberID));?>
 
-        <p>Member Profile:</p>
+        <p>Member Profile:</p> <!--display the member profile b4 edit?-->
         <input type="file" name="memberProfile" accept="image/*" onchange="previewMemberProfile(event)">
-        <img id="memberProfilePreview" alt="Member Profile Preview" style="display: none;">
+        <img id="memberProfilePreview" class="roundImage" alt="Member Profile Preview" style="display: none;">
 
         <p>Member Name:</p>
         <label><input type="text" name="memberName" value="<?php echo isset($memberData['memberName']) ? $memberData['memberName']:'';?>"></label>
