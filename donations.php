@@ -17,19 +17,69 @@ $visitCount = cookie();
         .progress-container {
             width: 100%;
             height: 30px;
-            background-color: #ccc;
-            border-radius: 20px;
+            border-radius: 25px;
+            background-color: #e0e0e0;
             overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            margin: 20px 0;
         }
 
         .progress-bar {
             height: 100%;
-            background-color: #4caf50;
+            background-color: #C5B4A5;
             text-align: center;
             line-height: 30px;
             color: white;
             font-weight: bold;
+            border-radius: 25px;
+            transition: width 0.5s ease-out;
         }
+        .donations-buttons {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .donation-btn {
+            padding: 10px 20px;
+            background-color: #C5B4A5;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .donation-btn:hover {
+            background-color: #C5B4A5;
+        }
+
+        #donation-input {
+            padding: 10px;
+            width: 100%;
+            max-width: 300px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+
+        .donate-submit {
+            padding: 10px 20px;
+            background-color: #C5B4A5;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .donate-submit:hover {
+            background-color: #C5B4A5;
+        }
+
     </style>
 </head>
 <body>
@@ -128,9 +178,15 @@ if (isset($_GET['action']) && $_GET['action'] == 'getProgress') {
     }
     ?>
     <form method="POST" enctype="multipart/form-data">
-        <label><input type="text" name="amount" placeholder="Enter the amount you want to donate"></label>
-        <button>Donate</button>
-        <!--after donate successfully, ask if they wan to leave feedback-->
+        <div class="donations-buttons">
+            <button class="donation-btn" onclick="setDonationAmount(10)">10</button>
+            <button class="donation-btn" onclick="setDonationAmount(20)">20</button>
+            <button class="donation-btn" onclick="setDonationAmount(50)">50</button>
+            <button class="donation-btn" onclick="setDonationAmount(100)">100</button>
+        </div>
+        <label><input id="donation-input" type="text" name="amount" placeholder="Enter the amount you want to donate..."></label> <!--set only positive num can-->
+        <button type="submit" class="donate-submit">Donate</button>
+        <!--after donate successfully, pop up ask if they wan to leave feedback-->
     </form>
 
     <h2>Where your donations goes?</h2>
@@ -228,13 +284,17 @@ if (isset($_GET['action']) && $_GET['action'] == 'getProgress') {
                 mealsText.textContent = `Meals Provided: ${data.mealsProvided}`;
                 peopleText.textContent = `People Supported: ${data.peopleSupported}`;
 
-                impactChart.data.datasets[0].data = [data.progressPercentage]; // Meals as %
-                impactChart.data.datasets[1].data = [data.peopleSupported];   // People Supported
+                impactChart.data.datasets[0].data = [data.progressPercentage];
+                impactChart.data.datasets[1].data = [data.peopleSupported];
                 impactChart.update();
             })
             .catch(error => console.error('Error fetching progress:', error));
     }
     setInterval(updateProgress, 5000) //refresh every 5 seconds
+
+    function setDonationAmount(amount){
+        document.getElementById('donation-input').value = amount;
+    }
 </script>
 <footer>
     <div class="footer-container">

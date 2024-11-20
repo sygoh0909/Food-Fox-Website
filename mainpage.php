@@ -173,7 +173,7 @@ include ('cookie.php');
                 <div class="companyDescription">
                     <h1>Food Fox</h1>
                     <p>"Join Food Fox in the fight to make zero hunger a reality for everyone."</p>
-                    <a href="signup.php" class="roundButton join">Join Us Now!</a>
+                    <a href="signup.php" class="roundButton join">Join Us Now!</a> <!--if already login then jump main page-->
                 </div>
                 <div class="overlay-nav">
                     <a href="mainpage.php" class="roundButton main">Home</a>
@@ -219,19 +219,13 @@ include ('cookie.php');
             </section>
             <section class="getinvolved">
                 <h2>Get Involved</h2>
-                <p>xxx</p>
+                <p>You do not need to be a chef to be involved in out work! <br> Everyone with a kind heart that wants to give back to their community is welcome to join us in our mission to achieve SDG 2: Zero Hunger.</p>
                 <img src="getinvolved.png" alt="Get Involved">
             </section>
         </div>
     </main>
 </body>
-<script>
-    function togglePopup(event) {
-        event.preventDefault();
-        const popup = document.getElementById('profile-popup');
-        popup.style.display = popup.style.display === 'block' ? 'none' : 'block';
-    }
-</script>
+
 <footer>
     <div class="footer-container">
         <div class="footer-section">

@@ -70,3 +70,10 @@ function connection(){
     return $conn;
 }
 ?>
+<script>
+    function togglePopup(event) {
+        event.preventDefault();
+        const popup = document.getElementById('profile-popup');
+        popup.style.display = popup.style.display === 'block' ? 'none' : 'block';
+    }
+</script>
