@@ -23,25 +23,25 @@ h2 {
 
 form {
     display: flex;
-    flex-wrap: wrap;
+    flex-direction: column;
     gap: 20px;
-    align-items: flex-start;
-    justify-content: space-between;
+    align-items: stretch;
+    justify-content: flex-start;
     width: 100%;
+    box-sizing: border-box;
 }
 
 form p {
-    flex-basis: 100%;
     margin: 10px 0 5px;
     font-weight: bold;
     color: #444444;
 }
 
 form label {
-    flex: 1 1 calc(50% - 20px);
     display: flex;
     flex-direction: column;
     margin-bottom: 10px;
+    width: 100%;
 }
 
 form input[type="text"],
@@ -58,6 +58,7 @@ form select {
 
 form textarea {
     resize: vertical;
+    min-height: 100px;
 }
 
 form input[type="text"]:focus,
@@ -79,7 +80,6 @@ form select:focus {
 
 form button,
 form a button {
-    flex: 1 1 auto;
     background-color: #7F6C54;
     color: white;
     border: none;
@@ -90,6 +90,7 @@ form a button {
     margin-top: 10px;
     text-align: center;
     transition: background-color 0.3s;
+    align-self: flex-start;
 }
 
 form button:hover {
@@ -104,4 +105,19 @@ form a button {
 
 form a button:hover {
     background-color: #A89E92;
+}
+
+/* Responsive adjustments */
+@media (min-width: 768px) {
+    form {
+        flex-wrap: wrap;
+        gap: 20px;
+        align-items: flex-start;
+        justify-content: space-between;
+    }
+
+    form label {
+        flex: 1 1 calc(50% - 20px);
+        min-width: 200px;
+    }
 }

@@ -35,16 +35,27 @@ $visitCount = cookie();
             $sizes = $_POST['sizes'];
             $specialAccommodation = $_POST['specialAccommodation'];
             $skills = $_POST['skills'];
-        }
 
         $errors = [];
 
         if (empty($errors)){
             if ($action == "edit"){
-                $sql = "UPDATE registrations SET eventName = '$eventName', registerType = '$registerType', dietaryRestrictions = '$dietaryRestrictions', sizes = '$sizes', specialAccommodation = '$specialAccommodation', skills = '$skills' WHERE registrationID = $registrationID";
-                $result = mysqli_query($conn, $sql);
+                //what if user wan change from participant to volunteer? ask them resubmit form instead?
+                $sql = "UPDATE registrations SET registerType = '$registerType', dietaryRestrictions = '$dietaryRestrictions' WHERE registrationID = $registrationID";
+
                 if ($conn->query($sql) === TRUE){
-                    echo "<script>alert('Registration updated successfully!'); window.location.href='admin_registrations.php';</script>";
+                    if ($registerType == "Participant"){
+                        $sql = "UPDATE participants SET specialAccommodation = '$specialAccommodation', shirtSize = '$sizes' WHERE registrationID = $registrationID";
+                        $result = mysqli_query($conn, $sql);
+                    }
+                    else if ($registerType == "Volunteer"){
+                        $sql = "UPDATE volunteers SET skills = '$skills' WHERE registrationID = $registrationID";
+                        $result = mysqli_query($conn, $sql);
+                    }
+                    else{
+                        //error?
+                    }
+                    echo "<script>alert('Registration updated successfully!'); window.location.href='admin_registrations.php';</script>"; //jump back but with blank?
                 }
             }
             elseif ($action == "delete"){
@@ -56,6 +67,7 @@ $visitCount = cookie();
         }
         foreach ($errors as $error) {
             echo "<p style='color:red;'>$error</p>";
+        }
         }
     }
     ?>
@@ -112,8 +124,8 @@ $visitCount = cookie();
             <label><input type="text" name="skills" value="<?php echo isset ($registrationInfo['skills']) ? $registrationInfo['skills']:'';?>"></label>
         </div>
 
-        <button type="submit"><?php echo $registrationID && $action=='edit'?'Update member info': 'Delete Member Info'?></button>
-        <a href="admin_registrations.php"><button>Cancel</button></a>
+        <button type="submit"><?php echo $registrationID && $action=='edit'?'Update Registration info': 'Delete Registration Info';?></button>
+        <a href="admin_registrations.php"><button>Cancel</button></a> <!--not working-->
     </form>
 </main>
 </body>
