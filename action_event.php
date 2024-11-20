@@ -112,7 +112,7 @@ $visitCount = cookie();
             //update event
             if (empty($errors)){
                 if ($action=="edit"){
-                    //update pics???
+                    //update pics??? display pics that saved???
                     $updateQuery = "UPDATE events SET eventName = '$eventName', start_dateTime = '$startDateTime', end_dateTime = '$endDateTime', location = '$location', details = '$details', registrationsNeeded = '$registrationsNeeded', eventStatus = '$eventStatus', eventPic = '$eventImagePath' WHERE eventID = '$eventID'";
 
                     if ($conn->query($updateQuery) === TRUE) {

@@ -29,8 +29,8 @@ $visitCount = cookie();
 
         if ($_SERVER["REQUEST_METHOD"] == "POST"){
             //details like member email edit through another page not here
-            $eventName = $_POST['eventName'];
-            $registerType = $_POST['registerType'];
+            $eventName = $_POST['events'];
+            $registerType = $_POST['registrations'];
             $dietaryRestrictions = $_POST['dietaryRestrictions'];
             $sizes = $_POST['sizes'];
             $specialAccommodation = $_POST['specialAccommodation'];
@@ -41,7 +41,7 @@ $visitCount = cookie();
 
         if (empty($errors)){
             if ($action == "edit"){
-                $sql = "UPDATE registrations SET eventName = '$eventName', registerType = '$registerType', dietaryRestrictions = '$dietaryRestrictions', sizes = '$sizes', specialAccommodation = '$specialAccommodation', skills = '$skills' WHERE registrationID = $registrationID'";
+                $sql = "UPDATE registrations SET eventName = '$eventName', registerType = '$registerType', dietaryRestrictions = '$dietaryRestrictions', sizes = '$sizes', specialAccommodation = '$specialAccommodation', skills = '$skills' WHERE registrationID = $registrationID";
                 $result = mysqli_query($conn, $sql);
                 if ($conn->query($sql) === TRUE){
                     echo "<script>alert('Registration updated successfully!'); window.location.href='admin_registrations.php';</script>";
