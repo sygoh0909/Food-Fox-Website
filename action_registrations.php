@@ -30,7 +30,6 @@ $visitCount = cookie();
         if ($_SERVER["REQUEST_METHOD"] == "POST"){
             //details like member email edit through another page not here
             $eventName = $_POST['events'];
-            $registerType = $_POST['registrations'];
             $dietaryRestrictions = $_POST['dietaryRestrictions'];
             $sizes = $_POST['sizes'];
             $specialAccommodation = $_POST['specialAccommodation'];
@@ -40,17 +39,16 @@ $visitCount = cookie();
 
         if (empty($errors)){
             if ($action == "edit"){
-                //what if user wan change from participant to volunteer? ask them resubmit form instead?
-                $sql = "UPDATE registrations SET registerType = '$registerType', dietaryRestrictions = '$dietaryRestrictions' WHERE registrationID = $registrationID";
+                //what if user wan change from participant to volunteer/change other event? ask them resubmit form instead?
+                $sql = "UPDATE registrations SET dietaryRestrictions = '$dietaryRestrictions' WHERE registrationID = $registrationID";
 
                 if ($conn->query($sql) === TRUE){
-                    if ($registerType == "Participant"){
+
+                    if ($registrationInfo['registerType'] == "Participant"){
                         $sql = "UPDATE participants SET specialAccommodation = '$specialAccommodation', shirtSize = '$sizes' WHERE registrationID = $registrationID";
-                        $result = mysqli_query($conn, $sql);
                     }
-                    else if ($registerType == "Volunteer"){
+                    else if ($registrationInfo['registerType'] == "Volunteer"){
                         $sql = "UPDATE volunteers SET skills = '$skills' WHERE registrationID = $registrationID";
-                        $result = mysqli_query($conn, $sql);
                     }
                     else{
                         //error?
@@ -93,13 +91,11 @@ $visitCount = cookie();
         <p>Dietary Restrictions:</p>
         <label><input type="text" name="dietaryRestrictions" value="<?php echo isset ($registrationInfo['dietaryRestrictions']) ? $registrationInfo['dietaryRestrictions'] : ''; ?>"></label>
 
-        <label for="registrations">Choose a register type: </label>
-        <select name="registrations" id="registrations" onchange="showFields()">
-            <option>Participant <?php echo $registrationInfo['registerType'] == 'Participant'?></option>
-            <option>Volunteer <?php echo $registrationInfo['registerType'] == 'Volunteer'?></option>
-        </select>
+        <label for="registrations">Register type: </label>
+        <?php echo $registrationInfo['registerType']; ?>
+        <input type="hidden" name="registrations" value="<?php echo $registrationInfo['registerType']; ?>">
 
-        <div class="participant-field">
+        <div class="participant-field" style="display: <?php echo $registrationInfo['registerType'] == "Participant" ? "block" : "none"; ?>;">
             <p>Special Accommodation:</p>
             <label><input type="text" name="specialAccommodation" value="<?php echo isset ($registrationInfo['specialAccommodation']) ? $registrationInfo['specialAccommodation'] :'';?>" ></label>
 
@@ -117,7 +113,7 @@ $visitCount = cookie();
             <!--provide t-shirt size chart also-->
         </div>
 
-        <div class="volunteer-field">
+        <div class="volunteer-field" style="display: <?php echo $registrationInfo['registerType'] == "Volunteer" ? "block" : "none"; ?>;">
             <p>Please note that you should be free the whole day as volunteer. </p>
 
             <p>Relevant skills:</p>
@@ -129,26 +125,5 @@ $visitCount = cookie();
     </form>
 </main>
 </body>
-<script>
-    function showFields(){
-        const registrationType = document.getElementById("registrations").value;
-        const participantField = document.querySelector(".participant-field");
-        const volunteerField = document.querySelector(".volunteer-field");
-
-        if (registrationType == "Participant"){
-            participantField.style.display = "block";
-            volunteerField.style.display = "none";
-        }
-        else if (registrationType == "Volunteer"){
-            participantField.style.display = "none";
-            volunteerField.style.display = "block";
-        }
-        else{
-            participantField.style.display = "none";
-            volunteerField.style.display = "none";
-        }
-
-    }
-</script>
 </html>
 
