@@ -61,22 +61,20 @@ $visitCount = cookie();
             elseif (!preg_match($emailPattern, $email)) {
                 $errors[] = "Enter a valid email address.";
             }
-            if (empty($password)) {
-                $errors[] = "Password is required";
-            }
-            elseif (!preg_match($passwordPattern, $password)) {
-                $errors[] = "Password must at least be 8 characters long, with at least one letter and one number.";
-            }
 
             if (empty($errors)){
                 //update event
                 if ($action == "edit"){
-                    $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
-                    $sql = "UPDATE members SET memberName = '$memberName', email = '$email', password = '$hashedPassword', phoneNum = '$phoneNum', bio = '$bio', memberProfile = '$memberProfilePath' WHERE memberID = $memberID";
-
-//                    if ($password == ''){
-//                        $sql = "UPDATE members SET memberName = '$memberName', email = '$email', password = '$password', phoneNum = '$phoneNum', bio = '$bio', memberProfile = '$memberProfilePath' WHERE memberID = $memberID";
-//                    }
+                    if ($password == ''){
+                        $sql = "UPDATE members SET memberName = '$memberName', email = '$email', phoneNum = '$phoneNum', bio = '$bio', memberProfile = '$memberProfilePath' WHERE memberID = $memberID";
+                    }
+                    else{
+                        $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
+                        if (!preg_match($passwordPattern, $password)) {
+                            $errors[] = "Password must at least be 8 characters long, with at least one letter and one number.";
+                        }
+                        $sql = "UPDATE members SET memberName = '$memberName', email = '$email', password = '$hashedPassword', phoneNum = '$phoneNum', bio = '$bio', memberProfile = '$memberProfilePath' WHERE memberID = $memberID";
+                    }
 
                     if ($conn->query($sql) === TRUE) {
                         echo "<script>alert('Member Info Updated Successfully');
@@ -91,6 +89,9 @@ $visitCount = cookie();
                         }
                 }
                 }
+            foreach ($errors as $error) {
+                echo "<p style='color:red;'>$error</p>";
+            } //change design for this maybe - show below each field? or just show on top idk
             }
 
         if ($action == "edit"){
