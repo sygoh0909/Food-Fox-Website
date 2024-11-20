@@ -70,6 +70,9 @@ $visitCount = cookie();
                     }
                 }
             }
+            foreach ($errors as $error) {
+                echo "<p style='color:red;'>$error</p>";
+            }
         }
         if ($action == "edit"){
             echo "<h2>Update Donation</h2>";
