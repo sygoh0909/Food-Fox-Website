@@ -96,8 +96,6 @@ $visitCount = cookie();
             <button>Search</button>
             <!--search feature-->
 
-            <!--no need add members gua?-->
-
         </div>
         <div class="member-table">
             <table>
