@@ -34,7 +34,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             if ($registerType == "Participant"){
                 $specialAccommodation = $_POST["specialAccommodation"];
                 $sizes = $_POST["sizes"];
-                $sql = "INSERT INTO participants (registrationID, specialAccommodation) VALUES ('$registrationID', '$sizes')";
+                $sql = "INSERT INTO participants (registrationID, specialAccommodation, shirtSize) VALUES ('$registrationID', '$specialAccommodation', '$sizes')";
                 mysqli_query($conn, $sql);
             }
             else if ($registerType == "Volunteer"){

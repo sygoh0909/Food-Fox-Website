@@ -23,7 +23,7 @@ $visitCount = cookie();
     $registrationInfo = null;
 
     if ($registrationID){
-        $sql = "SELECT r.*, m.email, m.phoneNum, e.eventName FROM registrations r, members m, events e WHERE r.eventID = e.eventID AND r.memberID = m.memberID AND registrationID = $registrationID";
+        $sql = "SELECT r.*, m.memberName, m.email, m.phoneNum, e.eventName FROM registrations r, members m, events e WHERE r.eventID = e.eventID AND r.memberID = m.memberID AND registrationID = $registrationID";
         $result = mysqli_query($conn, $sql);
         $registrationInfo = mysqli_fetch_assoc($result);
 
@@ -52,8 +52,9 @@ $visitCount = cookie();
                         else{
                             //error?
                         }
-                        echo "<script>alert('Registration updated successfully!'); window.location.href='admin_registrations.php';</script>"; //jump back but with blank?
-
+                        if ($conn->query($sql) === TRUE){
+                            echo "<script>alert('Registration updated successfully!'); window.location.href='admin_registrations.php';</script>"; //jump back but with blank?
+                        }
                     }
             }
             elseif ($action == "delete"){
@@ -72,6 +73,9 @@ $visitCount = cookie();
     <form method="POST" enctype="multipart/form-data">
         <label for="events">Event Name: </label>
         <?php echo $registrationInfo['eventName']?>
+
+        <p>Member Name: </p>
+        <?php echo $registrationInfo['memberName']?>
 
         <p>Email:</p>
         <?php echo $registrationInfo['email']; ?>

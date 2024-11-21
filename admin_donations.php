@@ -119,7 +119,7 @@ $visitCount = cookie();
                         echo "<td>" . $row["memberName"] . "</td>";
                         echo "<td>" . $row["amount"] . "</td>";
                         echo "<td>" . $row["donationDate"] . "</td>";
-                        echo "<td><a href='action_donation.php?donationID=" . $row["donationID"] . "&memberName=" .$row['memberName'] . "&action=edit '><button>Edit</button></a><a href='action_donation.php?donationID=" . $row["donationID"] . "&memberName=" .$row['memberName']. "&action=delete '><button>Delete</button></a></td>";
+                        echo "<td><a href='action_donation.php?donationID=" . $row["donationID"] . "&action=edit '><button>Edit</button></a><a href='action_donation.php?donationID=" . $row["donationID"] . "&action=delete '><button>Delete</button></a></td>";
                         echo "</tr>";
                     }
                 }

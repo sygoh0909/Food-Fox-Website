@@ -14,11 +14,16 @@ $visitCount = cookie();
         .main{
             color: white;
         }
+        h2 {
+            color: #5C4033;
+            margin-bottom: 10px;
+        }
+
         .progress-container {
             width: 100%;
             height: 30px;
             border-radius: 25px;
-            background-color: #e0e0e0;
+            background-color: #C5B4A5;
             overflow: hidden;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
             margin: 20px 0;
@@ -34,52 +39,41 @@ $visitCount = cookie();
             border-radius: 25px;
             transition: width 0.5s ease-out;
         }
-        .donations-buttons {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 10px;
-        }
 
-        .donation-btn {
-            padding: 10px 20px;
-            background-color: #C5B4A5;
-            color: white;
+        button, input[type="text"] {
+            font-size: 16px;
+            padding: 10px;
+            margin: 5px;
             border: none;
             border-radius: 5px;
-            font-size: 16px;
+            outline: none;
+        }
+
+        button {
             cursor: pointer;
             transition: background-color 0.3s ease;
         }
 
-        .donation-btn:hover {
-            background-color: #C5B4A5;
+        button:hover {
+            background-color: #7F6C54;
         }
 
-        #donation-input {
-            padding: 10px;
+        .donations-buttons button {
+            background-color: #C5B4A5;
+            color: white;
+        }
+
+        .donations-buttons button:hover {
+            background-color: #7F6C54;
+        }
+
+        input#donation-input {
             width: 100%;
             max-width: 300px;
-            font-size: 16px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            margin-bottom: 10px;
+            background-color: #F5EEDC;
+            border: 1px solid #C5B4A5;
+            color: #5C4033;
         }
-
-        .donate-submit {
-            padding: 10px 20px;
-            background-color: #d3a029;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            font-size: 16px;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-        }
-
-        .donate-submit:hover {
-            background-color: #C5B4A5;
-        }
-
     </style>
 </head>
 <body>
