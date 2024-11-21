@@ -143,7 +143,7 @@ $visitCount = cookie();
                         echo "<tr>";
                         echo "<td>" . $row["memberName"] . "</td>";
                         echo "<td>" . $row["feedback"] . "</td>";
-                        echo "<td><button>Delete</button>"; //delete - pop up - comfirm delete - delete feedback from donation
+                        echo "<td><button>Delete</button>"; //delete - pop up - comfirm delete - delete feedback from donation table
                         echo "</tr>";
                     }
                 }

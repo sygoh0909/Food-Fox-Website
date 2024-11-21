@@ -38,6 +38,30 @@ $visitCount = cookie();
             border-radius: 25px;
             transition: width 0.5s ease-out;
         }
+
+        .impact-container {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+        }
+
+        .chart-container {
+            width: 60%;
+        }
+
+        .info-container {
+            width: 35%;
+            padding: 20px;
+            background-color: #f4f4f4;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .info-container p {
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+        }
+
     </style>
 </head>
 <body>
@@ -126,28 +150,68 @@ if (isset($_GET['action']) && $_GET['action'] == 'getProgress') {
         if (empty($amount)) {
             $errors[] = 'You must enter an amount.';
         }
+        elseif (!preg_match('/^[1-9][0-9]*$/', $amount)) {
+            $errors[] = 'The amount must be a positive number.';
+        }
 
         if (empty($errors)) {
             $sql = "INSERT INTO donations (memberID, amount) VALUES ('$memberID', '$amount')";
             if ($conn->query($sql) === TRUE) {
-                echo "Donated successfully";
+                echo "<script>alert('Thank you for your donation!');</script>";
             }
+            else{
+                echo "Error: " . $sql . "<br>" . $conn->error;
+            }
+        }
+        foreach ($errors as $error) {
+            echo "<p style='color: red;'>$error</p>";
         }
     }
     ?>
     <form method="POST" enctype="multipart/form-data">
         <div class="donations-buttons">
-            <button class="donation-btn" onclick="setDonationAmount(10)">10</button>
-            <button class="donation-btn" onclick="setDonationAmount(20)">20</button>
-            <button class="donation-btn" onclick="setDonationAmount(50)">50</button>
-            <button class="donation-btn" onclick="setDonationAmount(100)">100</button>
+            <button type="button" class="donation-btn" name="amount" value="10">10</button>
+            <button type="button" class="donation-btn" name="amount" value="20">20</button>
+            <button type="button" class="donation-btn" name="amount" value="50">50</button>
+            <button type="button" class="donation-btn" name="amount" value="100">100</button>
         </div>
-        <label><input id="donation-input" type="text" name="amount" placeholder="Enter the amount you want to donate..."></label> <!--set only positive num can-->
-        <button type="submit" class="donate-submit">Donate</button>
-        <!--after donate successfully, pop up ask if they wan to leave feedback-->
+        <label><input id="donation-input" type="text" name="amount" placeholder="Enter the amount you want to donate..."></label>
+        <button type="button" class="donate-submit">Donate</button>
+
     </form>
 
+    <!--popup-->
+    <div id="confirmation-popup" class="confirmation-popup" style="display: none">
+        <div class="confirmation-content">\
+            <h3>Confirm your Donation</h3>
+            <p>You are about to donate: </p>
+            <form method="post" enctype="multipart/form-data">
+                <input type="hidden" name="confirm_amount" id="confirm-amount-input">
+                <label for="payment-method">Choose a payment method:</label>
+                <select name="payment-method" id="payment-method" required>
+                    <option value="credit-card">Credit Card</option> <!--link to each different payment page-->
+                    <option value="tng">Touch n Go</option>
+                    <option value="bank-transfer">Bank Transfer</option>
+                </select>
+                <button type="submit" name="confirm-donate">Confirm Donate</button>
+                <a href="donations.php"><button type="button"></button></a> <!--close popup-->
+            </form>
+        </div>
+    </div>
+
+    <div id="feedback-popup" class="feedback-popup" style="display: none">
+        <div class="feedback-content">
+
+        </div>
+    </div>
+
+
     <h2>Where your donations goes?</h2>
+    <div class="donations-container">
+        <img src="mercy.png" alt="Mercy Malaysia"> <!--updated when-->
+        <img src="kechara.png" alt="Kechara Soup Kitchen">
+        <img src="assemblysoup.png" alt="The Assembly Soup Kitchen">
+    </div>
 
     <h2>Our Collective Impact</h2>
     <div class="impact-container">
@@ -174,7 +238,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'getProgress') {
     ?>
 </main>
 </body>
-<script src="https://cdn.jsdelivr.net/npm.chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@3.7.0"></script>
 <script>
     //chart
     const ctx = document.getElementById('impactChart').getContext('2d');
