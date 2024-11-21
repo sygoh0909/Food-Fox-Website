@@ -11,6 +11,7 @@ $visitCount = cookie();
     <title>Edit/Delete Member Page</title>
 
     <style>
+
     </style>
 </head>
 <body>

@@ -11,21 +11,16 @@ $visitCount = cookie();
     <title>Add/Edit/Delete Event Page</title>
 
     <style>
-        body {
-            background-color: #F5EEDC;
-            margin: 0;
-            font-family: Arial, sans-serif;
-            display: flex;
-            justify-content: center;
+        input[type="time"] , [type="date"]{
+            padding: 5px;
+            font-size: 14px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            outline: none;
+            width: 120px;
+            transition: border-color 0.3s ease;
         }
-        main{
-            background-color: #C5B4A5;
-            padding: 20px 40px;
-            border-radius: 20px;
-        }
-        h2{
-            text-align: center;
-        }
+
     </style>
 </head>
 <body>
@@ -51,7 +46,8 @@ $visitCount = cookie();
         $endTime = $_POST['endTime'];
         $location = $_POST['location'];
         $details = $_POST['details'];
-        $registrationsNeeded = $_POST['registrationsNeeded'];
+        $participantsNeeded = $_POST['participantsNeeded'];
+        $volunteersNeeded  = $_POST['volunteersNeeded'];
         $eventStatus = $_POST['eventStatus'];
         $highlights = $_POST['highlights'];
         $schedules = $_POST['schedules'];
@@ -88,8 +84,11 @@ $visitCount = cookie();
             $errors[] = "Location is required";
         }
         //only can be numbers - regular expression
-        if (empty($registrationsNeeded)) {
-            $errors[] = "Registrations Needed is required";
+        if (empty ($participantsNeeded)){
+            $errors[] = "Participants Needed is required";
+        }
+        if (empty($volunteersNeeded)){
+            $errors[] = "Volunteers Needed is required";
         }
         //only can be upcoming or past status
         if (empty($eventStatus)) {
@@ -113,7 +112,7 @@ $visitCount = cookie();
         if (empty($errors)){
             if ($action=="edit"){
                 //update pics??? display pics that saved???
-                $updateQuery = "UPDATE events SET eventName = '$eventName', start_dateTime = '$startDateTime', end_dateTime = '$endDateTime', location = '$location', details = '$details', registrationsNeeded = '$registrationsNeeded', eventStatus = '$eventStatus', eventPic = '$eventImagePath' WHERE eventID = '$eventID'";
+                $updateQuery = "UPDATE events SET eventName = '$eventName', start_dateTime = '$startDateTime', end_dateTime = '$endDateTime', location = '$location', details = '$details', participantsNeeded = '$participantsNeeded', volunteersNeeded = '$volunteersNeeded', eventStatus = '$eventStatus', eventPic = '$eventImagePath' WHERE eventID = '$eventID'";
 
                 if ($conn->query($updateQuery) === TRUE) {
                     $deleteScheduleQuery = "DELETE FROM eventschedules WHERE eventID = '$eventID'";
@@ -156,7 +155,7 @@ $visitCount = cookie();
             //add new event
             else{
                 if (empty($errors)){
-                    $query = "INSERT INTO events (eventName, start_dateTime, end_dateTime, location, details, registrationsNeeded, eventStatus, eventPic) VALUES ('$eventName', '$startDateTime', '$endDateTime', '$location', '$details', '$registrationsNeeded', '$eventStatus', '$eventImagePath')";
+                    $query = "INSERT INTO events (eventName, start_dateTime, end_dateTime, location, details, participantsNeeded, volunteersNeeded, eventStatus, eventPic) VALUES ('$eventName', '$startDateTime', '$endDateTime', '$location', '$details', '$participantsNeeded', '$volunteersNeeded', '$eventStatus', '$eventImagePath')";
 
                     if ($conn->query($query) === TRUE) {
                         $eventID = $conn->insert_id;
@@ -275,8 +274,11 @@ $visitCount = cookie();
             <button type="button" onclick="addGuest()">+</button>
         </div>
 
-        <p>Registrations Needed:</p>
-        <label><input type="text" name="registrationsNeeded" value="<?php echo isset ($eventData['registrationsNeeded']) ? $eventData['registrationsNeeded']: ''; ?>" placeholder="Enter Registrations needed..."></label>
+        <p>Participants Needed:</p>
+        <label><input type="text" name="participantsNeeded" value="<?php echo isset ($eventData['participantsNeeded']) ? $eventData['participantsNeeded']: ''; ?>" placeholder="Enter Participants needed..."></label>
+
+        <p>Volunteers Needed:</p>
+        <label><input type="text" name="volunteersNeeded" value="<?php echo isset ($eventData['volunteersNeeded']) ? $eventData['volunteersNeeded']: ''; ?>" placeholder="Enter Volunteers needed..."></label>
 
         <p>Event Status:</p>
         <label><input type="text" name="eventStatus" value="<?php echo isset ($eventData['eventStatus']) ? $eventData['eventStatus']: '';?>" placeholder="Enter Event Type..."></label>

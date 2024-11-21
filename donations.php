@@ -18,7 +18,6 @@ $visitCount = cookie();
             color: #5C4033;
             margin-bottom: 10px;
         }
-
         .progress-container {
             width: 100%;
             height: 30px;
@@ -38,41 +37,6 @@ $visitCount = cookie();
             font-weight: bold;
             border-radius: 25px;
             transition: width 0.5s ease-out;
-        }
-
-        button, input[type="text"] {
-            font-size: 16px;
-            padding: 10px;
-            margin: 5px;
-            border: none;
-            border-radius: 5px;
-            outline: none;
-        }
-
-        button {
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-        }
-
-        button:hover {
-            background-color: #7F6C54;
-        }
-
-        .donations-buttons button {
-            background-color: #C5B4A5;
-            color: white;
-        }
-
-        .donations-buttons button:hover {
-            background-color: #7F6C54;
-        }
-
-        input#donation-input {
-            width: 100%;
-            max-width: 300px;
-            background-color: #F5EEDC;
-            border: 1px solid #C5B4A5;
-            color: #5C4033;
         }
     </style>
 </head>
