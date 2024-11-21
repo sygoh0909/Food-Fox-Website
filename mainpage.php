@@ -106,6 +106,18 @@ include ('cookie.php');
             text-align: justify;
         }
 
+        .about-us-images{
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+        }
+
+        .about-us-images img{
+            width: 50%;
+            height: 50%;
+            object-fit: cover;
+        }
+
         .team-member {
             text-align: center;
         }
@@ -187,8 +199,10 @@ include ('cookie.php');
             <section class="aboutus">
                 <h2>About Us</h2>
                 <p>xxx</p>
-                <img src="aboutus1.png" alt="About Us 1">
-                <img src="aboutus2.png" alt="About Us 2">
+                <div class="about-us-images">
+                    <img src="aboutus1.jpeg" alt="About Us 1">
+                    <img src="aboutus2.jpeg" alt="About Us 2">
+                </div>
             </section>
             <section class="team-member">
                 <h2>Our Team</h2>
@@ -220,7 +234,7 @@ include ('cookie.php');
             <section class="getinvolved">
                 <h2>Get Involved</h2>
                 <p>You do not need to be a chef to be involved in out work! <br> Everyone with a kind heart that wants to give back to their community is welcome to join us in our mission to achieve SDG 2: Zero Hunger.</p>
-                <img src="getinvolved.png" alt="Get Involved">
+                <img src="getinvolved.jpeg" alt="Get Involved">
             </section>
         </div>
     </main>

@@ -191,7 +191,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'getProgress') {
             },{
                 label: 'People Supported',
                 data: [0],
-                backgroundColor: '#2196f3'
+                backgroundColor: '#2196f3',
                 borderColor: '#1976d2',
                 borderWidth: 1
             }]
