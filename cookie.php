@@ -42,10 +42,18 @@ function loginSection(){
         <p>Points: </p>
         <a href='rewards.php'><button>Rewards</button></a>
         <!--log out and jump to main page with no member id-->
-        <button type='submit'>Log Out</button>
+        <form action='' method='POST'>
+            <button type='submit' name='logout'>Log Out</button>
+        </form>
 </div>
         </div>
-        ";
+        
+        ";if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['logout'])) {
+                    session_unset();
+                    session_destroy();
+                    header("Location: mainpage.php");
+                    exit();
+                }
             }
 //            echo "<p>Welcome back! This is your visit number $visitCount.</p>"; //testing
         }

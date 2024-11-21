@@ -248,13 +248,13 @@ if (isset($_GET['action']) && $_GET['action'] == 'getProgress') {
             labels: ['Meals Provided', 'People Supported'],
             datasets: [{
                 label: 'Meals Provided',
-                data: [0],
+                data: [0, 0],
                 backgroundColor: '#4caf50',
                 borderColor: '#388e3c',
                 borderWidth: 1
             },{
                 label: 'People Supported',
-                data: [0],
+                data: [0, 0],
                 backgroundColor: '#2196f3',
                 borderColor: '#1976d2',
                 borderWidth: 1
@@ -306,8 +306,8 @@ if (isset($_GET['action']) && $_GET['action'] == 'getProgress') {
                 mealsText.textContent = `Meals Provided: ${data.mealsProvided}`;
                 peopleText.textContent = `People Supported: ${data.peopleSupported}`;
 
-                impactChart.data.datasets[0].data = [data.progressPercentage];
-                impactChart.data.datasets[1].data = [data.peopleSupported];
+                impactChart.data.datasets[0].data = [data.mealsProvided, 0];
+                impactChart.data.datasets[1].data = [0, data.peopleSupported];
                 impactChart.update();
             })
             .catch(error => console.error('Error fetching progress:', error));
