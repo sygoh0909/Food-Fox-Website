@@ -1,0 +1,111 @@
+body {
+    background-color: #C5B4A5;
+    margin: 0;
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.container {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.welcome-section h2 {
+    color: #5C4033;
+    font-size: 24px;
+    margin-bottom: 10px;
+}
+
+.social-media {
+    margin: 20px 0;
+}
+
+.social-media a {
+    text-decoration: none;
+    color: white;
+    margin: 0 10px;
+    font-size: 20px;
+    padding: 10px;
+    border-radius: 50%;
+}
+
+.social-media .fa-facebook {
+    background-color: #3b5998;
+}
+
+.social-media .fa-instagram {
+    background-color: #e4405f;
+}
+
+.social-media .fa-youtube {
+    background-color: #ff0000;
+}
+
+.login-form, .sign-up-form {
+    background-color: white;
+    padding: 20px 30px;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    width: 100%;
+    max-width: 400px;
+    text-align: center;
+    border: 2px solid #7F6C54;
+}
+
+.login-form h2, .sign-up-form h2 {
+    color: #5C4033;
+    font-size: 24px;
+    margin-bottom: 20px;
+}
+
+.login-form p, .sign-up-form p {
+    margin: 10px 0;
+    color: #7F6C54;
+}
+
+.login-form label, .sign-up-form label {
+    display: block;
+    margin: 10px 0;
+    color: #7F6C54;
+}
+
+.login-form input, .sign-up-form input {
+    width: 90%;
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #D3A029;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+button {
+    background-color: #D3A029;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    cursor: pointer;
+    font-size: 16px;
+    margin-top: 20px;
+}
+
+button:hover {
+    background-color: #C5B4A5;
+}
+
+.signup-link, .login-link {
+    margin-top: 15px;
+    color: #5C4033;
+}
+
+.signup-link a, .login-link a {
+    color: #2196f3;
+    text-decoration: none;
+}
+
+.signup-link a:hover, .login-link a:hover {
+    text-decoration: underline;
+}

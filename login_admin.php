@@ -8,14 +8,8 @@ include ('cookie.php');
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Login Page</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="login.css">
     <style>
-        body {
-            background-color: #F5EEDC;
-            margin: 0;
-            font-family: Arial, sans-serif;
-            display: flex;
-            justify-content: center;
-        }
 
     </style>
 </head>
@@ -66,7 +60,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <h2>Login</h2>
     <h2>Welcome Admin!</h2>
     <form method="POST" enctype="multipart/form-data">
-        <p>Member ID/Email: </p>
+        <p>Admin Username: </p>
         <label><input type="text" name="loginInput"></label>
 
         <p>Password: </p>
@@ -75,8 +69,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <button type="submit">Sign In</button>
     </form>
 
-    <p class="signup-link">xxx <a href="signup.php">Sign Up now!</a></p>
-    <a href="login_admin.php"><button>Sign in as admin</button></a>
+    <p class="login-link">xxx <a href="login.php">Sign in as member!</a></p>
 
 </div>
 </body>
