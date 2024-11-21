@@ -64,6 +64,31 @@ function loginSection(){
     }
 }
 
+function adminLoginSection(){
+    cookie();
+
+    if (isset($_SESSION['adminID'])) {
+        $adminID = $_SESSION['adminID'];
+
+        if ($adminID) {
+
+            echo "<div class='profile-container'>
+                    <p><button class='roundButton'>Admin ID: {$adminID}</button></p>
+                    <form action='' method='post'>
+                        <button type='submit' name='adminLogout'>Log Out</button>
+                    </form>
+                  </div>";
+
+            if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['adminLogout'])) {
+                session_unset();
+                session_destroy();
+                header("Location: login_admin.php");
+                exit();
+            }
+        }
+    }
+}
+
 function connection(){
     /*connect to database*/
     $dbhost = 'localhost';

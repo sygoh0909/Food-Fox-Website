@@ -1,6 +1,6 @@
 <?php
+ob_start();
 include ('cookie.php');
-$visitCount = cookie();
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -31,6 +31,11 @@ $visitCount = cookie();
             color: white;
             font-weight: bold;
             transition: color 0.3s ease;
+        }
+
+        .nav-links{
+            display: flex;
+            gap: 30px;
         }
 
         .roundButton{
@@ -144,6 +149,11 @@ $visitCount = cookie();
                 <a href="admin_members.php" class="roundButton">Members</a>
                 <a href="admin_events.php" class="roundButton">Events</a>
                 <a href="admin_donations.php" class="roundButton">Donation</a>
+            </div>
+            <div class="nav-links">
+                <?php
+                adminLoginSection();
+                ?>
             </div>
         </div>
     </nav>

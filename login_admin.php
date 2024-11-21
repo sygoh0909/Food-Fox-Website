@@ -31,12 +31,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 
     //set an admin username and password
-    $admin_username = 'admin';
+    $adminID = '1234';
     $admin_password = 'admin1234';
 
-    if ($admin_username == $loginInput && $admin_password == $password) {
+    if ($adminID == $loginInput && $admin_password == $password) {
         session_start();
-        $_SESSION['username'] = $admin_username;
+        $_SESSION['adminID'] = $adminID;
         $_SESSION['password'] = $admin_password;
         echo "<script> alert('Login successful!'); window.location.href='admin_main.php'; </script>";
     }
@@ -60,7 +60,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <h2>Login</h2>
     <h2>Welcome Admin!</h2>
     <form method="POST" enctype="multipart/form-data">
-        <p>Admin Username: </p>
+        <p>Admin ID: </p>
         <label><input type="text" name="loginInput"></label>
 
         <p>Password: </p>
