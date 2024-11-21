@@ -88,6 +88,11 @@ $visitCount = cookie();
                 <a href="admin_events.php">Events</a>
                 <a href="admin_donations.php">Donation</a>
             </div>
+            <div class="nav-links">
+                <?php
+                adminLoginSection();
+                ?>
+            </div>
         </div>
     </nav>
 </header>
