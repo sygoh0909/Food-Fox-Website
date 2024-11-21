@@ -117,7 +117,7 @@ include ('cookie.php');
                 while ($row = $result->fetch_assoc()) {
                     echo "<div class='event-card'>";
                     echo "<img src='" . $row['eventPic'] . "' alt='" . $row['eventPic'] . "'>";
-                    echo "<h3>" . $row['eventName'] . "</h3>";
+                    echo "<h3>" . $row['eventName'] . "</h3>"; //show last updated when also?
                     echo "<a href='eventInfo.php?eventID=" .$row['eventID']." &action=upcoming'><button>View more info</button></a>";
                     echo "</div>";
                 }

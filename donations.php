@@ -1,6 +1,6 @@
 <?php
+ob_start();
 include ('cookie.php');
-$visitCount = cookie();
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -62,6 +62,72 @@ $visitCount = cookie();
             margin-bottom: 15px;
         }
 
+        .donations-buttons {
+            margin-bottom: 20px;
+        }
+
+        .donation-btn {
+            margin: 5px;
+            padding: 10px 20px;
+            background-color: #d3a029;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .donation-btn:hover {
+            background-color: #5c4033;
+        }
+
+        #donation-input {
+            width: 250px;
+            padding: 10px;
+            border: 1px solid #7F6C54;
+            border-radius: 5px;
+            text-align: center;
+        }
+        .donate-submit{
+            margin: 5px;
+            padding: 10px 20px;
+            background-color: #d3a029;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .donations-container{
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 20px;
+        }
+        .donation-card {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            max-width: 300px;
+            text-align: center;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        .donation-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+        }
+
+        .donation-card img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+
+        .donation-card h3 {
+            font-size: 1.5rem;
+            color: #5C4033;
+            margin: 15px 10px;
+        }
     </style>
 </head>
 <body>
@@ -142,8 +208,9 @@ if (isset($_GET['action']) && $_GET['action'] == 'getProgress') {
     if ($conn->connect_error) {
         die("Connection failed: " . $conn->connect_error);
     }
-    if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-        $amount = $_POST['amount'];
+    if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['confirm-donate'])) {
+        $amount = $_POST['confirm-amount'];
+        $paymentMethod = $_POST['payment-method'];
 
         $errors = [];
 
@@ -155,7 +222,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'getProgress') {
         }
 
         if (empty($errors)) {
-            $sql = "INSERT INTO donations (memberID, amount) VALUES ('$memberID', '$amount')";
+            $sql = "INSERT INTO donations (memberID, amount, paymentMethod) VALUES ('$memberID', '$amount', '$paymentMethod')";
             if ($conn->query($sql) === TRUE) {
                 echo "<script>alert('Thank you for your donation!');</script>";
             }
@@ -169,14 +236,14 @@ if (isset($_GET['action']) && $_GET['action'] == 'getProgress') {
     }
     ?>
     <form method="POST" enctype="multipart/form-data">
-        <div class="donations-buttons">
+        <div class="donations-buttons"> <!--error handling-->
             <button type="button" class="donation-btn" name="amount" value="10">10</button>
             <button type="button" class="donation-btn" name="amount" value="20">20</button>
             <button type="button" class="donation-btn" name="amount" value="50">50</button>
             <button type="button" class="donation-btn" name="amount" value="100">100</button>
         </div>
         <label><input id="donation-input" type="text" name="amount" placeholder="Enter the amount you want to donate..."></label>
-        <button type="button" class="donate-submit">Donate</button>
+        <button type="button" class="donate-submit" onclick="showConfirmation()">Donate</button>
 
     </form>
 
@@ -184,9 +251,9 @@ if (isset($_GET['action']) && $_GET['action'] == 'getProgress') {
     <div id="confirmation-popup" class="confirmation-popup" style="display: none">
         <div class="confirmation-content">\
             <h3>Confirm your Donation</h3>
-            <p>You are about to donate: </p>
+            <p>You are about to donate: <span id="confirm-amount"></span></p>
             <form method="post" enctype="multipart/form-data">
-                <input type="hidden" name="confirm_amount" id="confirm-amount-input">
+                <input type="hidden" name="confirm-amount" id="confirm-amount-input">
                 <label for="payment-method">Choose a payment method:</label>
                 <select name="payment-method" id="payment-method" required>
                     <option value="credit-card">Credit Card</option> <!--link to each different payment page-->
@@ -194,7 +261,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'getProgress') {
                     <option value="bank-transfer">Bank Transfer</option>
                 </select>
                 <button type="submit" name="confirm-donate">Confirm Donate</button>
-                <a href="donations.php"><button type="button"></button></a> <!--close popup-->
+                <button type="button" onclick="closePopUp()">Cancel</button><!--close popup-->
             </form>
         </div>
     </div>
@@ -208,9 +275,18 @@ if (isset($_GET['action']) && $_GET['action'] == 'getProgress') {
 
     <h2>Where your donations goes?</h2>
     <div class="donations-container">
-        <img src="mercy.png" alt="Mercy Malaysia"> <!--updated when-->
-        <img src="kechara.png" alt="Kechara Soup Kitchen">
-        <img src="assemblysoup.png" alt="The Assembly Soup Kitchen">
+        <div class="donation-card">
+            <h3>Mercy Malaysia</h3>
+            <img src="mercy.png" alt="Mercy Malaysia"> <!--updated when-->
+        </div>
+        <div class="donation-card">
+            <h3>Kechara Soup Kitchen</h3>
+            <img src="kechara.png" alt="Kechara Soup Kitchen">
+        </div>
+        <div class="donation-card">
+            <h3>The Assembly Soup Kitchen</h3>
+            <img src="assemblysoup.png" alt="The Assembly Soup Kitchen">
+        </div>
     </div>
 
     <h2>Our Collective Impact</h2>
@@ -314,8 +390,24 @@ if (isset($_GET['action']) && $_GET['action'] == 'getProgress') {
     }
     setInterval(updateProgress, 5000) //refresh every 5 seconds
 
-    function setDonationAmount(amount){
-        document.getElementById('donation-input').value = amount;
+    //buttons
+    const buttons = document.querySelectorAll('.donation-btn');
+    const donationInput = document.getElementById('donation-input');
+
+    buttons.forEach(button =>{
+        button.addEventListener('click', () => {
+            donationInput.value = button.value;
+        })
+    })
+
+    function showConfirmation(){
+        const amount = document.getElementById('donation-input').value;
+        document.getElementById('confirm-amount').textContent = `RM ${amount}`;
+        document.getElementById('confirm-amount-input').value =  amount;
+        document.getElementById('confirmation-popup').style.display = 'block';
+    }
+    function closePopUp(){
+        document.getElementById('confirmation-popup').style.display = 'none';
     }
 </script>
 <footer>
