@@ -53,14 +53,14 @@ $visitCount = cookie();
                             //error?
                         }
                         if ($conn->query($sql) === TRUE){
-                            echo "<script>alert('Registration updated successfully!'); window.location.href='admin_registrations.php';</script>"; //jump back but with blank?
+                            echo "<script>alert('Registration updated successfully!'); window.location.href='admin_registrations.php?eventID=".$registrationInfo['eventID']."';</script>"; //jump back but with blank?
                         }
                     }
             }
             elseif ($action == "delete"){
                 $sql = "DELETE FROM registrations WHERE registrationID = $registrationID";
                 if ($conn->query($sql) === TRUE) {
-                    echo "<script>alert('Registration Deleted!'); window.location.href='admin_registrations.php';</script>";
+                    echo "<script>alert('Registration Deleted!'); window.location.href='admin_registrations.php?eventID=".$registrationInfo['eventID']."';</script>";
                 }
             }
         }
