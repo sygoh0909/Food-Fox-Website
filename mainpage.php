@@ -124,7 +124,7 @@ include ('cookie.php');
 
         .team-member div {
             display: inline-block;
-            margin: 15px;
+            margin: 12px;
             text-align: center;
         }
 

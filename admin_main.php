@@ -7,49 +7,9 @@ include ('cookie.php');
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="admin.css">
     <title>Admin Main Page</title>
     <style>
-        body {
-            background-color: #F5EEDC;
-            margin: 0;
-            font-family: Arial, sans-serif;
-        }
-
-        .navbar {
-            padding: 15px 20px;
-            background-color: #5C4033;
-        }
-
-        .main-links {
-            display: flex;
-            justify-content: center;
-            gap: 40px;
-        }
-
-        .main-links a {
-            text-decoration: none;
-            color: white;
-            font-weight: bold;
-            transition: color 0.3s ease;
-        }
-
-        .nav-links{
-            display: flex;
-            gap: 30px;
-        }
-
-        .roundButton{
-            padding: 8px 20px;
-            border-radius: 25px;
-            text-decoration: none;
-            font-weight: bold;
-        }
-
-        .roundButton:hover{
-            border-radius: 25px;
-            background-color: rgba(255,255,255,0.2);
-        }
-
         .admin-dashboard {
             padding: 20px;
             text-align: center;

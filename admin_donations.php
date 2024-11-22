@@ -7,28 +7,10 @@ $visitCount = cookie();
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="admin.css">
     <title>Admin Donations Management Page</title>
 
     <style>
-        body {
-            background-color: #F5EEDC;
-            margin: 0;
-            font-family: Arial, sans-serif;
-        }
-        .navbar {
-            padding: 15px 20px;
-            background-color: #5C4033;
-        }
-        .main-links {
-            display: flex;
-            justify-content: center;
-            gap: 40px;
-        }
-        .main-links a {
-            text-decoration: none;
-            color: white;
-            font-weight: bold;
-        }
         .donations {
             padding: 20px 30px;
         }
@@ -36,45 +18,9 @@ $visitCount = cookie();
             margin-bottom: 20px;
             text-align: center;
         }
-        .search{
-            text-align: center
-        }
-        input[type="text"] {
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            width: 200px;
-        }
-        button {
-            padding: 10px 15px;
-            background-color: #5C4033;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer; /* set how the mouse looks like when pointing on the button */
-            margin-left: 10px;
-            transition: background-color 0.3s;
-        }
-        button:hover {
-            background-color: #7B5A46;
-        }
         .donations-table {
             margin-top: 20px;
             overflow-x: auto; /* To allow scrolling on smaller screens */
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 10px;
-        }
-        table th, table td {
-            border: 1px solid black;
-            padding: 10px;
-            text-align: left;
-        }
-        table th {
-            background-color: #5C4033;
-            color: white;
         }
     </style>
 </head>
