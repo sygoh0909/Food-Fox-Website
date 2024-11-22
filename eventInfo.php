@@ -130,8 +130,8 @@ include ('cookie.php');
                     echo "<p><strong>Start Date & Time:</strong> " . $eventData['start_dateTime'] . "</p>";
                     echo "<p><strong>End Date & Time:</strong> " . $eventData['end_dateTime'] . "</p>";
                     echo "<p><strong>Location:</strong> " . $eventData['location'] . "</p>";
-                    echo "<p><strong>Participants Needed:</strong> " . $eventData['participantsNeeded'] . "</p>";
-                    echo "<p><strong>Volunteers Needed:</strong> " . $eventData['volunteersNeeded'] . "</p>";
+//                    echo "<p><strong>Participants Needed:</strong> " . $eventData['participantsNeeded'] . "</p>";
+//                    echo "<p><strong>Volunteers Needed:</strong> " . $eventData['volunteersNeeded'] . "</p>";
                     echo "<p class='note'><strong>Note:</strong> Participants are those who will attend the event, while volunteers are individuals who help with event operations.</p>";
                     echo "</div>";
                     if ($memberID){

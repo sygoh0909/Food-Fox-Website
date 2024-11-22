@@ -49,7 +49,7 @@ $visitCount = cookie();
             $errors = [];
 
             if (empty($errors)){
-                if ($action == "edit"){
+                if ($action == "edit"){ //confirm edit and delete b4 sending to database
                     $sql = "UPDATE donations SET amount = '$amount', feedback = '$feedback' WHERE donationID = $donationID";
                     if ($conn->query($sql) === TRUE){
                         echo "<script>
