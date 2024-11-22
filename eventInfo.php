@@ -89,6 +89,7 @@ include ('cookie.php');
     $eventID = isset($_GET['eventID']) ? $_GET['eventID'] : null;
     $action = isset($_GET['action']) ? $_GET['action'] : null;
     $eventData = null;
+    $memberID = isset($_GET['memberID']) ? $_GET['memberID'] : null; //must include this or is there way to get from login section
 
     if ($eventID) {
         if ($action == "upcoming") {
@@ -108,7 +109,12 @@ include ('cookie.php');
                     echo "<p><strong>Volunteers Needed:</strong> " . $eventData['volunteersNeeded'] . "</p>";
                     echo "<p class='note'><strong>Note:</strong> Participants are those who will attend the event, while volunteers are individuals who help with event operations.</p>";
                     echo "</div>";
-                    echo "<a href='eventRegistrations.php?eventID=" . $row['eventID'] . "'><button>Register Now!</button></a>";
+                    if ($memberID){
+                        echo "<a href='eventRegistrations.php?eventID=" . $row['eventID'] . "'><button>Register Now!</button></a>";
+                    }
+                    else{
+                        echo "Please login to register for events"; //or maybe should do popup alert and jump to login page
+                    }
                 }
             }
         } elseif ($action == "past") {
