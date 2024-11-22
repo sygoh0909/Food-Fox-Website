@@ -42,10 +42,19 @@ body{
 .login:hover, .signup:hover{
     transform: translateY(-2px);
 }
-.roundButton.member{
+.member{
     background-color: #d3a029;
     color: white;
     font-size: smaller;
+}
+.admin{
+    background-color: white;
+    color: #5C4033;
+    font-size: smaller;
+}
+.profile-container{
+    display: flex;
+    justify-content: space-between;
 }
 .popup {
     display: none;

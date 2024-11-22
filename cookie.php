@@ -73,7 +73,7 @@ function adminLoginSection(){
         if ($adminID) {
 
             echo "<div class='profile-container'>
-                    <p><button class='roundButton'>Admin ID: {$adminID}</button></p>
+                    <p><button class='roundButton admin'>Admin ID: {$adminID}</button></p>
                     <form action='' method='post'>
                         <button type='submit' name='adminLogout'>Log Out</button>
                     </form>
