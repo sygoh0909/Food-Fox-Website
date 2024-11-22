@@ -223,7 +223,7 @@ include ('cookie.php');
                 </div>
                 <div class="team-member4">
                     <img src="logo.png" alt="Team Member 4">
-                    <p><b>Phang Pei Mei</b></p>
+                    <p><b>Phang Pei May</b></p>
                     <p>xxx</p>
                 </div>
             </section>

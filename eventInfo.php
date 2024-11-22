@@ -113,11 +113,11 @@ include ('cookie.php');
                         echo "<a href='eventRegistrations.php?eventID=" . $row['eventID'] . "'><button>Register Now!</button></a>";
                     }
                     else{
-                        echo "Please login to register for events"; //or maybe should do popup alert and jump to login page
+                        echo "<script>alert('Please login or sign up to register for events'); window.location.href='login.php';</script>";
                     }
                 }
             }
-        } elseif ($action == "past") {
+        } elseif ($action == "past") { //past event table/info is not set yet
             $sql = "SELECT * FROM events e, pastevents p WHERE e.eventID = $eventID AND e.eventID = p.eventID AND e.eventStatus='Past' ";
             $result = $conn->query($sql);
             if ($result->num_rows > 0) {
@@ -134,7 +134,12 @@ include ('cookie.php');
                     echo "<p><strong>Volunteers Needed:</strong> " . $eventData['volunteersNeeded'] . "</p>";
                     echo "<p class='note'><strong>Note:</strong> Participants are those who will attend the event, while volunteers are individuals who help with event operations.</p>";
                     echo "</div>";
-                    echo "<a href='eventRegistrations.php?eventID=" . $row['eventID'] . "'><button>Register Now!</button></a>";
+                    if ($memberID){
+                        echo "<a href='eventRegistrations.php?eventID=" . $row['eventID'] . "'><button>Register Now!</button></a>";
+                    }
+                    else{
+                        echo "<script>alert('Please login or sign up to register for events'); window.location.href='login.php')</script>";
+                    }
                 }
             }
         }

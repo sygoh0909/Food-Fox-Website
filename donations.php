@@ -132,7 +132,7 @@ include ('cookie.php');
 </head>
 <body>
 <?php
-$fundraisingGoal = 1000;
+$fundraisingGoal = 5000;
 $conn = connection();
 
 $sql = "SELECT SUM(amount) AS total_donations FROM donations";
