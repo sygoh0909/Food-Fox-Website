@@ -16,7 +16,6 @@ include ('cookie.php');
             padding: 20px;
             background-color: #F5EEDC;
         }
-
         .events h2 {
             font-size: 2rem;
             color: #5C4033;
