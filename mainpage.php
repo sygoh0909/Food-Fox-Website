@@ -186,12 +186,7 @@ include ('cookie.php');
                     <h1>Food Fox</h1>
                     <p>"Join Food Fox in the fight to make zero hunger a reality for everyone."</p>
                     <?php
-                    $memberID = isset($_SESSION['memberID']) ? $_SESSION['memberID'] : '';
-                    if ($memberID){
-                        echo "<a href='mainpage.php' class='roundButton join'>Join Us Now!</a>";
-                    }else{
-                        echo "<a href='signup.php' class='roundButton join'>Join Us Now!</a>"; //sign up or login?
-                    }
+                    loginSection();
                     ?>
                 </div>
                 <div class="overlay-nav">

@@ -105,7 +105,7 @@ $visitCount = cookie();
                         echo "<td data-event-id='" .htmlspecialchars($row["eventID"]) ."'>" .str_repeat('*', strlen($row["eventID"]))."</td>";
                         echo "<td>" . $row["eventName"] . "</td>";
                         echo "<td>" . $row["totalRegistrations"] . "</td>";
-                        echo "<td><a href='action_event.php?eventID=" .$row['eventID']. "&action=edit'><button>Edit</button></a><a href='action_event.php?eventID=" .$row['eventID']. "&action=delete'><button>Delete</button></a><a href='admin_registrations.php?eventID=" .$row['eventID']."'><button>View Registrations</button></a></td>";
+                        echo "<td><a href='action_event.php?eventID=" .$row['eventID']. "&action=editPast'><button>Edit</button></a><a href='action_event.php?eventID=" .$row['eventID']. "&action=deletePast'><button>Delete</button></a><a href='admin_registrations.php?eventID=" .$row['eventID']."'><button>View Registrations</button></a></td>";
                         echo "</tr>";
                     }
                 } else {

@@ -13,46 +13,77 @@ include ('cookie.php');
             color: white;
         }
         .events {
-            background-color: white;
+            background-color: #ffffff;
             padding: 20px;
-            margin: 20px;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            text-align: center;
+            margin: 20px auto;
+            max-width: 800px;
+            border-radius: 15px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+        }
+
+        .events img {
+            width: 100%;
+            height: auto;
+            border-radius: 15px 15px 0 0;
         }
 
         .events h2 {
-            color: #C5B4A5;
+            color: #4a4a4a;
+            margin-bottom: 10px;
+            font-size: 24px;
+            text-align: center;
         }
 
         .events p {
-            font-size: 18px;
-            color: #5C4033;
+            font-size: 16px;
+            color: #333333;
+            margin: 10px 0;
+            line-height: 1.5;
         }
 
-        .events button {
+        .events p strong {
+            color: #7F6C54;
+        }
+
+        button {
             background-color: #d3a029;
             color: white;
             border: none;
-            padding: 10px 20px;
+            padding: 12px 24px;
             font-size: 16px;
             border-radius: 5px;
             cursor: pointer;
             transition: background-color 0.3s ease;
+            display: block;
+            margin: 20px auto 0;
+            width: fit-content;
         }
 
-        .events button:hover {
+        button:hover {
             background-color: #7F6C54;
         }
 
         .note {
-            font-size: 16px;
-            color: #7F6C54;
+            font-size: 14px;
+            color: #5C4033;
             margin-top: 10px;
+            text-align: center;
         }
 
         .note strong {
             color: #C5B4A5;
+        }
+
+        .event-highlight {
+            background-color: #f8f5f2;
+            padding: 10px;
+            border-radius: 8px;
+            margin: 10px 0;
+        }
+
+        .event-highlight p {
+            margin: 0;
         }
     </style>
 </head>
@@ -89,7 +120,8 @@ include ('cookie.php');
     $eventID = isset($_GET['eventID']) ? $_GET['eventID'] : null;
     $action = isset($_GET['action']) ? $_GET['action'] : null;
     $eventData = null;
-    $memberID = isset($_GET['memberID']) ? $_GET['memberID'] : null; //must include this or is there way to get from login section
+    $memberID = $_SESSION['memberID'];
+    //must include this or is there way to get from login section
 
     if ($eventID) {
         if ($action == "upcoming") {
@@ -100,15 +132,20 @@ include ('cookie.php');
                     $eventData = $row;
                     echo "<div class='events'>";
                     echo "<h2>Event Name: " . $eventData['eventName'] . "</h2>";
-                    echo "<img src='" . $row['eventPic'] . "' alt='" . $row['eventName'] . "' width='300' height='200'>";
+                    echo "<img src='" . $row['eventPic'] . "' alt='" . $row['eventPic'] . "' width='300' height='200'>";
+                    echo "<div class='event-highlight'>";
                     echo "<p><strong>Details:</strong> " . $eventData['details'] . "</p>";
                     echo "<p><strong>Start Date & Time:</strong> " . $eventData['start_dateTime'] . "</p>";
                     echo "<p><strong>End Date & Time:</strong> " . $eventData['end_dateTime'] . "</p>";
                     echo "<p><strong>Location:</strong> " . $eventData['location'] . "</p>";
+                    echo "</div>";
+                    echo "<div class='event-highlight'>";
                     echo "<p><strong>Registrations Needed:</strong> " . $eventData['participantsNeeded'] . "</p>";
                     echo "<p><strong>Volunteers Needed:</strong> " . $eventData['volunteersNeeded'] . "</p>";
+                    echo "</div>";
                     echo "<p class='note'><strong>Note:</strong> Participants are those who will attend the event, while volunteers are individuals who help with event operations.</p>";
                     echo "</div>";
+
                     if ($memberID){
                         echo "<a href='eventRegistrations.php?eventID=" . $row['eventID'] . "'><button>Register Now!</button></a>";
                     }
@@ -118,22 +155,27 @@ include ('cookie.php');
                 }
             }
         } elseif ($action == "past") { //past event table/info is not set yet
-            $sql = "SELECT * FROM events e, pastevents p WHERE e.eventID = $eventID AND e.eventID = p.eventID AND e.eventStatus='Past' ";
+            $sql = "SELECT e.*, p.* FROM events e, pastevents p WHERE e.eventID = $eventID AND e.eventID = p.eventID AND e.eventStatus='Past' ";
             $result = $conn->query($sql);
             if ($result->num_rows > 0) {
                 while($row = $result->fetch_assoc()) {
                     $eventData = $row;
                     echo "<div class='events'>";
                     echo "<h2>Event Name: " . $eventData['eventName'] . "</h2>";
-                    echo "<img src='" . $row['eventPic'] . "' alt='" . $row['eventName'] . "' width='300' height='200'>";
+                    echo "<img src='" . $eventData['eventPic'] . "' alt='" . $eventData['eventPic'] . "' width='300' height='200'>";
+                    echo "<div class='event-highlight'>";
                     echo "<p><strong>Details:</strong> " . $eventData['details'] . "</p>";
                     echo "<p><strong>Start Date & Time:</strong> " . $eventData['start_dateTime'] . "</p>";
                     echo "<p><strong>End Date & Time:</strong> " . $eventData['end_dateTime'] . "</p>";
                     echo "<p><strong>Location:</strong> " . $eventData['location'] . "</p>";
-//                    echo "<p><strong>Participants Needed:</strong> " . $eventData['participantsNeeded'] . "</p>";
-//                    echo "<p><strong>Volunteers Needed:</strong> " . $eventData['volunteersNeeded'] . "</p>";
-                    echo "<p class='note'><strong>Note:</strong> Participants are those who will attend the event, while volunteers are individuals who help with event operations.</p>";
                     echo "</div>";
+                    echo "<div class='event-highlight'>";
+                    echo "<p><strong>Attendees:</strong>" . $eventData['attendees'] . "</p>";
+                    echo "<p><strong>Impact and Outcomes:</strong>" . $eventData['impact'] . "</p>";
+                    echo "</div>";
+                    echo "<p><strong>Photo Gallery:</strong></p><img src='" . $eventData['photoGallery'] . "' alt='" . $eventData['eventName'] . "' width='300' height='200'>";
+                    echo "</div>";
+
                     if ($memberID){
                         echo "<a href='eventRegistrations.php?eventID=" . $row['eventID'] . "'><button>Register Now!</button></a>";
                     }
@@ -142,6 +184,8 @@ include ('cookie.php');
                     }
                 }
             }
+        }else{
+            echo "No upcoming or past events.";
         }
     }
     ?>

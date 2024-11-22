@@ -137,7 +137,7 @@ include ('cookie.php');
                     echo "<div class='event-card'>";
                     echo "<img src='" . $row['eventPic'] . "' alt='" . $row['eventPic'] . "'>";
                     echo "<h3>" . $row['eventName'] . "</h3>";
-                    echo "<a href='eventInfo.php?eventID=" .$row['eventID']."action=past'><button>View more info</button></a>"; //upcoming and past same page different info?
+                    echo "<a href='eventInfo.php?eventID=" .$row['eventID']." &action=past'><button>View more info</button></a>";
                     echo "</div>";
                 }
             } else {

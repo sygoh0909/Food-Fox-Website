@@ -32,13 +32,21 @@ $visitCount = cookie();
     $action = isset($_GET['action']) ? $_GET['action'] : null;
     $eventData = null;
 
-    if ($eventID && ($action == "edit" || $action == "delete")) {
-        $sql = "SELECT * FROM events WHERE eventID = '$eventID'";
-        $result = $conn->query($sql);
-        $eventData = $result->fetch_assoc(); //retrieves the data as an associative array
+    if ($eventID) {
+        if ($action == "edit" || $action == "delete"){
+            $sql = "SELECT * FROM events WHERE eventID = '$eventID'";
+            $result = $conn->query($sql);
+            $eventData = $result->fetch_assoc(); //retrieves the data as an associative array
+        }
+        elseif ($action == "editPast" || $action == "deletePast"){
+            $sql = "SELECT e.*, p.* FROM events e, past events p WHERE e.eventID = p.eventID AND e.eventID = '$eventID'";
+            $result = $conn->query($sql);
+            $pastEventData = $result->fetch_assoc();
+        }
     }
 
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
+        //basic info for events
         $eventName = $_POST['eventName'];
         $startDate = $_POST['startDate'];
         $endDate = $_POST['endDate'];
@@ -57,12 +65,18 @@ $visitCount = cookie();
         $startDateTime = $startDate . " " . $startTime;
         $endDateTime = $endDate . " " . $endTime;
 
-        //regular expressions
+        //additional info if become past events
+        $attendees = $_POST['attendees'];
+        $impact = $_POST['impact'];
+
+        //regular expressions for error handling
 
 
         $errors = [];
         $eventImagePath = '';
         $guestImagePath = '';
+
+        $photoGalleryPath = '';
 
         //validation
         if (empty($eventName)) {
@@ -108,10 +122,17 @@ $visitCount = cookie();
             move_uploaded_file($_FILES["guestImage"]["tmp_name"], $guestImagePath);
         }
 
+        if (isset($_FILES['photoGallery']) && $_FILES['photoGallery']['error'] == 0) {
+            $target_dir = "uploads/";
+            $galleryPath = $target_dir . basename($_FILES["photoGallery"]["name"]);
+            move_uploaded_file($_FILES["photoGallery"]["tmp_name"], $galleryPath);
+        }
+
         //update event
         if (empty($errors)){
             if ($action=="edit"){
                 //update pics??? display pics that saved???
+
                 $updateQuery = "UPDATE events SET eventName = '$eventName', start_dateTime = '$startDateTime', end_dateTime = '$endDateTime', location = '$location', details = '$details', participantsNeeded = '$participantsNeeded', volunteersNeeded = '$volunteersNeeded', eventStatus = '$eventStatus', eventPic = '$eventImagePath' WHERE eventID = '$eventID'";
 
                 if ($conn->query($updateQuery) === TRUE) {
@@ -184,6 +205,9 @@ $visitCount = cookie();
                     echo "<script>alert('New Event Added'); window.location.href='admin_events.php';</script>";
                 }
             }
+        }
+        foreach ($errors as $error) {
+            echo "<p style='color:red;'>$error</p>";
         }
             }
 

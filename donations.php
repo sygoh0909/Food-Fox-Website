@@ -203,7 +203,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'getProgress') {
     <h2>Make a Donation</h2>
     <?php
     $conn = connection();
-    $memberID = isset($_SESSION['memberID']) ? $_SESSION['memberID'] : "";
+    $memberID = $_SESSION['memberID'];
 
     if ($conn->connect_error) {
         die("Connection failed: " . $conn->connect_error);
