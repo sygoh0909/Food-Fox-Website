@@ -38,7 +38,7 @@ function loginSection(){
         <p>Member ID: {$memberInfo['memberID']}</p>
         <p>Member Name: {$memberInfo['memberName']}</p>
         <p>Join Date: {$memberInfo['joinDate']}</p>
-        <a href='profile.php?memberID=". $memberInfo['memberID']."'><button>Check out more!</button></a>
+        <a href='profile.php?memberID=". $memberInfo['memberID']."'><button>Profile</button></a>
         <p>Points: </p>
         <a href='rewards.php'><button>Rewards</button></a>
         <!--log out and jump to main page with no member id-->

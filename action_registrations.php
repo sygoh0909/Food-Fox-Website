@@ -116,7 +116,7 @@ $visitCount = cookie();
         </div>
 
         <button type="submit"><?php echo $registrationID && $action=='edit'?'Update Registration info': 'Delete Registration Info';?></button>
-        <a href="admin_registrations.php"><button type="button">Cancel</button></a>
+        <?php echo "<a href='admin_registrations.php?eventID=" .$registrationInfo['eventID']."'><button type='button'>Cancel</button></a>"?>
     </form>
 </main>
 </body>

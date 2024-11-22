@@ -103,25 +103,29 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     <?php
     if ($memberID) {
-        $sql = "SELECT email, phoneNum FROM members WHERE memberID = $memberID";
+        $sql = "SELECT memberName, email, phoneNum FROM members WHERE memberID = $memberID";
         $result = mysqli_query($conn, $sql);
         $memberData = mysqli_fetch_assoc($result);
     }?>
 
-        <!--sync info from profile, if user havent fill or wanna change, direct them to profile-->
-        <!--name????-->
+        <!--sync info from profile (show a note also if wanna change info, change from profile), if user havent fill, pop up a alert message and direct them to profile-->
+        <p>Name:</p>
+        <label><input type="text" name="name" value="<?php echo isset($memberData['name']) ? $memberData['name']: '';?>"></label>
+
     <p>Email:</p>
     <label><input type="text" name="email" value="<?php echo isset($memberData['email']) ? $memberData['email']: '';?>"></label>
 
     <p>Phone Number:</p>
     <label><input type="text" name="phoneNum" value="<?php echo isset($memberData['phoneNum']) ? $memberData['phoneNum']:'';?>"></label>
 
-    <?php
-    if (empty($memberData['phoneNum'])) {
-        echo "You haven't provide a phone number in your profile.";
-        echo "Update your profile? <a href='profile.php'><button>Yes</button></a><button type='button'>No</button>";
-    }
-    ?>
+        <?php if (empty($memberData['phoneNum']) || (empty($memberData['memberName'])) || (empty($memberData['email']))): ?>
+            <div class="missing-info-alert">
+                <p>You haven't provided a phone number in your profile.</p>
+                <p>Would you like to update your profile?</p>
+                <a href="profile.php"><button>Yes</button></a>
+                <button onclick="alert('You can update later, but this information may be required!');">No</button>
+            </div>
+        <?php endif; ?>
 
         <p>Dietary Restrictions:</p>
         <label><input type="text" name="dietaryRestrictions" placeholder="Enter any dietary restrictions if got..."></label>
