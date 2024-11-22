@@ -39,9 +39,9 @@ $visitCount = cookie();
             $eventData = $result->fetch_assoc(); //retrieves the data as an associative array
         }
         elseif ($action == "editPast" || $action == "deletePast"){
-            $sql = "SELECT e.*, p.* FROM events e, past events p WHERE e.eventID = p.eventID AND e.eventID = '$eventID'";
+            $sql = "SELECT e.*, p.* FROM events e, pastevents p WHERE e.eventID = p.eventID AND e.eventID = '$eventID'";
             $result = $conn->query($sql);
-            $pastEventData = $result->fetch_assoc();
+            $eventData = $result->fetch_assoc();
         }
     }
 
@@ -65,49 +65,58 @@ $visitCount = cookie();
         $startDateTime = $startDate . " " . $startTime;
         $endDateTime = $endDate . " " . $endTime;
 
-        //additional info if become past events
-        $attendees = $_POST['attendees'];
-        $impact = $_POST['impact'];
-
-        //regular expressions for error handling
-
-
         $errors = [];
-        $eventImagePath = '';
+        $eventImagePath = $eventData['eventPic'];
         $guestImagePath = '';
 
         $photoGalleryPath = '';
 
         //validation
         if (empty($eventName)) {
-            $errors[] = "Event Name is required";
+            $errors['eventName'] = "Event Name is required";
         }
+//        elseif (!preg_match("/^[a-zA-Z\s]+$/", $eventName)){
+//            $errors['eventName'] = "Event name should only contain alphabets and spaces.";
+//        }
         if (empty($startDate)) {
-            $errors[] = "Start Date is required";
+            $errors['startDate'] = "Start Date is required";
         }
         if (empty($endDate)) {
-            $errors[] = "End Date is required";
+            $errors['endDate'] = "End Date is required";
         }
         if (empty($startTime)) {
-            $errors[] = "Start Time is required";
+            $errors['startTime'] = "Start Time is required";
         }
         if (empty($endTime)) {
-            $errors[] = "End Time is required";
+            $errors['endTime'] = "End Time is required";
         }
         if (empty($location)) {
-            $errors[] = "Location is required";
+            $errors['location'] = "Location is required";
         }
-        //only can be numbers - regular expression
+        elseif (!preg_match("/^[a-zA-Z0-9\s,.\-\/]+$/", $location)) {
+            $errors['location'] = "Location should only contain letters, numbers, spaces, commas, periods, hyphens, and slashes.";
+        }
         if (empty ($participantsNeeded)){
-            $errors[] = "Participants Needed is required";
+            $errors['participantsNeeded'] = "Participants Needed is required";
+        }
+        elseif (!preg_match("/^\d+$/", $participantsNeeded)) {
+            $errors['participantsNeeded'] = "Participants needed must be a positive number.";
         }
         if (empty($volunteersNeeded)){
-            $errors[] = "Volunteers Needed is required";
+            $errors['volunteersNeeded'] = "Volunteers Needed is required";
         }
-        //only can be upcoming or past status
+        elseif (!preg_match("/^\d+$/", $volunteersNeeded)) {
+            $errors['volunteersNeeded'] = "Volunteers needed must be a positive number.";
+        }
         if (empty($eventStatus)) {
-            $errors[] = "Event Status is required";
+            $errors['eventStatus'] = "Event Status is required";
         }
+        elseif (!in_array($eventStatus, ['Upcoming', 'Past', 'Canceled'])) {
+            $errors['eventStatus'] = "Event status must be either 'Upcoming' or 'Past' or 'Canceled'.";
+        }
+//        if (!preg_match("/^[a-zA-Z\s]+$/", $guestName)) {
+//            $errors[] = "Guest name should only contain alphabets and spaces.";
+//        }
 
         //handle image upload
         if (isset($_FILES['eventImage']) && $_FILES['eventImage']['error'] == 0) {
@@ -128,10 +137,19 @@ $visitCount = cookie();
             move_uploaded_file($_FILES["photoGallery"]["tmp_name"], $galleryPath);
         }
 
+        if ($action=="editPast"){
+            //additional info if become past events
+            $attendees = $_POST['attendees'];
+            $impact = $_POST['impact'];
+
+            if (!preg_match("/^\d+$/", $attendees)) {
+                $errors[] = "Attendees must be a positive number.";
+            }
+        }
+
         //update event
         if (empty($errors)){
-            if ($action=="edit"){
-                //update pics??? display pics that saved???
+            if ($action=="edit" || $action=="editPast"){
 
                 $updateQuery = "UPDATE events SET eventName = '$eventName', start_dateTime = '$startDateTime', end_dateTime = '$endDateTime', location = '$location', details = '$details', participantsNeeded = '$participantsNeeded', volunteersNeeded = '$volunteersNeeded', eventStatus = '$eventStatus', eventPic = '$eventImagePath' WHERE eventID = '$eventID'";
 
@@ -164,17 +182,24 @@ $visitCount = cookie();
                             $conn->query($guestUpdate);
                         }
                     }
+                    if ($action=="editPast"){
+                        $sql = "UPDATE pastevents SET eventID = '$eventID', attendees = '$attendees', impact = '$impact', photoGallery = '$photoGalleryPath' WHERE eventID = '$eventID'";
+                        $conn->query($sql);
+                    }
                     echo "<script>alert('Event Updated'); window.location.href='admin_events.php';</script>";
                 }
             }
-            elseif ($action == "delete"){
+            elseif ($action=="delete" || $action=="deletePast"){
                 $sql = "DELETE FROM events WHERE eventID = '$eventID'";
+                if ($action=="deletePast"){
+                    $sql = "DELETE FROM pastevents WHERE eventID = '$eventID'";
+                }
                 if ($conn->query($sql) === TRUE) {
                     echo "<script>alert('Event Deleted'); window.location.href='admin_events.php';</script>";
                 }
             }
             //add new event
-            else{
+            elseif ($action == "add"){
                 if (empty($errors)){
                     $query = "INSERT INTO events (eventName, start_dateTime, end_dateTime, location, details, participantsNeeded, volunteersNeeded, eventStatus, eventPic) VALUES ('$eventName', '$startDateTime', '$endDateTime', '$location', '$details', '$participantsNeeded', '$volunteersNeeded', '$eventStatus', '$eventImagePath')";
 
@@ -206,18 +231,18 @@ $visitCount = cookie();
                 }
             }
         }
-        foreach ($errors as $error) {
-            echo "<p style='color:red;'>$error</p>";
-        }
+//        foreach ($errors as $error) {
+//            echo "<p style='color:red;'>$error</p>";
+//        }
             }
 
-        if ($action == "edit"){
+        if ($action == "edit" || $action == "editPast"){
             echo "<h2>Update Event</h2>";
         }
-        elseif ($action == "delete"){
+        elseif ($action == "delete" || $action == "deletePast"){
             echo "<h2>Delete Event</h2>";
         }
-        else{
+        elseif ($action == "add"){
             //add event
             echo "<h2>Add New Event</h2>";
         }
@@ -231,17 +256,23 @@ $visitCount = cookie();
 
         <p>Event Name:</p>
         <label><input type="text" name="eventName" value="<?php echo isset($eventData['eventName']) ? $eventData['eventName'] : ''; ?>" placeholder="Enter event name..."></label>
+        <p style="color: red;"><?= isset($errors['eventName']) ? $errors['eventName'] : '' ?></p>
 
         <p>Event Date:</p>
         <label>Start Date: <input type="date" name="startDate" value="<?php echo isset($eventData['start_dateTime']) ? substr($eventData['start_dateTime'], 0,10) : '';?>"></label>
+        <p style="color: red;"><?= isset($errors['startDate']) ? $errors['startDate'] : '' ?></p>
         <label>End Date: <input type="date" name="endDate" value="<?php echo isset ($eventData['end_dateTime']) ? substr($eventData['end_dateTime'], 0, 10): '';?>"</label>
+        <p style="color: red;"><?= isset($errors['endDate']) ? $errors['endDate'] : '' ?></p>
 
         <p>Event Time:</p>
         <label>Start Time: <input type="time" name="startTime" value="<?php echo isset($eventData['start_dateTime']) ? substr($eventData['start_dateTime'], 11, 5): '';?>"</label>
+        <p style="color: red;"><?= isset($errors['startTime']) ? $errors['startTime'] : '' ?></p>
         <label>End Time: <input type="time" name="endTime" value="<?php echo isset($eventData['end_dateTime']) ? substr($eventData['end_dateTime'], 11, 5): '';?>"></label>
+        <p style="color: red;"><?= isset($errors['endTime']) ? $errors['endTime'] : '' ?></p>
 
         <p>Event Location:</p>
         <label><input type="text" name="location" value="<?php echo isset ($eventData['location']) ? $eventData['location']:'';?>" placeholder="Enter event location..."></label>
+        <p style="color: red;"><?= isset($errors['location']) ? $errors['location'] : '' ?></p>
 
         <p>Event Details:</p>
         <label><input type="text" name="details" value="<?php echo isset ($eventData['details']) ? $eventData['details']: '';?>" placeholder="Enter brief event details..."></label>
@@ -300,21 +331,39 @@ $visitCount = cookie();
 
         <p>Participants Needed:</p>
         <label><input type="text" name="participantsNeeded" value="<?php echo isset ($eventData['participantsNeeded']) ? $eventData['participantsNeeded']: ''; ?>" placeholder="Enter Participants needed..."></label>
+        <p style="color: red;"><?= isset($errors['participantsNeeded']) ? $errors['participantsNeeded'] : '' ?></p>
 
         <p>Volunteers Needed:</p>
         <label><input type="text" name="volunteersNeeded" value="<?php echo isset ($eventData['volunteersNeeded']) ? $eventData['volunteersNeeded']: ''; ?>" placeholder="Enter Volunteers needed..."></label>
+        <p style="color: red;"><?= isset($errors['volunteersNeeded']) ? $errors['volunteersNeeded'] : '' ?></p>
 
         <p>Event Status:</p>
         <label><input type="text" name="eventStatus" value="<?php echo isset ($eventData['eventStatus']) ? $eventData['eventStatus']: '';?>" placeholder="Enter Event Type..."></label>
+        <p style="color: red;"><?= isset($errors['eventStatus']) ? $errors['eventStatus'] : '' ?></p>
+
+        <?php if ($action == "editPast" || $action == "deletePast"){?>
+        <p>Attendees:</p>
+        <label><input type="text" name="attendees" value="<?php echo isset ($eventData['attendees']) ? $eventData['eventStatus']: '';?>"</label>
+        <p style="color: red;"><?= isset($errors['attendees']) ? $errors['attendees'] : '' ?></p>
+
+        <p>Impact and Outcomes:</p>
+        <label><input type="text" name="impact" value="<?php echo isset ($eventData['impact']) ? $eventData['impact']:'';?>"</label>
+
+        <p>Photo Gallery:</p>
+        <label><input type="file" name="photoGallery" accept="image/*" onchange='previewEventImage()'> <!--show the image saved in database-->
+            <img id="photoGallery" class="photo-gallery" alt="Photo Gallery" style="display: none">
+        </label>
+
+        <?php } ?>
 
         <div class="button">
             <?php
             $buttonText = '';
 
-            if ($eventID and $action == "edit"){
+            if ($eventID && ($action == "edit" || $action == "editPast")){
                 $buttonText = "Update Event";
             }
-            elseif ($eventID and $action == "delete"){
+            elseif ($eventID && ($action == "delete" || $action == "deletePast")){
                 $buttonText = "Delete Event";
             }
             else{ //actually should set action for add
@@ -324,6 +373,7 @@ $visitCount = cookie();
             ?>
             <a href="admin_events.php"><button type="button">Cancel</button></a>
         </div>
+
     </form>
 </main>
 <script>

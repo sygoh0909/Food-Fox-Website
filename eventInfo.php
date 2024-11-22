@@ -176,12 +176,12 @@ include ('cookie.php');
                     echo "<p><strong>Photo Gallery:</strong></p><img src='" . $eventData['photoGallery'] . "' alt='" . $eventData['eventName'] . "' width='300' height='200'>";
                     echo "</div>";
 
-                    if ($memberID){
-                        echo "<a href='eventRegistrations.php?eventID=" . $row['eventID'] . "'><button>Register Now!</button></a>";
-                    }
-                    else{
-                        echo "<script>alert('Please login or sign up to register for events'); window.location.href='login.php')</script>";
-                    }
+//                    if ($memberID){
+//                        echo "<a href='eventRegistrations.php?eventID=" . $row['eventID'] . "'><button>Register Now!</button></a>";
+//                    }
+//                    else{
+//                        echo "<script>alert('Please login or sign up to register for events'); window.location.href='login.php')</script>";
+//                    }
                 }
             }
         }else{

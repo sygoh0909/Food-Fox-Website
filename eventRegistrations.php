@@ -24,6 +24,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $dietaryRestrictions = $_POST["dietaryRestrictions"];
 
     $errors = []; //check for errors
+    if (empty ($registerType)) {
+        $errors[] = "Registration type is required";
+    }
+    elseif (in_array($registerType, ['Participant', 'Volunteer'])) {
+        $errors[] = "Registration type must be either Participant or Volunteer.";
+    }
 
     if (empty($errors)){
         //need event id, and member id also
@@ -61,6 +67,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         .participant-field, .volunteer-field{
             display: none;
         }
+        .note {
+            font-size: 14px;
+            color: #5C4033;
+            margin-top: 10px;
+            text-align: center;
+        }
+
     </style>
 </head>
 <body>
@@ -109,20 +122,23 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }?>
 
         <!--sync info from profile (show a note also if wanna change info, change from profile), if user havent fill, pop up a alert message and direct them to profile-->
-        <p>Name:</p>
-        <label><input type="text" name="name" value="<?php echo isset($memberData['name']) ? $memberData['name']: '';?>"></label>
+        <p>Please note that name, email, and phone number will be automatically synced from your profile.
+        Please direct to profile page to change any information. </p>
+
+        <p>Name:</p> <!--should check for full name?idk-->
+        <?php echo isset($memberData['memberName']) ? $memberData['memberName']: '';?>
 
     <p>Email:</p>
-    <label><input type="text" name="email" value="<?php echo isset($memberData['email']) ? $memberData['email']: '';?>"></label>
+    <?php echo isset($memberData['email']) ? $memberData['email']: '';?>
 
     <p>Phone Number:</p>
-    <label><input type="text" name="phoneNum" value="<?php echo isset($memberData['phoneNum']) ? $memberData['phoneNum']:'';?>"></label>
+    <?php echo isset($memberData['phoneNum']) ? $memberData['phoneNum']:'';?>
 
-        <?php if (empty($memberData['phoneNum']) || (empty($memberData['memberName'])) || (empty($memberData['email']))): ?>
+        <?php if (empty($memberData['phoneNum'])): ?>
             <div class="missing-info-alert">
                 <p>You haven't provided a phone number in your profile.</p>
-                <p>Would you like to update your profile?</p>
-                <a href="profile.php"><button>Yes</button></a>
+                <p>Please fill in your phone number in your profile</p>
+                <a href="profile.php"><button>Proceed to profile</button></a>
                 <button onclick="alert('You can update later, but this information may be required!');">No</button>
             </div>
         <?php endif; ?>
@@ -154,7 +170,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     </div>
 
     <div class="volunteer-field">
-        <p>Please note that you should be free the whole day as volunteer. </p>
+        <p class="note">Please note that you are expected to be free for the whole day as a volunteer. </p>
 
         <p>Relevant skills:</p>
         <label><input type="text" name="skills" placeholder="Enter any relevant skills you have..."></label>

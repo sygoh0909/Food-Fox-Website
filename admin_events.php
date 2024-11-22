@@ -48,7 +48,7 @@ $visitCount = cookie();
         <div class="search">
             <label><input type="text" placeholder="Search events..."></label>
             <button>Search</button> <!--search feature-->
-            <a href="action_event.php"><button id="button1">Add New Event</button></a>
+            <a href="action_event.php?action=add"><button id="button1">Add New Event</button></a>
         </div>
         <div class="upcoming-events-table">
             <table>
