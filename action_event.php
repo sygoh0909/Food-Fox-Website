@@ -20,12 +20,12 @@ $visitCount = cookie();
             width: 120px;
             transition: border-color 0.3s ease;
         }
-        .event-image-preview {
-            max-width: 200px;
-            max-height: 200px;
-            margin-top: 10px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
+        .image{
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
+            border: 3px solid #C5B4A5;
+            margin-bottom: 10px;
         }
     </style>
 </head>
@@ -257,9 +257,10 @@ $visitCount = cookie();
 
     <form method="POST" enctype="multipart/form-data">
         <p>Event Image:</p>
-        <label><input type="file" name="eventImage" accept="image/*" onchange='previewEventImage()'> <!--show the image saved in database-->
-            <img id="eventImagePreview" class="event-image-preview" src="<?= !empty($eventImagePath)? $eventImagePath : ''?>" alt="Event Image Preview" style="<?= !empty($eventImagePath) ? 'display: block;' : 'display: none;' ?>">
-        </label>
+        <div class="event-image">
+            <img src="<?php echo ($eventData['eventPic'])?>" alt="Event Image" id="previewEventImage" class="image">
+        </div>
+        <label><input type="file" id="uploadPic" accept="image/*" onchange="previewEventImage()"></label>
 
         <p>Event Name:</p>
         <label><input type="text" name="eventName" value="<?php echo isset($eventData['eventName']) ? $eventData['eventName'] : ''; ?>" placeholder="Enter event name..."></label>
