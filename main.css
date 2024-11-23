@@ -43,8 +43,8 @@ body{
     transform: translateY(-2px);
 }
 .member{
-    background-color: #d3a029;
-    color: white;
+    background-color: #C5B4A5;
+    color: #6B5A48;
     font-size: smaller;
 }
 .admin{
@@ -52,38 +52,79 @@ body{
     color: #5C4033;
     font-size: smaller;
 }
-.profile-container{
+
+.profile-container {
     display: flex;
     justify-content: space-between;
+    align-items: center;
+
 }
+
 .popup {
     display: none;
     position: absolute;
     top: 50px;
     right: 20px;
-    background-color: white;
-    color: black;
+    background-color: #F5EEDC;
+    color: #6B5A48;
     padding: 15px;
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    border: 2px solid #C5B4A5;
     border-radius: 10px;
     z-index: 1000;
+    font-size: 14px;
 }
 
 .popup a {
-    color: #4caf50;
+    color: #5C4033;
     text-decoration: none;
     margin: 0 5px;
+    font-weight: bold;
 }
 
 .popup a:hover {
     text-decoration: underline;
 }
+
 .roundImage {
     width: 100px;
     height: 100px;
     border-radius: 50%;
     object-fit: cover;
+    border: 3px solid #C5B4A5;
+    margin-bottom: 10px;
 }
+
+.popup button {
+    background-color: #6B5A48;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    margin: 10px 0;
+    cursor: pointer;
+    border-radius: 5px;
+    font-size: 12px;
+    transition: background-color 0.3s ease;
+    width: 100%;
+}
+
+.popup button:hover {
+    background-color: #5C4033;
+}
+
+.popup p {
+    margin: 10px 0;
+    color: #6B5A48;
+    font-size: 14px;
+    text-align: center;
+}
+
+.popup a button {
+    width: auto;
+    padding: 6px 10px;
+    font-size: 12px;
+}
+
 footer {
     background-color: #5C4033;
     color: white;
@@ -100,7 +141,7 @@ footer {
 }
 
 .footer-section {
-    flex: 1 1 200px; /* Ensures flexibility across screen sizes */
+    flex: 1 1 200px;
     max-width: 300px;
 }
 
