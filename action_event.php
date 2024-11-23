@@ -20,7 +20,13 @@ $visitCount = cookie();
             width: 120px;
             transition: border-color 0.3s ease;
         }
-
+        .event-image-preview {
+            max-width: 200px;
+            max-height: 200px;
+            margin-top: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
     </style>
 </head>
 <body>
@@ -65,11 +71,12 @@ $visitCount = cookie();
         $startDateTime = $startDate . " " . $startTime;
         $endDateTime = $endDate . " " . $endTime;
 
-        $errors = [];
-        $eventImagePath = $eventData['eventPic'];
+        $eventImagePath = '';
         $guestImagePath = '';
 
         $photoGalleryPath = '';
+
+        $errors = [];
 
         //validation
         if (empty($eventName)) {
@@ -251,7 +258,7 @@ $visitCount = cookie();
     <form method="POST" enctype="multipart/form-data">
         <p>Event Image:</p>
         <label><input type="file" name="eventImage" accept="image/*" onchange='previewEventImage()'> <!--show the image saved in database-->
-            <img id="eventImagePreview" class="event-image-preview" alt="Event Image Preview" style="display: none">
+            <img id="eventImagePreview" class="event-image-preview" src="<?= !empty($eventImagePath)? $eventImagePath : ''?>" alt="Event Image Preview" style="<?= !empty($eventImagePath) ? 'display: block;' : 'display: none;' ?>">
         </label>
 
         <p>Event Name:</p>
