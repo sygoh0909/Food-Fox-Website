@@ -35,7 +35,6 @@ include ('cookie.php')
         .profile-pic {
             width: 120px;
             height: 120px;
-            background-color: #ddd;
             border-radius: 50%;
             display: flex;
             align-items: center;
@@ -108,10 +107,10 @@ include ('cookie.php')
 <main>
     <?php
     $conn = connection();
-    $memberID = $_SESSION['memberID'];
+    $memberID = isset($_GET['memberID']) ? $_GET['memberID'] : '';
     $memberData = null;
 
-    $sql = "SELECT m.*, r.* FROM members m, registrations r WHERE m.memberID = $memberID AND m.memberID = r.memberID";
+    $sql = "SELECT * FROM members WHERE memberID = $memberID";
     $result = mysqli_query($conn, $sql);
     $memberData = mysqli_fetch_assoc($result);
 
@@ -122,10 +121,44 @@ include ('cookie.php')
             $phoneNum = $_POST['phoneNum'];
             $bio = $_POST['bio'];
 
+            $memberProfilePath = '';
+
             if (isset($_FILES['memberProfile']) && $_FILES['memberProfile']['error'] == 0) {
                 $target_dir = "uploads/";
-                $eventImagePath = $target_dir . basename($_FILES["memberProfile"]["name"]);
-                move_uploaded_file($_FILES["memberProfile"]["tmp_name"], $eventImagePath);
+                $memberProfilePath = $target_dir . basename($_FILES["memberProfile"]["name"]);
+                move_uploaded_file($_FILES["memberProfile"]["tmp_name"], $memberProfilePath);
+            }
+
+            $errors = [];
+
+            if (empty($memberName)) {
+                $errors[] = "Name is required";
+            }
+            elseif (!preg_match('/^[a-zA-Z]+$/', $memberName)) {
+                $errors[] = "Name can contain only letters and spaces";
+            }
+            if (empty($email)) {
+                $errors[] = "Email is required";
+            }
+            elseif (!preg_match('/^[\w\-\.]+@[a-zA-Z]+\.[a-zA-Z]{2,}$/', $email)) {
+                $errors[] = "Enter a valid email address.";
+            }
+            if (empty($password)) {
+                $errors[] = "Password is required";
+            }
+
+            if (empty($errors)){
+                //update password?
+                $sql = "UPDATE members SET memberProfile = $memberProfilePath, memberName = $memberName, email = $email, phoneNum = $phoneNum, bio = $bio WHERE memberID = $memberID";
+                $result = mysqli_query($conn, $sql);
+                if ($conn->query($sql) === TRUE) {
+                    echo "<script>alert('Profile Updated Successfully');</script>";
+                }
+                else{
+                    foreach ($errors as $error){
+                        echo $error;
+                    }
+                }
             }
         }
     }
@@ -134,9 +167,9 @@ include ('cookie.php')
     <!-- Left Sidebar -->
     <div class="profile-sidebar">
         <div class="profile-pic">
-            <img src="<?php echo ($memberData['memberProfile'])?>" alt="Profile Picture" id="profileImg" class="roundImage"">
+            <img src="<?php echo ($memberData['memberProfile'])?>" alt="Profile Picture" id="profileImg" class="roundImage">
         </div>
-        <button type="button" class="btn" onclick="document.getElementById('uploadPic').click()">Edit Profile Picture</button>
+        <button type="button" id='profile-btn' class="btn" onclick="document.getElementById('uploadPic').click()" style="display: none">Edit Profile Picture</button>
         <input type="file" id="uploadPic" style="display: none;" accept="image/*" onchange="previewProfilePic()">
 
         <div class="profile-info">
@@ -181,9 +214,9 @@ include ('cookie.php')
             <h3>Recent Activity</h3>
             <!--show recent activity that member joined-->
             <?php
-            //not sure fully working or not
             $sql = "SELECT e.eventName, r.registrationDate FROM events e, registrations r WHERE r.memberID = $memberID AND e.eventID = r.eventID ORDER BY r.registrationDate DESC LIMIT 3";
             $result = mysqli_query($conn, $sql);
+
             if (mysqli_num_rows($result) > 0) {
                 while ($row = mysqli_fetch_assoc($result)) {
                     $eventName = $row['eventName'];
@@ -229,6 +262,8 @@ include ('cookie.php')
         document.getElementById('saveChangesBtn').style.display = 'inline-block';
 
         document.getElementById('changePasswordBtn').style.display = 'inline-block';
+
+        document.getElementById('profile-btn').style.display = 'inline-block';
 
         this.style.display = 'none';
     });
