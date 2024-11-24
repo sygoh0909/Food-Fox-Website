@@ -134,9 +134,9 @@ $visitCount = cookie();
         elseif (!in_array($eventStatus, ['Upcoming', 'Past', 'Canceled'])) {
             $errors['eventStatus'] = "Event status must be either 'Upcoming' or 'Past' or 'Canceled'.";
         }
-//        if (!preg_match("/^[a-zA-Z\s]+$/", $guestName)) {
-//            $errors[] = "Guest name should only contain alphabets and spaces.";
-//        }
+        if (!preg_match("/^[a-zA-Z\s]+$/", $guestName)) {
+            $errors['guestName'] = "Guest name should only contain alphabets and spaces.";
+        }
 
         //handle image upload
         if (isset($_FILES['eventImage']) && $_FILES['eventImage']['error'] == 0) {
@@ -346,6 +346,7 @@ $visitCount = cookie();
                     echo "</div>";
                     echo "<label><input type='file' id='uploadGuestPic' accept='image/*' onchange='previewGuestImage()'>";
                     echo "<input type='text' name='guestName[]' value='{$guestList['guestName']}' placeholder='Enter guests name...'>";
+                    //display error message for guest Name
                     echo "<input type='text' name='guestBio[]' placeholder='Enter guests bio...'></label>";
                 }
             }
