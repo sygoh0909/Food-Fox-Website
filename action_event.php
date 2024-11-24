@@ -20,12 +20,25 @@ $visitCount = cookie();
             width: 120px;
             transition: border-color 0.3s ease;
         }
-        .image{
-            width: 100px;
+        .image {
+            width: 120px;
             height: 100px;
             object-fit: cover;
             border: 3px solid #C5B4A5;
             margin-bottom: 10px;
+            border-radius: 10px;
+        }
+        .event-image {
+            width: 140px;
+            height: 120px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5em;
+            color: #666;
+            margin-bottom: 20px;
+            object-fit: cover;
         }
     </style>
 </head>
@@ -258,9 +271,9 @@ $visitCount = cookie();
     <form method="POST" enctype="multipart/form-data">
         <p>Event Image:</p>
         <div class="event-image">
-            <img src="<?php echo ($eventData['eventPic'])?>" alt="Event Image" id="previewEventImage" class="image">
+            <img src="<?php echo ($eventData['eventPic'])?>" alt="Event Image" id="eventImg" class="image">
         </div>
-        <label><input type="file" id="uploadPic" accept="image/*" onchange="previewEventImage()"></label>
+        <input type="file" id="uploadPic" accept="image/*" onchange="previewEventImage()">
 
         <p>Event Name:</p>
         <label><input type="text" name="eventName" value="<?php echo isset($eventData['eventName']) ? $eventData['eventName'] : ''; ?>" placeholder="Enter event name..."></label>
@@ -327,11 +340,18 @@ $visitCount = cookie();
                 $guestQuery = "SELECT * FROM eventguests WHERE eventID = '$eventID'";
                 $result = $conn->query($guestQuery);
                 while ($guestList = $result->fetch_assoc()) {
-                    echo "<div class='dynamic-inputs'><label><input type='file' name='guestImage' accept='image/*'' onchange='previewGuestImage()'><img id='guestImagePreview' class='guest-image-preview' alt='Guest Image Preview' style='display: none'><input type='text' name='guestName[]' value='{$guestList['guestName']}' placeholder='Enter guests name...'><input type='text' name='guestBio[]' placeholder='Enter guests bio...'></label>";
+                    echo "<div class='dynamic-inputs'>";
+                    echo "<div class='guestPic'>";
+                    echo "<img src='{$guestList['guestProfilePic']}' alt='Guest Picture' id='guestPic' class='roundImage'>";
+                    echo "</div>";
+                    echo "<label><input type='file' id='uploadGuestPic' accept='image/*' onchange='previewGuestImage()'>";
+                    echo "<input type='text' name='guestName[]' value='{$guestList['guestName']}' placeholder='Enter guests name...'>";
+                    echo "<input type='text' name='guestBio[]' placeholder='Enter guests bio...'></label>";
                 }
             }
             else{
-                echo "<div class='dynamic-inputs'><label><input type='file' name='guestImage' accept='image/*'' onchange='previewGuestImage()'><img id='guestImagePreview' class='guest-image-preview' alt='Guest Image Preview' style='display: none'><input type='text' name='guestName[]' placeholder='Enter guests name...'><input type='text' name='guestBio[]' placeholder='Enter guests bio...'></label>";
+                //else if new column is added
+                echo "<div class='dynamic-inputs'><div class='guestPic'><img src='' alt='Guest Picture' id='guestPic' class='roundImage'></div><label><input type='file' id='uploadGuestPic' accept='image/*' onchange='previewGuestImage()'><input type='text' name='guestName[]' placeholder='Enter guests name...'><input type='text' name='guestBio[]' placeholder='Enter guests bio...'></label>";
             }
             ?>
             <button type="button" onclick="addGuest()">+</button>
@@ -385,16 +405,32 @@ $visitCount = cookie();
     </form>
 </main>
 <script>
-    function previewEventImage(event){
-        const eventImagePreview = document.getElementById('eventImagePreview');
-        eventImagePreview.src = URL.createObjectURL(event.target.files[0]);
-        eventImagePreview.style.display = 'block';
+    function previewEventImage(){
+        const fileInput = document.getElementById('uploadPic');
+        const eventImg = document.getElementById('eventImg');
+
+        const file = fileInput.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                eventImg.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
     }
 
-    function previewGuestImage(event){
-        const guestImagePreview = document.getElementById('guestImagePreview');
-        guestImagePreview.src = URL.createObjectURL(event.target.files[0]);
-        guestImagePreview.style.display = 'block';
+    function previewGuestImage(){
+        const fileInput = document.getElementById('uploadGuestPic');
+        const guestPic = document.getElementById('guestPic');
+
+        const file = fileInput.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function (e){
+                guestPic.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
     }
 
     function addHighlights(){
