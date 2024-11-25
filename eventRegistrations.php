@@ -20,15 +20,15 @@ while ($row = mysqli_fetch_assoc($result)) {
 }
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $registerType = $_POST["registrations"];
+    $registerType = isset($_POST['registrations']) ? trim($_POST['registrations']) : '';
     $dietaryRestrictions = $_POST["dietaryRestrictions"];
 
     $errors = []; //check for errors
     if (empty ($registerType)) {
-        $errors[] = "Registration type is required";
+        $errors['registrations'] = "Registration type is required";
     }
     elseif (in_array($registerType, ['Participant', 'Volunteer'])) {
-        $errors[] = "Registration type must be either Participant or Volunteer.";
+        $errors['registrations'] = "Registration type must be either Participant or Volunteer.";
     }
 
     if (empty($errors)){
@@ -73,6 +73,39 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             margin-top: 10px;
             text-align: center;
         }
+        img {
+            margin-top: 10px;
+            max-width: 100%;
+            height: auto;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+        }
+        .missing-info-alert {
+            background-color: #ffe6e6;
+            border: 1px solid #ffcccc;
+            padding: 15px;
+            border-radius: 5px;
+            margin-top: 15px;
+        }
+
+        .missing-info-alert p {
+            color: #cc0000;
+            font-weight: bold;
+        }
+
+        .missing-info-alert a button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        .missing-info-alert a button:hover {
+            background-color: #0056b3;
+        }
 
     </style>
 </head>
@@ -116,41 +149,58 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     <?php
     if ($memberID) {
-        $sql = "SELECT memberName, email, phoneNum FROM members WHERE memberID = $memberID";
+        $sql = "SELECT memberID, memberName, email, phoneNum FROM members WHERE memberID = $memberID";
         $result = mysqli_query($conn, $sql);
         $memberData = mysqli_fetch_assoc($result);
     }?>
 
         <!--sync info from profile (show a note also if wanna change info, change from profile), if user havent fill, pop up a alert message and direct them to profile-->
-        <p>Please note that name, email, and phone number will be automatically synced from your profile.
+        <p class="note">Please note that name, email, and phone number will be automatically synced from your profile.
         Please direct to profile page to change any information. </p>
 
+        <!--do checking for not blank name, email, phoneNum-->
+
         <p>Name:</p> <!--should check for full name?idk-->
-        <?php echo isset($memberData['memberName']) ? $memberData['memberName']: '';?>
+        <?php echo isset($memberData['memberName']) ? $memberData['memberName']: '';
+        if (empty($memberData['memberName'])){
+            if ($_SERVER["REQUEST_METHOD"] == "POST"){
+                echo "<p style='color:red;'>Please enter your name.</p>";
+            }
+        }?>
 
     <p>Email:</p>
-    <?php echo isset($memberData['email']) ? $memberData['email']: '';?>
+    <?php echo isset($memberData['email']) ? $memberData['email']: '';
+    if (empty($memberData['email'])){
+        if ($_SERVER["REQUEST_METHOD"] == "POST"){
+            echo "<p style='color:red;'>Please enter an email address.</p>";
+        }
+    }?>
 
     <p>Phone Number:</p>
     <?php echo isset($memberData['phoneNum']) ? $memberData['phoneNum']:'';?>
 
-        <?php if (empty($memberData['phoneNum'])): ?>
+        <?php if (empty($memberData['phoneNum'])):
+            if ($_SERVER["REQUEST_METHOD"] == "POST"){
+                echo "<p style='color: red;'>Please enter a phone number.</p>";
+            }
+            ?>
             <div class="missing-info-alert">
                 <p>You haven't provided a phone number in your profile.</p>
                 <p>Please fill in your phone number in your profile</p>
-                <a href="profile.php"><button>Proceed to profile</button></a>
-                <button onclick="alert('You can update later, but this information may be required!');">No</button>
+                <?php echo "<a href='profile.php?memberID=". $memberData['memberID']."'><button type='button'>Proceed to Profile Page</button></a>"?>
             </div>
         <?php endif; ?>
 
         <p>Dietary Restrictions:</p>
         <label><input type="text" name="dietaryRestrictions" placeholder="Enter any dietary restrictions if got..."></label>
 
-    <label for="registrations">Choose a register type: </label>
+    <label for="registrations">Registration type: </label>
     <select name="registrations" id="registrations" onchange="showFields()">
-        <option>Participant</option>
-        <option>Volunteer</option>
+        <option value="" disabled selected>Select registration type</option>
+        <option value="Participant">Participant</option>
+        <option value="Volunteer">Volunteer</option>
     </select>
+        <p style="color: red;"><?= isset($errors['registrations']) ? $errors['registrations'] : '' ?></p>
 
     <div class="participant-field">
 
@@ -158,8 +208,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <label><input type="text" name="specialAccommodation" placeholder="Enter any special accomodation if got..."></label>
 
         <p>T-Shirt Size</p>
-        <label for="sizes">Choose a T-Shirt Size:</label>
+        <label for="sizes"></label>
         <select name="sizes" id="sizes">
+            <option value="" disabled selected>Choose a T-Shirt Size</option>
             <option>XS</option>
             <option>S</option>
             <option>M</option>
@@ -167,6 +218,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <option>XL</option>
         </select>
         <!--provide t-shirt size chart also-->
+        <img src="https://www.tshirtprint2u.com.my/images/sizechart_tshirtprint2u.jpg">
     </div>
 
     <div class="volunteer-field">

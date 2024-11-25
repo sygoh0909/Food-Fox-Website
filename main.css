@@ -9,6 +9,8 @@ body{
     align-items: center;
     padding: 15px 20px;
     background-color: #5C4033;
+    position: sticky;
+    top: 0;
 }
 .social-media{
     display: flex;

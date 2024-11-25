@@ -31,7 +31,7 @@ form {
     box-sizing: border-box;
 }
 
-form p {
+form p, form label {
     margin: 10px 0 5px;
     font-weight: bold;
     color: #444444;

@@ -206,6 +206,7 @@ include ('cookie.php')
 
                 <div class="save">
                     <button type="submit" id="saveChangesBtn" class="btn" style="display: none;">Save Changes</button>
+                    <button type="button" id="cancel-btn" class="btn" style="display: none">Cancel</button>
                 </div>
 
             </form>
@@ -235,6 +236,7 @@ include ('cookie.php')
             ?>
 
             <!--a button to check out all events they participated/registered-->
+            <button>Check out more!</button>
         </div>
     </div>
 </div>
@@ -262,6 +264,8 @@ include ('cookie.php')
         document.getElementById('saveChangesBtn').style.display = 'inline-block';
 
         document.getElementById('changePasswordBtn').style.display = 'inline-block';
+
+        document.getElementById('cancel-btn').style.display = 'inline-block'
 
         document.getElementById('profile-btn').style.display = 'inline-block';
 
