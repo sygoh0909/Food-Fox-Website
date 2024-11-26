@@ -134,9 +134,11 @@ $visitCount = cookie();
         elseif (!in_array($eventStatus, ['Upcoming', 'Past', 'Canceled'])) {
             $errors['eventStatus'] = "Event status must be either 'Upcoming' or 'Past' or 'Canceled'.";
         }
-        if (!preg_match("/^[a-zA-Z\s]+$/", $guestName)) {
-            $errors['guestName'] = "Guest name should only contain alphabets and spaces.";
-        }
+//        foreach ($guestName as $index => $guestName) {
+//            if (!preg_match("/^[a-zA-Z\s]+$/", $guestName)) {
+//                $errors["guestName_$index"] = "Guest name at index $index ('$guestName') should only contain alphabets and spaces.";
+//            }
+//        }
 
         //handle image upload
         if (isset($_FILES['eventImage']) && $_FILES['eventImage']['error'] == 0) {
@@ -277,23 +279,23 @@ $visitCount = cookie();
 
         <p>Event Name:</p>
         <label><input type="text" name="eventName" value="<?php echo isset($eventData['eventName']) ? $eventData['eventName'] : ''; ?>" placeholder="Enter event name..."></label>
-        <p style="color: red;"><?= isset($errors['eventName']) ? $errors['eventName'] : '' ?></p>
+        <p class="error-message"><?= isset($errors['eventName']) ? $errors['eventName'] : '' ?></p>
 
         <p>Event Date:</p>
         <label>Start Date: <input type="date" name="startDate" value="<?php echo isset($eventData['start_dateTime']) ? substr($eventData['start_dateTime'], 0,10) : '';?>"></label>
-        <p style="color: red;"><?= isset($errors['startDate']) ? $errors['startDate'] : '' ?></p>
+        <p class="error-message""><?= isset($errors['startDate']) ? $errors['startDate'] : '' ?></p>
         <label>End Date: <input type="date" name="endDate" value="<?php echo isset ($eventData['end_dateTime']) ? substr($eventData['end_dateTime'], 0, 10): '';?>"</label>
-        <p style="color: red;"><?= isset($errors['endDate']) ? $errors['endDate'] : '' ?></p>
+        <p class="error-message""><?= isset($errors['endDate']) ? $errors['endDate'] : '' ?></p>
 
         <p>Event Time:</p>
         <label>Start Time: <input type="time" name="startTime" value="<?php echo isset($eventData['start_dateTime']) ? substr($eventData['start_dateTime'], 11, 5): '';?>"</label>
-        <p style="color: red;"><?= isset($errors['startTime']) ? $errors['startTime'] : '' ?></p>
+        <p class="error-message"><?= isset($errors['startTime']) ? $errors['startTime'] : '' ?></p>
         <label>End Time: <input type="time" name="endTime" value="<?php echo isset($eventData['end_dateTime']) ? substr($eventData['end_dateTime'], 11, 5): '';?>"></label>
-        <p style="color: red;"><?= isset($errors['endTime']) ? $errors['endTime'] : '' ?></p>
+        <p class="error-message"><?= isset($errors['endTime']) ? $errors['endTime'] : '' ?></p>
 
         <p>Event Location:</p>
         <label><input type="text" name="location" value="<?php echo isset ($eventData['location']) ? $eventData['location']:'';?>" placeholder="Enter event location..."></label>
-        <p style="color: red;"><?= isset($errors['location']) ? $errors['location'] : '' ?></p>
+        <p class="error-message"><?= isset($errors['location']) ? $errors['location'] : '' ?></p>
 
         <p>Event Details:</p>
         <label><input type="text" name="details" value="<?php echo isset ($eventData['details']) ? $eventData['details']: '';?>" placeholder="Enter brief event details..."></label>
@@ -368,7 +370,7 @@ $visitCount = cookie();
 
         <p>Event Status:</p>
         <label><input type="text" name="eventStatus" value="<?php echo isset ($eventData['eventStatus']) ? $eventData['eventStatus']: '';?>" placeholder="Enter Event Type..."></label>
-        <p style="color: red;"><?= isset($errors['eventStatus']) ? $errors['eventStatus'] : '' ?></p>
+        <p class="error-message"><?= isset($errors['eventStatus']) ? $errors['eventStatus'] : '' ?></p>
 
         <?php if ($action == "editPast" || $action == "deletePast"){?>
         <p>Attendees:</p>

@@ -143,21 +143,18 @@ include ('cookie.php')
             elseif (!preg_match('/^[\w\-\.]+@[a-zA-Z]+\.[a-zA-Z]{2,}$/', $email)) {
                 $errors[] = "Enter a valid email address.";
             }
-            if (empty($password)) {
-                $errors[] = "Password is required";
-            }
 
             if (empty($errors)){
                 //update password?
-                $sql = "UPDATE members SET memberProfile = $memberProfilePath, memberName = $memberName, email = $email, phoneNum = $phoneNum, bio = $bio WHERE memberID = $memberID";
+                $sql = "UPDATE members SET memberProfile = '$memberProfilePath', memberName = '$memberName', email = '$email', phoneNum = '$phoneNum', bio = '$bio' WHERE memberID = $memberID";
                 $result = mysqli_query($conn, $sql);
                 if ($conn->query($sql) === TRUE) {
                     echo "<script>alert('Profile Updated Successfully');</script>";
                 }
-                else{
-                    foreach ($errors as $error){
-                        echo $error;
-                    }
+            }
+            else{
+                foreach ($errors as $error){
+                    echo $error;
                 }
             }
         }

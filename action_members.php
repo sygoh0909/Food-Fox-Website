@@ -11,7 +11,11 @@ $visitCount = cookie();
     <title>Edit/Delete Member Page</title>
 
     <style>
-
+        .note {
+            font-size: 14px;
+            color: #5C4033;
+            margin-top: 10px;
+        }
     </style>
 </head>
 <body>
@@ -51,17 +55,18 @@ $visitCount = cookie();
 
             //need to include if edit only need check these errors???
             if (empty($memberName)) {
-                $errors[] = "Member Name is required";
+                $errors['memberName'] = "Member Name is required";
             }
             elseif (!preg_match($namePattern, $memberName)) {
-                $errors[] = "Name can contain only letters and spaces";
+                $errors['memberName'] = "Name can contain only letters and spaces";
             }
             if (empty($email)) {
-                $errors[] = "Email is required";
+                $errors['email'] = "Email is required";
             }
             elseif (!preg_match($emailPattern, $email)) {
-                $errors[] = "Enter a valid email address.";
+                $errors['email'] = "Enter a valid email address.";
             }
+            //should be more right
 
             if (empty($errors)){
                 //update event
@@ -70,11 +75,13 @@ $visitCount = cookie();
                         $sql = "UPDATE members SET memberName = '$memberName', email = '$email', phoneNum = '$phoneNum', bio = '$bio', memberProfile = '$memberProfilePath' WHERE memberID = $memberID";
                     }
                     else{
-                        $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
                         if (!preg_match($passwordPattern, $password)) {
-                            $errors[] = "Password must at least be 8 characters long, with at least one letter and one number.";
+                            $passwordError['password'] = "Password must at least be 8 characters long, with at least one letter and one number.";
                         }
-                        $sql = "UPDATE members SET memberName = '$memberName', email = '$email', password = '$hashedPassword', phoneNum = '$phoneNum', bio = '$bio', memberProfile = '$memberProfilePath' WHERE memberID = $memberID";
+                        if (empty($passwordError)){
+                            $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
+                            $sql = "UPDATE members SET memberName = '$memberName', email = '$email', password = '$hashedPassword', phoneNum = '$phoneNum', bio = '$bio', memberProfile = '$memberProfilePath' WHERE memberID = $memberID";
+                        }
                     }
 
                     if ($conn->query($sql) === TRUE) {
@@ -90,9 +97,6 @@ $visitCount = cookie();
                         }
                 }
                 }
-            foreach ($errors as $error) {
-                echo "<p style='color:red;'>$error</p>";
-            } //change design for this maybe - show below each field? or just show on top idk
             }
 
         if ($action == "edit"){
@@ -119,13 +123,16 @@ $visitCount = cookie();
 
         <p>Member Name:</p>
         <label><input type="text" name="memberName" value="<?php echo isset($memberData['memberName']) ? $memberData['memberName']:'';?>"></label>
+        <p class="error-message"><?= isset($errors['memberName']) ? $errors['memberName'] : '' ?></p>
 
         <p>Email:</p>
         <label><input type="text" name="email" value="<?php echo isset($memberData['email']) ? $memberData['email']:'';?>"></label>
+        <p class="error-message"><?= isset($errors['email']) ? $errors['email'] : '' ?></p>
 
         <p>Password:</p>
         <label><input type="text" name="password" placeholder="Enter a new password if you want to change it..."></label>
-        <p>Leave blank to keep the existing password.</p>
+        <p class="note">Leave blank to keep the existing password.</p>
+        <p class="error-message"><?= isset($passwordError['password']) ? $passwordError['password'] : '' ?></p>
 
         <p>Phone Number:</p>
         <label><input type="text" name="phoneNum" value="<?php echo isset($memberData['phoneNum']) ? $memberData['phoneNum']:'';?>"></label>
