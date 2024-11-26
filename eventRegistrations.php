@@ -187,7 +187,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <div class="missing-info-alert">
                 <p>You haven't provided a phone number in your profile.</p>
                 <p>Please fill in your phone number in your profile</p>
-                <?php echo "<a href='profile.php?memberID=". $memberData['memberID']."'><button type='button'>Proceed to Profile Page</button></a>"?>
+                <?php echo "<a href='profile.php?memberID=". $memberData['memberID']."&action=registration'><button type='button'>Proceed to Profile Page</button></a>"?>
             </div>
         <?php endif; ?>
 
