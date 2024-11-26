@@ -52,7 +52,8 @@ $visitCount = cookie();
             $passwordPattern = '/^(?=.*[a-zA-z])(?=.*\d)[A-Za-z\d]{8,}$/'; //password format maybe need change
 
             //validation
-            $errors = [];
+            $errors = array();
+            $passwordError = array();
 
             //need to include if edit only need check these errors???
             if (empty($memberName)) {
@@ -111,7 +112,7 @@ $visitCount = cookie();
         }
     }
     else{
-        //error message
+        echo "Cannot find member ID.";
     }
     ?>
 
