@@ -39,6 +39,7 @@ include ('cookie.php')
             border-radius: 5px;
             padding: 5px 10px;
             font-size: 0.8em;
+            text-align: center;
             cursor: pointer;
             border: none;
             transition: background-color 0.3s ease;
@@ -46,6 +47,19 @@ include ('cookie.php')
 
         .btn:hover {
             background-color: #A89E92;
+        }
+
+        .btn.save, .cancel{
+            display: inline-block;
+            background-color: #7F6C54;
+            color: #fff;
+            padding: 10px 15px;
+            font-size: 1em;
+            position: relative;
+        }
+
+        .btn.save, .cancel:hover{
+            background-color: #6B5A48;
         }
 
         .btn.logout {
@@ -185,18 +199,17 @@ include ('cookie.php')
     $sql = "SELECT * FROM members WHERE memberID = $memberID";
     $result = mysqli_query($conn, $sql);
     $memberData = mysqli_fetch_assoc($result);
-    $passwordChangeAttempt = false;
+
+    $passwordChangeAttempt = isset($_POST['changePassword']) && $_POST['changePassword'] === 'true'; //check if the field is displayed
+    $changePassword = false;
 
     if ($memberID){
         if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['saveChanges'])){
-            $memberName = $_POST['memberName'];
-            $email = $_POST['email'];
-            $phoneNum = $_POST['phoneNum'];
-            $bio = $_POST['bio'];
+            $memberName = isset($_POST['memberName']) ? $_POST['memberName'] : $memberData['memberName']; // Default to existing data
+            $email = isset($_POST['email']) ? $_POST['email'] : $memberData['email'];
+            $phoneNum = isset($_POST['phoneNum']) ? $_POST['phoneNum'] : $memberData['phoneNum'];
+            $bio = isset($_POST['bio']) ? $_POST['bio'] : $memberData['bio'];
 //            $password = $_POST['password'];
-            $currentPassword = $_POST['currentPassword'];
-            $newPassword = $_POST['newPassword'];
-            $confirmPassword = $_POST['confirmPassword'];
 
             $memberProfilePath = '';
 
@@ -225,42 +238,49 @@ include ('cookie.php')
                 $errors['phoneNum'] = "Enter a valid phone number.";
             }
 
-            if (empty($errors)){
-                if ($changePassword = false){
-                    $sql = "UPDATE members SET memberProfile = '$memberProfilePath', memberName = '$memberName', email = '$email', phoneNum = '$phoneNum', bio = '$bio' WHERE memberID = $memberID";
-                    if ($conn->query($sql) === TRUE) {
-                        echo "<script>alert('Profile Updated Successfully');</script>";
+            if ($passwordChangeAttempt){
+
+                $currentPassword = $_POST['currentPassword'];
+                $newPassword = $_POST['newPassword'];
+                $confirmPassword = $_POST['confirmPassword'];
+
+                if ($currentPassword == ''){
+                    $passwordChangeAttempt = true;
+                    $passwordError['currentPassword'] = "Current password is required";
+                }
+                elseif (!password_verify($currentPassword, $memberData['password'])){
+                    $passwordChangeAttempt = true;
+                    $passwordError['currentPassword'] = "Current password is different";
+                }
+                if ($newPassword == ''){
+                    $passwordChangeAttempt = true;
+                    $passwordError['newPassword'] = "New password is required";
+                }
+                elseif (!preg_match('/^(?=.*[a-zA-z])(?=.*\d)[A-Za-z\d]{8,}$/', $newPassword)){
+                    $passwordChangeAttempt = true;
+                    $passwordError['newPassword'] = "Password must at least be 8 characters long, with at least one letter and one number.";
+                }
+                if ($newPassword != $confirmPassword){
+                    $passwordChangeAttempt = true;
+                    $passwordError['confirmPassword'] = "Passwords do not match";
+                }
+            }
+
+            if (empty($errors) && empty($passwordError)){
+                if ($changePassword == false){
+                    $hashedPassword = $memberData['password'];
                     }
+                else{
+                    $hashedPassword = password_hash($newPassword, PASSWORD_DEFAULT);
+                    }
+
+                $sql = "UPDATE members SET memberProfile = '$memberProfilePath', memberName = '$memberName', email = '$email', phoneNum = '$phoneNum', bio = '$bio', password = '$hashedPassword' WHERE memberID = $memberID";
+                if ($conn->query($sql) === TRUE) {
+                    $passwordChangeAttempt = false;
+                    echo "<script>alert('Profile Updated Successfully'); window.location.href = window.location.href</script>";
                 }
                 else{
-                    if ($currentPassword == ''){
-                        $passwordChangeAttempt = true;
-                        $passwordError['currentPassword'] = "Current password is required";
-                    }
-                    elseif ($currentPassword != $memberData['password']){
-                        $passwordChangeAttempt = true;
-                        $passwordError['currentPassword'] = "Current password is different";
-                    }
-                    if ($newPassword == ''){
-                        $passwordChangeAttempt = true;
-                        $passwordError['newPassword'] = "New password is required";
-                    }
-                    elseif (!preg_match('/^(?=.*[a-zA-z])(?=.*\d)[A-Za-z\d]{8,}$/', $newPassword)){
-                        $passwordChangeAttempt = true;
-                        $passwordError['newPassword'] = "Password must at least be 8 characters long, with at least one letter and one number.";
-                    }
-                    if ($newPassword != $confirmPassword){
-                        $passwordChangeAttempt = true;
-                        $passwordError['confirmPassword'] = "Passwords do not match";
-                    }
-                    if (empty($passwordError)){
-                        $hashedPassword = password_hash($confirmPassword, PASSWORD_DEFAULT);
-                        $sql = "UPDATE members SET memberProfile = '$memberProfilePath', memberName = '$memberName', email = '$email', phoneNum = '$phoneNum', bio = '$bio', password = '$hashedPassword' WHERE memberID = $memberID";
-                        if ($conn->query($sql) === TRUE) {
-                            $passwordChangeAttempt = false;
-                            echo "<script>alert('Profile Updated Successfully');</script>";
-                        }
-                    }
+                    echo "Error: " . $sql . "<br>" . $conn->error;
                 }
             }
         }
@@ -319,10 +339,9 @@ include ('cookie.php')
                 <label><input type="text" name="bio" value="<?php echo isset($memberData['bio'])?$memberData['bio']:'';?>" disabled></label>
 
                 <p>Password:</p>
-                <!-- if got error it will close the fields -->
                 <?php
-                $changePassword = false;
-                echo str_repeat('*', strlen($memberData['password']));?>
+//                $changePassword = false;
+                echo str_repeat('*', 8);?>
 
                 <button type="button" id="changePasswordBtn" class="btn" style="display: <?= $passwordChangeAttempt ? 'inline-block' : 'none'; ?>;">Change Password</button>
                 <!--if change password button is pressed, show some fields for user to enter their password now and a new password?-->
@@ -339,8 +358,9 @@ include ('cookie.php')
                 </div>
 
                 <div class="save">
-                    <button type="submit" name="saveChanges" id="saveChangesBtn" class="btn" style="display: <?= $passwordChangeAttempt ? 'inline-block' : 'none'; ?>;">Save Changes</button>
-                    <button type="button" id="cancel-btn" class="btn" style="display: <?= $passwordChangeAttempt ? 'inline-block' : 'none'; ?>">Cancel</button>
+                    <br>
+                    <button type="submit" name="saveChanges" id="saveChangesBtn" class="btn save" style="display: <?= $passwordChangeAttempt ? 'inline-block' : 'none'; ?>;">Save Changes</button>
+                    <button type="button" id="cancel-btn" class="btn cancel" style="display: <?= $passwordChangeAttempt ? 'inline-block' : 'none'; ?>">Cancel</button>
                 </div>
 
             </form>
