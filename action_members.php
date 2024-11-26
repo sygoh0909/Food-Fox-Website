@@ -72,10 +72,10 @@ $visitCount = cookie();
             }
 
             if (empty($errors)){
-                //update event
+                //update
                 if ($action == "edit"){
                     if ($password == ''){
-                        $sql = "UPDATE members SET memberName = '$memberName', email = '$email', phoneNum = '$phoneNum', bio = '$bio', memberProfile = '$memberProfilePath' WHERE memberID = $memberID";
+                        $sql = "UPDATE members SET memberProfile = '$memberProfilePath', memberName = '$memberName', email = '$email', phoneNum = '$phoneNum', bio = '$bio', memberProfile = '$memberProfilePath' WHERE memberID = $memberID";
                     }
                     else{
                         if (!preg_match($passwordPattern, $password)) {
@@ -83,7 +83,7 @@ $visitCount = cookie();
                         }
                         if (empty($passwordError)){
                             $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
-                            $sql = "UPDATE members SET memberName = '$memberName', email = '$email', password = '$hashedPassword', phoneNum = '$phoneNum', bio = '$bio', memberProfile = '$memberProfilePath' WHERE memberID = $memberID";
+                            $sql = "UPDATE members SET memberProfile = '$memberProfilePath', memberName = '$memberName', email = '$email', password = '$hashedPassword', phoneNum = '$phoneNum', bio = '$bio', memberProfile = '$memberProfilePath' WHERE memberID = $memberID";
                         }
                     }
 

@@ -86,7 +86,6 @@ $visitCount = cookie();
 
         $eventImagePath = '';
         $guestImagePath = '';
-
         $photoGalleryPath = '';
 
         $errors = [];
@@ -275,7 +274,7 @@ $visitCount = cookie();
         <div class="event-image">
             <img src="<?php echo ($eventData['eventPic'])?>" alt="Event Image" id="eventImg" class="image">
         </div>
-        <input type="file" id="uploadPic" accept="image/*" onchange="previewEventImage()">
+        <input type="file" name="eventImage" id="uploadPic" accept="image/*" onchange="previewEventImage()">
 
         <p>Event Name:</p>
         <label><input type="text" name="eventName" value="<?php echo isset($eventData['eventName']) ? $eventData['eventName'] : ''; ?>" placeholder="Enter event name..."></label>
@@ -374,7 +373,7 @@ $visitCount = cookie();
 
         <?php if ($action == "editPast" || $action == "deletePast"){?>
         <p>Attendees:</p>
-        <label><input type="text" name="attendees" value="<?php echo isset ($eventData['attendees']) ? $eventData['eventStatus']: '';?>"</label>
+        <label><input type="text" name="attendees" value="<?php echo isset ($eventData['attendees']) ? $eventData['attendees']: '';?>"</label>
         <p style="color: red;"><?= isset($errors['attendees']) ? $errors['attendees'] : '' ?></p>
 
         <p>Impact and Outcomes:</p>
