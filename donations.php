@@ -204,6 +204,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'getProgress') {
     <?php
     $conn = connection();
     $memberID = $_SESSION['memberID'];
+    //if member only can donate
 
     if ($conn->connect_error) {
         die("Connection failed: " . $conn->connect_error);

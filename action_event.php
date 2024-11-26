@@ -435,6 +435,8 @@ $visitCount = cookie();
         }
     }
 
+    //preview for event photo gallery pics
+
     function addHighlights(){
         const container = document.getElementById('highlights-container');
         const newInput = document.createElement('div');
