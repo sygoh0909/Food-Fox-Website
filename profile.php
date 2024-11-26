@@ -146,7 +146,7 @@ include ('cookie.php')
 
             if (empty($errors)){
                 //update password?
-                $sql = "UPDATE members SET memberName = '$memberName', email = '$email', phoneNum = '$phoneNum', bio = '$bio' WHERE memberID = $memberID";
+                $sql = "UPDATE members SET memberProfile = '$memberProfilePath', memberName = '$memberName', email = '$email', phoneNum = '$phoneNum', bio = '$bio' WHERE memberID = $memberID";
                 $result = mysqli_query($conn, $sql);
                 if ($conn->query($sql) === TRUE) {
                     echo "<script>alert('Profile Updated Successfully');</script>";
@@ -167,7 +167,7 @@ include ('cookie.php')
             <img src="<?php echo ($memberData['memberProfile'])?>" alt="Profile Picture" id="profileImg" class="roundImage">
         </div>
         <button type="button" id='profile-btn' class="btn" onclick="document.getElementById('uploadPic').click()" style="display: none">Edit Profile Picture</button>
-        <input type="file" id="uploadPic" style="display: none;" accept="image/*" onchange="previewProfilePic()">
+        <input type="file" name='memberProfile' id="uploadPic" style="display: none;" accept="image/*" onchange="previewProfilePic()">
 
         <div class="profile-info">
             <p>Member ID: <?php echo ($memberData['memberID'])?></p>

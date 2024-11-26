@@ -120,9 +120,9 @@ $visitCount = cookie();
         <p>Member ID:</p> <!--should display member id?-->
         <?php echo str_repeat('*', strlen($memberID));?>
 
-        <p>Member Profile:</p> <!--display the member profile b4 edit?-->
-        <input type="file" name="memberProfile" accept="image/*" onchange="previewMemberProfile(event)">
-        <img id="memberProfilePreview" class="roundImage" alt="Member Profile Preview" style="display: none;">
+        <p>Member Profile:</p>
+        <img src="<?php echo ($memberData['memberProfile']);?>" alt="Member Profile" id="memberProfile" class="roundImage">
+        <input type="file" name="memberProfile" id="uploadPic" accept="image/*" onchange="previewMemberProfile()">
 
         <p>Member Name:</p>
         <label><input type="text" name="memberName" value="<?php echo isset($memberData['memberName']) ? $memberData['memberName']:'';?>"></label>
@@ -154,15 +154,17 @@ $visitCount = cookie();
 </main>
 </body>
 <script>
-    function previewMemberProfile(event) {
-        const memberProfilePreview = document.getElementById('memberProfilePreview');
-        const file = event.target.files[0];
+    function previewMemberProfile() {
+        const fileInput = document.getElementById('uploadPic');
+        const memberProfile = document.getElementById('memberProfile');
 
+        const file = fileInput.files[0];
         if (file) {
-            memberProfilePreview.src = URL.createObjectURL(file);
-            memberProfilePreview.style.display = 'block';
-        } else {
-            memberProfilePreview.style.display = 'none';
+            const reader = new FileReader();
+            reader.onload = function (e){
+                memberProfile.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
         }
     }
 
