@@ -32,6 +32,7 @@ $visitCount = cookie();
         $memberData = $result->fetch_assoc();
 
         if ($_SERVER["REQUEST_METHOD"] == "POST") {
+            //include address?
             $memberName = $_POST["memberName"];
             $email = $_POST["email"];
             $password = $_POST["password"];
@@ -66,7 +67,9 @@ $visitCount = cookie();
             elseif (!preg_match($emailPattern, $email)) {
                 $errors['email'] = "Enter a valid email address.";
             }
-            //should be more right
+            if (!preg_match('/^\+?[0-9]{1,4}?\s?(\(?[0-9]{3}\)?[\s.-]?)?[0-9]{3}[\s.-]?[0-9]{4}$/', $phoneNum)) {
+                $errors['phoneNum'] = "Enter a valid phone number.";
+            }
 
             if (empty($errors)){
                 //update event
@@ -132,10 +135,11 @@ $visitCount = cookie();
         <p>Password:</p>
         <label><input type="text" name="password" placeholder="Enter a new password if you want to change it..."></label>
         <p class="note">Leave blank to keep the existing password.</p>
-        <p class="error-message"><?= isset($passwordError['password']) ? $passwordError['password'] : '' ?></p>
+        <p class="error-message"><?= isset($passwordError['password']) ? $passwordError['password'] : '';?></p>
 
         <p>Phone Number:</p>
         <label><input type="text" name="phoneNum" value="<?php echo isset($memberData['phoneNum']) ? $memberData['phoneNum']:'';?>"></label>
+        <p class="error-message"><?= isset ($errors['phoneNum']) ? $errors['phoneNum'] :'';?></p>
 
         <p>Bio:</p>
         <label><input type="text" name="bio" value="<?php echo isset($memberData['bio'])?$memberData['bio']:'';?>"></label>
