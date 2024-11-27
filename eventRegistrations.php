@@ -233,7 +233,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     </form>
 
 </main>
-</body>
 <script>
     function showFields(){
         const registrationType = document.getElementById("registrations").value;
@@ -289,4 +288,5 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <p>&copy; 2024 Food Fox. All rights reserved. | Powered by <a href="https://foodfox.com" target="_blank">Food Fox</a></p>
     </div>
 </footer>
+</body>
 </html>

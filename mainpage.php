@@ -247,7 +247,6 @@ include ('cookie.php');
             </section>
         </div>
     </main>
-</body>
 
 <footer>
     <div class="footer-container">
@@ -283,4 +282,5 @@ include ('cookie.php');
         <p>&copy; 2024 Food Fox. All rights reserved. | Powered by <a href="https://foodfox.com" target="_blank">Food Fox</a></p>
     </div>
 </footer>
+</body>
 </html>

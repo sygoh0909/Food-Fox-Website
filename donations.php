@@ -315,7 +315,6 @@ if (isset($_GET['action']) && $_GET['action'] == 'getProgress') {
     }
     ?>
 </main>
-</body>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@3.7.0"></script>
 <script>
     //chart
@@ -446,4 +445,5 @@ if (isset($_GET['action']) && $_GET['action'] == 'getProgress') {
         <p>&copy; 2024 Food Fox. All rights reserved. | Powered by <a href="https://foodfox.com" target="_blank">Food Fox</a></p>
     </div>
 </footer>
+</body>
 </html>
