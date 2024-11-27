@@ -399,14 +399,23 @@ $visitCount = cookie();
             else{ //actually should set action for add
                 $buttonText = "Add Event";
             }
-            echo "<button type='submit'>{$buttonText}</button>";
+            echo "<button type='button' onclick='displayActionPopup()'>{$buttonText}</button>";
             ?>
             <a href="admin_events.php"><button type="button">Cancel</button></a>
         </div>
 
     </form>
+
+    <div id="action-popup" class="action-popup" style="display:none;">
+        <form id="action-form" method="post" action="">
+            <h2>Confirm action?</h2>
+            <button type="submit" name="confirmAction">Yes</button>
+            <button type="button" onclick="closeActionPopup()">No</button>
+        </form>
+    </div>
+
 </main>
-<script>
+<script src="main.js">
     function previewEventImage(){
         const fileInput = document.getElementById('uploadPic');
         const eventImg = document.getElementById('eventImg');

@@ -115,10 +115,20 @@ $visitCount = cookie();
             <label><input type="text" name="skills" value="<?php echo isset ($registrationInfo['skills']) ? $registrationInfo['skills']:'';?>"></label>
         </div>
 
-        <button type="submit"><?php echo $registrationID && $action=='edit'?'Update Registration info': 'Delete Registration Info';?></button>
+        <button type="button" onclick="displayActionPopup()"><?php echo $registrationID && $action=='edit'?'Update Registration info': 'Delete Registration Info';?></button>
         <?php echo "<a href='admin_registrations.php?eventID=" .$registrationInfo['eventID']."'><button type='button'>Cancel</button></a>"?>
     </form>
+
+    <div id="action-popup" class="action-popup" style="display:none;">
+        <form id="action-form" method="post" action="">
+            <h2>Confirm action?</h2>
+            <button type="submit" name="confirmAction">Yes</button>
+            <button type="button" onclick="closeActionPopup()">No</button>
+        </form>
+    </div>
+
 </main>
 </body>
+<script src="main.js"></script>
 </html>
 
