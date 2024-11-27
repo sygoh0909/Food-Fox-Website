@@ -52,7 +52,7 @@ include ('cookie.php')
             background-color: #A89E92;
         }
 
-        .btn.save, .cancel{
+        .btn.save, .cancel, .delete{
             display: inline-block;
             background-color: #7F6C54;
             color: #fff;
@@ -61,7 +61,7 @@ include ('cookie.php')
             position: relative;
         }
 
-        .btn.save, .cancel:hover{
+        .btn.save, .cancel, .delete:hover{
             background-color: #6B5A48;
         }
 
@@ -398,12 +398,31 @@ include ('cookie.php')
 
                     ?>
                 </div>
+               <button type="button" name="deleteAcc" class="btn delete" onclick="displayActionPopup()">Delete Account</button>
             </div>
         </div>
     </form>
 
+    <div id="action-popup" class="action-popup" style="display:none;">
+        <form id="action-form" method="post" action="">
+            <h2>Are you sure you want to delete your account?</h2>
+            <button type="submit" name="confirmAction">Yes</button>
+            <button type="button" onclick="closeActionPopup()">No</button>
+        </form>
+    </div>
+
+    <?php
+    if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['confirmAction'])) {
+        $sql = "DELETE FROM members WHERE memberID = $memberID";
+        if ($conn->query($sql) === TRUE) {
+            echo "<script>alert('Account deleted successfully! Logging out...'); window.location.href='mainpage.php'</script>')";
+        }
+    }
+    ?>
+
 </main>
 </body>
+<script src="main.js"></script>
 <script>
     function previewProfilePic() {
         const fileInput = document.getElementById('uploadPic');

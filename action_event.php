@@ -408,7 +408,21 @@ $visitCount = cookie();
 
     <div id="action-popup" class="action-popup" style="display:none;">
         <form id="action-form" method="post" action="">
-            <h2>Confirm action?</h2>
+            <h2><?php
+            $buttonText = '';
+
+            if ($eventID && ($action == "edit" || $action == "editPast")){
+                $buttonText = "Confirm to update event info?";
+            }
+            elseif ($eventID && ($action == "delete" || $action == "deletePast")){
+                $buttonText = "Confirm to delete event info?";
+            }
+            else{ //actually should set action for add
+                $buttonText = "Confirm to add event?";
+            }
+            echo "{$buttonText}";
+            ?>
+            </h2>
             <button type="submit" name="confirmAction">Yes</button>
             <button type="button" onclick="closeActionPopup()">No</button>
         </form>

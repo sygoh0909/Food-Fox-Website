@@ -132,15 +132,33 @@ body{
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    background-color: white;
+    background-color: #f4f4f4;
     padding: 20px;
-    border: 1px solid #ccc;
+    border: 1px solid #7F6C54;
+    border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     z-index: 1000;
+    text-align: center;
+}
+
+.action-popup h2 {
+    color: #7F6C54;
+    font-family: 'Arial', sans-serif;
+    font-size: 18px;
+    margin-bottom: 15px;
 }
 
 .action-popup button {
-    margin: 5px;
+    background-color: #7F6C54;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 8px 16px;
+    cursor: pointer;
+    font-size: 14px;
+    font-family: 'Arial', sans-serif;
+    transition: background-color 0.3s ease;
+    margin: 0 5px;
 }
 
 footer {
