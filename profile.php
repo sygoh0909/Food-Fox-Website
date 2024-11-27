@@ -14,14 +14,13 @@ include ('cookie.php')
         .container {
             display: flex;
             gap: 20px;
-            height: 100vh;
+            min-height: 100vh;
             background-color: #f9f3e9;
             padding: 20px;
             box-sizing: border-box;
         }
 
         .profile-sidebar {
-            position: relative;
             flex: 0 0 30%;
             text-align: center;
             display: flex;
@@ -31,6 +30,10 @@ include ('cookie.php')
             background-color: #fff;
             border-radius: 8px;
             box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+            padding: 20px;
+            box-sizing: border-box;
+            position: sticky;
+            top: 20px;
         }
 
         .btn{
@@ -145,7 +148,8 @@ include ('cookie.php')
             padding: 20px;
             display: flex;
             flex-direction: column;
-            justify-content: space-between;
+            gap: 20px;
+            box-sizing: border-box;
         }
 
         .form-section h3 {
@@ -310,9 +314,7 @@ include ('cookie.php')
                 </div>
                 <button type='button' class="btn" id='editProfileBtn'>Edit Profile</button> <!--if press this user only can edit their info-->
                 <?php
-                echo "<form action='' method='POST'>
-            <button type='submit' class='btn logout' name='logout'>Log Out</button>
-        </form>";
+                echo "<form action='' method='POST'><button type='submit' class='btn logout' name='logout'>Log Out</button></form>";
 
                 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['logout'])){
                     session_unset();
@@ -370,35 +372,35 @@ include ('cookie.php')
                         <button type="button" id="cancel-btn" class="btn cancel" style="display: <?= $passwordChangeAttempt ? 'inline-block' : 'none'; ?>">Cancel</button>
                     </div>
                 </div>
+
+                <div class="recent-activity">
+                    <h3>Recent Activity</h3>
+                    <!--show recent activity that member joined-->
+                    <?php
+                    $sql = "SELECT e.eventName, r.registrationDate FROM events e, registrations r WHERE r.memberID = $memberID AND e.eventID = r.eventID ORDER BY r.registrationDate DESC LIMIT 3";
+                    $result = mysqli_query($conn, $sql);
+
+                    if (mysqli_num_rows($result) > 0) {
+                        while ($row = mysqli_fetch_assoc($result)) {
+                            $eventName = $row['eventName'];
+                            $registrationDate = $row['registrationDate'];
+
+                            echo "<div class='activity-item'>";
+                            echo "<span>Event: $eventName</span>";
+                            echo "<span>Register Date: $registrationDate</span>";
+                            echo "</div>";
+                        }
+                        echo "<a href='recentActivity.php?memberID=" . $memberData['memberID'] ."'><button type='button' class='btn'>Check out more!</button></a>";
+                    }
+                    else {
+                        echo "<p>No recent registrations found.</p>";
+                    }
+
+                    ?>
+                </div>
+            </div>
+        </div>
     </form>
-
-    <div class="recent-activity">
-        <h3>Recent Activity</h3>
-        <!--show recent activity that member joined-->
-        <?php
-        $sql = "SELECT e.eventName, r.registrationDate FROM events e, registrations r WHERE r.memberID = $memberID AND e.eventID = r.eventID ORDER BY r.registrationDate DESC LIMIT 3";
-        $result = mysqli_query($conn, $sql);
-
-        if (mysqli_num_rows($result) > 0) {
-            while ($row = mysqli_fetch_assoc($result)) {
-                $eventName = $row['eventName'];
-                $registrationDate = $row['registrationDate'];
-            }
-        }
-        else {
-            echo "<p>No recent registrations found.</p>";
-        }
-
-        echo "<div class='activity-item'>";
-        echo "<span>$eventName</span>";
-        echo "<span>$registrationDate</span>";
-        echo "</div>";
-
-        ?>
-
-        <!--a button to check out all events they participated/registered-->
-        <button type="button" class="btn">Check out more!</button>
-    </div>
 
 </main>
 </body>
