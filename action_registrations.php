@@ -121,7 +121,7 @@ $visitCount = cookie();
 
     <div id="action-popup" class="action-popup" style="display:none;">
         <form id="action-form" method="post" action="">
-            <h2>Confirm action?</h2>
+            <h2><?php echo $registrationID && $action=='edit'?'Confirm to update registration info?': 'Confirm to delete registration info?';?></h2>
             <button type="submit" name="confirmAction">Yes</button>
             <button type="button" onclick="closeActionPopup()">No</button>
         </form>
