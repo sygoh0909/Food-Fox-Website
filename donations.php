@@ -226,6 +226,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'getProgress') {
             $sql = "INSERT INTO donations (memberID, amount, paymentMethod) VALUES ('$memberID', '$amount', '$paymentMethod')";
             if ($conn->query($sql) === TRUE) {
                 echo "<script>alert('Thank you for your donation!');</script>";
+                //do a calculation for donation points and save to points in member
             }
             else{
                 echo "Error: " . $sql . "<br>" . $conn->error;

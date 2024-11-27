@@ -11,6 +11,9 @@ include ('cookie.php');
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="main.css">
     <style>
+        .navbar {
+            z-index: 100; /*so that it can display on top of banner img*/
+        }
         .banner{
             position: relative;
             width: 100%;
