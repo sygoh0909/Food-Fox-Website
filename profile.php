@@ -184,6 +184,7 @@ include ('cookie.php')
             border-radius: 5px;
             margin-bottom: 10px;
         }
+
         .error-message{
             color: red;
         }
@@ -196,12 +197,14 @@ include ('cookie.php')
     $memberID = isset($_GET['memberID']) ? $_GET['memberID'] : '';
     $memberData = null;
 
+    $passwordFlag = isset($_POST['changePasswordFlag']) ? $_POST['changePasswordFlag'] : false;
+
     $sql = "SELECT * FROM members WHERE memberID = $memberID";
     $result = mysqli_query($conn, $sql);
     $memberData = mysqli_fetch_assoc($result);
 
-    $passwordChangeAttempt = isset($_POST['changePassword']) && $_POST['changePassword'] === 'true'; //check if the field is displayed
     $changePassword = false;
+    $passwordChangeAttempt = false;
 
     if ($memberID){
         if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['saveChanges'])){
@@ -217,6 +220,7 @@ include ('cookie.php')
                 $target_dir = "uploads/";
                 $memberProfilePath = $target_dir . basename($_FILES["memberProfile"]["name"]);
                 move_uploaded_file($_FILES["memberProfile"]["tmp_name"], $memberProfilePath);
+                //validation for images 
             }
 
             $errors = array();
@@ -238,7 +242,8 @@ include ('cookie.php')
                 $errors['phoneNum'] = "Enter a valid phone number.";
             }
 
-            if ($passwordChangeAttempt){
+
+            if ($passwordFlag === 'true'){ //if the change password button is pressed and the fields displayed
 
                 $currentPassword = $_POST['currentPassword'];
                 $newPassword = $_POST['newPassword'];
@@ -267,7 +272,7 @@ include ('cookie.php')
             }
 
             if (empty($errors) && empty($passwordError)){
-                if ($changePassword == false){
+                if (!$passwordFlag){
                     $hashedPassword = $memberData['password'];
                     }
                 else{
@@ -286,114 +291,115 @@ include ('cookie.php')
         }
     }
     ?>
-<div class="container">
-    <!-- Left Sidebar -->
-    <div class="profile-sidebar">
-        <div class="profile-pic">
-            <label for="uploadPic">
-                <img src="<?php echo ($memberData['memberProfile'])?>" id="profileImg">
-                <div class="hover-overlay">Edit Picture</div>
-            </label>
-            <input type="file" name='memberProfile' id="uploadPic" style="display: none;" accept="image/*" onchange="previewProfilePic()">
-        </div>
 
-        <div class="profile-info">
-            <p>Member ID: <?php echo ($memberData['memberID'])?></p>
-            <p>Member since: <?php echo date("d F Y", strtotime($memberData['joinDate']));?></p>
-        </div>
-        <button type='button' class="btn" id='editProfileBtn'>Edit Profile</button> <!--if press this user only can edit their info-->
-        <?php
-        echo "<form action='' method='POST'>
+    <form method="post" enctype="multipart/form-data" id="profileForm">
+        <div class="container">
+            <!-- Left Sidebar -->
+            <div class="profile-sidebar">
+                <div class="profile-pic">
+                    <label for="uploadPic">
+                        <img src="<?php echo ($memberData['memberProfile'])?>" id="profileImg">
+                        <div class="hover-overlay">Edit Picture</div>
+                    </label>
+                    <input type="file" name='memberProfile' id="uploadPic" disabled style="display: none;" accept="image/*" onchange="previewProfilePic()">
+                </div>
+
+                <div class="profile-info">
+                    <p>Member ID: <?php echo ($memberData['memberID'])?></p>
+                    <p>Member since: <?php echo date("d F Y", strtotime($memberData['joinDate']));?></p>
+                </div>
+                <button type='button' class="btn" id='editProfileBtn'>Edit Profile</button> <!--if press this user only can edit their info-->
+                <?php
+                echo "<form action='' method='POST'>
             <button type='submit' class='btn logout' name='logout'>Log Out</button>
         </form>";
 
-        if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['logout'])){
-            session_unset();
-            session_destroy();
-            echo "<script>alert('Logged out Successfully'); window.location.href='mainpage.php';</script>";
-            exit();
-        }
-        ?>
-    </div>
-
-    <!-- Right Profile Details -->
-    <div class="profile-details">
-        <div class="form-section">
-            <h3>Profile Information</h3>
-            <form method="post" enctype="multipart/form-data" id="profileForm">
-
-                <!--right side-->
-                <p>Member Name:</p>
-                <label><input type="text" name="memberName" value="<?php echo isset($memberData['memberName']) ? $memberData['memberName']:'';?>" disabled></label>
-                <p class="error-message"><?= isset($errors['memberName']) ? $errors['memberName'] : '' ?></p>
-
-                <p>Email:</p>
-                <label><input type="text" name="email" value="<?php echo isset($memberData['email']) ? $memberData['email']:'';?>" disabled></label>
-                <p class="error-message"><?= isset($errors['email']) ? $errors['email'] : '' ?></p>
-
-                <p>Phone Number:</p>
-                <label><input type="text" name="phoneNum" value="<?php echo isset($memberData['phoneNum']) ? $memberData['phoneNum']:'';?>" disabled></label>
-                <p class="error-message"><?= isset ($errors['phoneNum']) ? $errors['phoneNum'] :'';?></p>
-
-                <p>Bio:</p>
-                <label><input type="text" name="bio" value="<?php echo isset($memberData['bio'])?$memberData['bio']:'';?>" disabled></label>
-
-                <p>Password:</p>
-                <?php
-//                $changePassword = false;
-                echo str_repeat('*', 8);?>
-
-                <button type="button" id="changePasswordBtn" class="btn" style="display: <?= $passwordChangeAttempt ? 'inline-block' : 'none'; ?>;">Change Password</button>
-                <!--if change password button is pressed, show some fields for user to enter their password now and a new password?-->
-
-                <div class="change-password-field" id="change-password-field" style="display: <?= $passwordChangeAttempt ? 'block' : 'none'; ?>;">
-                    <label><input type="text" name="currentPassword" placeholder="Enter your current password..."></label>
-                    <p class="error-message"><?= isset($passwordError['currentPassword']) ? $passwordError['currentPassword'] : '';?></p>
-
-                    <label><input type="text" name="newPassword" placeholder="Enter your new password..."></label>
-                    <p class="error-message"><?= isset($passwordError['newPassword']) ? $passwordError['newPassword'] : '';?></p>
-
-                    <label><input type="text" name="confirmPassword" placeholder="Confirm your new password..."></label>
-                    <p class="error-message"><?= isset($passwordError['confirmPassword']) ? $passwordError['confirmPassword'] : '';?></p>
-                </div>
-
-                <div class="save">
-                    <br>
-                    <button type="submit" name="saveChanges" id="saveChangesBtn" class="btn save" style="display: <?= $passwordChangeAttempt ? 'inline-block' : 'none'; ?>;">Save Changes</button>
-                    <button type="button" id="cancel-btn" class="btn cancel" style="display: <?= $passwordChangeAttempt ? 'inline-block' : 'none'; ?>">Cancel</button>
-                </div>
-
-            </form>
-        </div>
-        <div class="recent-activity">
-            <h3>Recent Activity</h3>
-            <!--show recent activity that member joined-->
-            <?php
-            $sql = "SELECT e.eventName, r.registrationDate FROM events e, registrations r WHERE r.memberID = $memberID AND e.eventID = r.eventID ORDER BY r.registrationDate DESC LIMIT 3";
-            $result = mysqli_query($conn, $sql);
-
-            if (mysqli_num_rows($result) > 0) {
-                while ($row = mysqli_fetch_assoc($result)) {
-                    $eventName = $row['eventName'];
-                    $registrationDate = $row['registrationDate'];
+                if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['logout'])){
+                    session_unset();
+                    session_destroy();
+                    echo "<script>alert('Logged out Successfully'); window.location.href='mainpage.php';</script>";
+                    exit();
                 }
+                ?>
+            </div>
+
+            <!-- Right Profile Details -->
+            <div class="profile-details">
+                <div class="form-section">
+                    <h3>Profile Information</h3>
+
+                    <!--right side-->
+                    <p>Member Name:</p>
+                    <label><input type="text" name="memberName" value="<?php echo isset($memberData['memberName']) ? $memberData['memberName']:'';?>" disabled></label>
+                    <p class="error-message"><?= isset($errors['memberName']) ? $errors['memberName'] : '' ?></p>
+
+                    <p>Email:</p>
+                    <label><input type="text" name="email" value="<?php echo isset($memberData['email']) ? $memberData['email']:'';?>" disabled></label>
+                    <p class="error-message"><?= isset($errors['email']) ? $errors['email'] : '' ?></p>
+
+                    <p>Phone Number:</p>
+                    <label><input type="text" name="phoneNum" value="<?php echo isset($memberData['phoneNum']) ? $memberData['phoneNum']:'';?>" disabled></label>
+                    <p class="error-message"><?= isset ($errors['phoneNum']) ? $errors['phoneNum'] :'';?></p>
+
+                    <p>Bio:</p>
+                    <label><input type="text" name="bio" value="<?php echo isset($memberData['bio'])?$memberData['bio']:'';?>" disabled></label>
+
+                    <p>Password:</p>
+                    <?php
+                    //                $changePassword = false;
+                    echo str_repeat('*', 8);?>
+
+                    <input type="hidden" id="changePasswordFlag" name="changePasswordFlag" value="false">
+                    <button type="button" id="changePasswordBtn" class="btn" style="display: <?= $passwordChangeAttempt ? 'inline-block' : 'none'; ?>;">Change Password</button>
+                    <!--if change password button is pressed, show some fields for user to enter their password now and a new password?-->
+
+                    <div class="change-password-field" id="change-password-field" style="display: <?= $passwordChangeAttempt ? 'block' : 'none'; ?>;">
+                        <label><input type="text" name="currentPassword" placeholder="Enter your current password..."></label>
+                        <p class="error-message"><?= isset($passwordError['currentPassword']) ? $passwordError['currentPassword'] : '';?></p>
+
+                        <label><input type="text" name="newPassword" placeholder="Enter your new password..."></label>
+                        <p class="error-message"><?= isset($passwordError['newPassword']) ? $passwordError['newPassword'] : '';?></p>
+
+                        <label><input type="text" name="confirmPassword" placeholder="Confirm your new password..."></label>
+                        <p class="error-message"><?= isset($passwordError['confirmPassword']) ? $passwordError['confirmPassword'] : '';?></p>
+                    </div>
+
+                    <div class="save">
+                        <br>
+                        <button type="submit" name="saveChanges" id="saveChangesBtn" class="btn save" style="display: <?= $passwordChangeAttempt ? 'inline-block' : 'none'; ?>;">Save Changes</button>
+                        <button type="button" id="cancel-btn" class="btn cancel" style="display: <?= $passwordChangeAttempt ? 'inline-block' : 'none'; ?>">Cancel</button>
+                    </div>
+                </div>
+    </form>
+
+    <div class="recent-activity">
+        <h3>Recent Activity</h3>
+        <!--show recent activity that member joined-->
+        <?php
+        $sql = "SELECT e.eventName, r.registrationDate FROM events e, registrations r WHERE r.memberID = $memberID AND e.eventID = r.eventID ORDER BY r.registrationDate DESC LIMIT 3";
+        $result = mysqli_query($conn, $sql);
+
+        if (mysqli_num_rows($result) > 0) {
+            while ($row = mysqli_fetch_assoc($result)) {
+                $eventName = $row['eventName'];
+                $registrationDate = $row['registrationDate'];
             }
-            else {
-                echo "<p>No recent registrations found.</p>";
-            }
+        }
+        else {
+            echo "<p>No recent registrations found.</p>";
+        }
 
-            echo "<div class='activity-item'>";
-            echo "<span>$eventName</span>";
-            echo "<span>$registrationDate</span>";
-            echo "</div>";
+        echo "<div class='activity-item'>";
+        echo "<span>$eventName</span>";
+        echo "<span>$registrationDate</span>";
+        echo "</div>";
 
-            ?>
+        ?>
 
-            <!--a button to check out all events they participated/registered-->
-            <button type="button" class="btn">Check out more!</button>
-        </div>
+        <!--a button to check out all events they participated/registered-->
+        <button type="button" class="btn">Check out more!</button>
     </div>
-</div>
+
 </main>
 </body>
 <script>
@@ -432,9 +438,11 @@ include ('cookie.php')
     })
 
     document.getElementById('changePasswordBtn').addEventListener('click', function (){
-        <?php $changePassword = true; ?>
         const field = document.getElementById("change-password-field");
         field.style.display = field.style.display === "block" ? "none" : "block";
+        document.getElementById("changePasswordFlag").value = "true";
+
+        this.style.display = 'none';
     })
 </script>
 
