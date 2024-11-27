@@ -127,6 +127,22 @@ body{
     font-size: 12px;
 }
 
+.action-popup {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: white;
+    padding: 20px;
+    border: 1px solid #ccc;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    z-index: 1000;
+}
+
+.action-popup button {
+    margin: 5px;
+}
+
 footer {
     background-color: #5C4033;
     color: white;

@@ -42,7 +42,7 @@ $visitCount = cookie();
         $result = $conn->query($sql);
         $donationDetails = $result->fetch_assoc();
 
-        if ($_SERVER["REQUEST_METHOD"] == "POST"){
+        if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["confirmAction"])){
             $amount = $_POST["amount"];
             $feedback = $_POST["feedback"];
 
@@ -98,9 +98,18 @@ $visitCount = cookie();
         <p>Feedback</p>
         <label><input type="text" name="feedback" value="<?php echo $donationDetails['feedback'];?>"</label>
 
-        <button type="submit"><?php echo $donationID && $action=="edit"?'Update donation details':'Delete donation details'?></button>
-        <a href="admin_donations.php"><button type="button">Cancel</button></a> <!--not updated successfully-->
+        <button type="button" onclick="displayActionPopup()"><?php echo $donationID && $action=="edit"?'Update donation details':'Delete donation details'?></button>
+        <a href="admin_donations.php"><button type="button">Cancel</button></a>
     </form>
+
+    <div id="action-popup" class="action-popup" style="display:none;">
+        <form id="action-form" method="post" action="">
+            <h2>Confirm action?</h2>
+            <button type="submit" name="confirmAction">Yes</button>
+            <button type="button" onclick="closeActionPopup()">No</button>
+        </form>
+    </div>
 </main>
 </body>
+<script src="main.js"></script>
 </html>

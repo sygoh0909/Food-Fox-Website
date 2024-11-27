@@ -20,7 +20,7 @@ $visitCount = cookie();
         }
         .donations-table {
             margin-top: 20px;
-            overflow-x: auto; /* To allow scrolling on smaller screens */
+            overflow-x: auto;
         }
     </style>
 </head>
@@ -96,14 +96,14 @@ $visitCount = cookie();
                 </tr>
                 <?php
                 $conn = connection();
-                $sql = "SELECT d.feedback, m.memberName FROM donations d, members m WHERE d.memberID = m.memberID";
+                $sql = "SELECT d.donationID, d.feedback, m.memberName FROM donations d, members m WHERE d.memberID = m.memberID";
                 $result = $conn->query($sql);
                 if ($result->num_rows > 0) {
                     while($row = $result->fetch_assoc()) {
                         echo "<tr>";
                         echo "<td>" . $row["memberName"] . "</td>";
                         echo "<td>" . $row["feedback"] . "</td>";
-                        echo "<td><button>Delete</button>"; //delete - pop up beside - comfirm delete - delete feedback from donation table
+                        echo "<td><button type='button' onclick='displayDeletePopup()'>Delete</button>";
                         echo "</tr>";
                     }
                 }
