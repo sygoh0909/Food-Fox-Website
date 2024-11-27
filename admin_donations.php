@@ -46,9 +46,10 @@ $visitCount = cookie();
     <section class="donations">
         <h2>Donations Management</h2>
         <div class="search">
-            <label><input type="text" placeholder="Search donations..."></label>
-            <button>Search</button> <!--search feature-->
-
+            <form method="get" action="">
+                <label><input type="text" name="search" placeholder="Search donations..."></label>
+                <button type="submit">Search</button> <!--search feature-->
+            </form>
         </div>
         <div class="donations-table">
             <table>
@@ -61,7 +62,15 @@ $visitCount = cookie();
                 </tr>
                 <?php
                 $conn = connection();
-                $sql = "SELECT d.*, m.memberName FROM donations d, members m WHERE d.memberID = m.memberID";
+
+                $searchQuery = isset($_GET['search']) ? $_GET['search'] : "";
+
+                $sql = "SELECT d.*, m.memberName FROM donations d JOIN members m ON d.memberID = m.memberID";
+
+                if(!empty($searchQuery)){
+                    $sql .= " WHERE memberName LIKE '%".$searchQuery."%' OR amount LIKE '%".$searchQuery."%' OR donationDate LIKE '%".$searchQuery."%'";
+                }
+
                 $result = $conn->query($sql);
                 if ($result->num_rows > 0) {
                     while($row = $result->fetch_assoc()) {

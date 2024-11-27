@@ -41,11 +41,12 @@ $visitCount = cookie();
 <main>
     <section class="members">
         <h2>Members Management</h2>
-        <div style="text-align: center;">
-            <label><input type="text" placeholder="Search members..."></label>
-            <button>Search</button>
-            <!--search feature-->
-
+        <div class="search">
+            <form method="get" action="">
+                <label><input type="text" name="search" placeholder="Search by name or join date..."></label>
+                <button type="submit">Search</button>
+                <!--search feature-->
+            </form>
         </div>
         <div class="member-table">
             <table>
@@ -58,7 +59,15 @@ $visitCount = cookie();
                 </tr>
                 <?php
                 $conn = connection();
+
+                $searchQuery = isset($_GET['search']) ? $_GET['search'] : ""; //check search or not
+
                 $sql = "SELECT memberID, memberName, email, joinDate FROM members";
+
+                if (!empty($searchQuery)) {
+                    $sql .= " WHERE memberName LIKE '%" . $searchQuery . "%'" . "OR joinDate LIKE '%" . $searchQuery . "%'";
+                }
+
                 $result = $conn->query($sql);
                 if ($result->num_rows > 0) {
                     while($row = $result->fetch_assoc()) {

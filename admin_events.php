@@ -46,9 +46,11 @@ $visitCount = cookie();
     <section class="events">
         <h2>Events Management</h2>
         <div class="search">
-            <label><input type="text" placeholder="Search events..."></label>
-            <button>Search</button> <!--search feature-->
-            <a href="action_event.php?action=add"><button id="button1">Add New Event</button></a>
+            <form method="get" action="">
+                <label><input type="text" name="search" placeholder="Search events..."></label>
+                <button type="submit">Search</button> <!--search feature-->
+                <a href="action_event.php?action=add"><button id="button1" type="button">Add New Event</button></a>
+            </form>
         </div>
         <div class="upcoming-events-table">
             <table>
@@ -59,15 +61,14 @@ $visitCount = cookie();
                     <th>Actions</th>
                 </tr>
                 <?php
-                $dbhost = "localhost";
-                $dbuser = "root";
-                $dbpass = "";
-                $dbname = "foodfoxdb";
-                $conn = new mysqli($dbhost, $dbuser, $dbpass, $dbname);
-                if ($conn->connect_error) {
-                    die("Connection failed: " . $conn->connect_error);
-                }
+                $conn = connection();
+
+                $searchQuery = isset ($_GET['search']) ? $_GET['search'] : '';
                 $sql = "SELECT e.eventID, e.eventName, COUNT(r.registrationID) AS totalRegistrations FROM events e LEFT JOIN registrations r ON e.eventID = r.eventID WHERE e.eventStatus='Upcoming' GROUP BY e.eventID, e.eventName";
+
+                if (!empty ($searchQuery)) {
+                    $sql .= "WHERE (e.eventName LIKE '%$searchQuery%')";//wrong
+                }
                 $result = $conn->query($sql);
 
                 if ($result->num_rows > 0) {
