@@ -18,7 +18,11 @@ $visitCount = cookie();
             margin-bottom: 20px;
             text-align: center;
         }
-        .upcoming-events-table {
+        h3{
+            margin-top: 30px;
+            text-align: center;
+        }
+        .upcoming-events-table, .past-events-table {
             margin-top: 20px;
             overflow-x: auto; /* To allow scrolling on smaller screens */
         }
@@ -54,9 +58,10 @@ $visitCount = cookie();
         </div>
         <div class="upcoming-events-table">
             <table>
+                <h3>Upcoming Events</h3>
                 <tr>
-                    <th>Upcoming Event ID</th>
-                    <th>Upcoming Event Name</th>
+                    <th>Event ID</th>
+                    <th>Event Name</th>
                     <th>Total Registrations</th>
                     <th>Actions</th>
                 </tr>
@@ -64,12 +69,14 @@ $visitCount = cookie();
                 $conn = connection();
 
                 $searchQuery = isset ($_GET['search']) ? $_GET['search'] : '';
-                $sql = "SELECT e.eventID, e.eventName, COUNT(r.registrationID) AS totalRegistrations FROM events e LEFT JOIN registrations r ON e.eventID = r.eventID WHERE e.eventStatus='Upcoming' GROUP BY e.eventID, e.eventName";
+                $upcomingSql = "SELECT e.eventID, e.eventName, COUNT(r.registrationID) AS totalRegistrations FROM events e LEFT JOIN registrations r ON e.eventID = r.eventID WHERE e.eventStatus = 'Upcoming'";
 
                 if (!empty ($searchQuery)) {
-                    $sql .= "WHERE (e.eventName LIKE '%$searchQuery%')";//wrong
+                    $upcomingSql .= " AND (e.eventName LIKE '%$searchQuery%' OR e.eventStatus LIKE '%$searchQuery%')";
                 }
-                $result = $conn->query($sql);
+
+                $upcomingSql .= " GROUP BY e.eventID, e.eventName";
+                $result = $conn->query($upcomingSql);
 
                 if ($result->num_rows > 0) {
                     while($row = $result->fetch_assoc()) {
@@ -89,23 +96,31 @@ $visitCount = cookie();
         </div>
         <div class="past-events-table">
             <table>
+                <h3>Past Events</h3>
                 <tr>
-                    <th>Past Event ID</th>
-                    <th>Past Event Name</th>
-                    <th>Total Registrations</th>
+                    <th>Event ID</th>
+                    <th>Event Name</th>
+                    <th>Attendees</th> <!--count for checkin ppl later on-->
                     <th>Actions</th>
                 </tr>
                 <?php
                 $conn = connection();
-                $sql = "SELECT e.eventID, e.eventName, COUNT(r.registrationID) AS totalRegistrations FROM events e LEFT JOIN registrations r ON e.eventID = r.eventID WHERE e.eventStatus='Past' GROUP BY e.eventID, e.eventName";
-                $result = $conn->query($sql);
+
+                $searchQuery = isset ($_GET['search']) ? $_GET['search'] : '';
+                $pastSql = "SELECT e.eventID, e.eventName, p.attendees FROM events e INNER JOIN pastevents p ON e.eventID = p.eventID WHERE e.eventStatus='Past'";
+
+                if (!empty ($searchQuery)){
+                    $pastSql .= " AND (e.eventName LIKE '%$searchQuery%' OR e.eventStatus LIKE '%$searchQuery%')";
+                }
+                $pastSql .= " GROUP BY e.eventID, e.eventName, p.attendees";
+                $result = $conn->query($pastSql);
 
                 if ($result->num_rows > 0) {
                     while($row = $result->fetch_assoc()) {
                         echo "<tr>";
                         echo "<td data-event-id='" .htmlspecialchars($row["eventID"]) ."'>" .str_repeat('*', strlen($row["eventID"]))."</td>";
                         echo "<td>" . $row["eventName"] . "</td>";
-                        echo "<td>" . $row["totalRegistrations"] . "</td>";
+                        echo "<td>" . $row["attendees"] . "</td>";
                         echo "<td><a href='action_event.php?eventID=" .$row['eventID']. "&action=editPast'><button>Edit</button></a><a href='action_event.php?eventID=" .$row['eventID']. "&action=deletePast'><button>Delete</button></a><a href='admin_registrations.php?eventID=" .$row['eventID']."'><button>View Registrations</button></a></td>";
                         echo "</tr>";
                     }
