@@ -418,7 +418,7 @@ include ('cookie.php')
 
     <div id="action-popup" class="action-popup" style="display:none;">
         <form id="action-form" method="post" action="">
-            <h2>Are you sure you want to delete your account?</h2>
+            <h2>Are you sure you want to delete your account?</h2> <!--delete or log out-->
             <button type="submit" name="confirmAction">Yes</button>
             <button type="button" onclick="closeActionPopup()">No</button>
         </form>

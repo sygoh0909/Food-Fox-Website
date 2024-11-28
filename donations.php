@@ -46,7 +46,8 @@ include ('cookie.php');
         }
 
         .chart-container {
-            width: 60%;
+            width: 500px;
+            height: 300px;
         }
 
         .info-container {
@@ -128,11 +129,47 @@ include ('cookie.php');
             color: #5C4033;
             margin: 15px 10px;
         }
+
+        .donation-popup {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #f4f4f4;
+            padding: 20px;
+            border: 1px solid #7F6C54;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+            text-align: center;
+        }
+
+        .donation-popup h2 {
+            color: #7F6C54;
+            font-family: 'Arial', sans-serif;
+            font-size: 18px;
+            margin-bottom: 15px;
+        }
+
+        .donation-popup button {
+            background-color: #7F6C54;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 8px 16px;
+            cursor: pointer;
+            font-size: 14px;
+            font-family: 'Arial', sans-serif;
+            transition: background-color 0.3s ease;
+            margin: 0 5px;
+        }
     </style>
 </head>
 <body>
 <?php
 $fundraisingGoal = 5000;
+$maxMealsProvided = 10000;
+$maxPeopleSupported = 5000;
 $conn = connection();
 
 $sql = "SELECT SUM(amount) AS total_donations FROM donations";
@@ -140,6 +177,7 @@ $result = $conn->query($sql);
 $totalDonations = ($result->num_rows>0) ? $result->fetch_assoc()['total_donations'] : 0;
 
 $mealsProvided = floor($totalDonations / 10);
+$mealsProvidedPercentage = min(100, ($mealsProvided / $maxMealsProvided) * 100); //cap at 100%
 
 $count = "SELECT COUNT(*) AS total_people FROM donations";
 $result = $conn->query($count);
@@ -148,20 +186,22 @@ if ($result->num_rows > 0) {
 }
 
 $peopleSupported = $row['total_people'];
+$peopleSupportedPercentage = min(100, ($peopleSupported / $maxPeopleSupported) * 100);
 
 if (isset($_GET['action']) && $_GET['action'] == 'getProgress') {
-    $progressPercentage = $totalDonations / $fundraisingGoal * 100;
+    $progressPercentage = min(100, ($totalDonations / $fundraisingGoal * 100));
 
-    if ($progressPercentage > 100) {
-        $progressPercentage = 100;
-    }
+//    if ($progressPercentage > 100) {
+//        $progressPercentage = 100;
+//    }
 
-    echo json_encode([
+    $data = [
         'totalDonations' => $totalDonations,
         'progressPercentage' => $progressPercentage,
-        'mealsProvided' => $mealsProvided,
-        'peopleSupported' => $peopleSupported,
-    ]);
+        'mealsPercentage' => $mealsProvidedPercentage,
+        'peoplePercentage' => $peopleSupportedPercentage
+    ];
+    echo json_encode($data);
     exit;
 }
 
@@ -203,13 +243,13 @@ if (isset($_GET['action']) && $_GET['action'] == 'getProgress') {
     <h2>Make a Donation</h2>
     <?php
     $conn = connection();
-    $memberID = $_SESSION['memberID'];
+    $memberID = isset($_SESSION['memberID']) ? $_SESSION['memberID'] : 0;
     //if member only can donate
 
     if ($conn->connect_error) {
         die("Connection failed: " . $conn->connect_error);
     }
-    if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['confirm-donate'])) {
+    if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['confirmDonate'])) {
         $amount = $_POST['confirm-amount'];
         $paymentMethod = $_POST['payment-method'];
 
@@ -225,8 +265,14 @@ if (isset($_GET['action']) && $_GET['action'] == 'getProgress') {
         if (empty($errors)) {
             $sql = "INSERT INTO donations (memberID, amount, paymentMethod) VALUES ('$memberID', '$amount', '$paymentMethod')";
             if ($conn->query($sql) === TRUE) {
-                echo "<script>alert('Thank you for your donation!');</script>";
-                //do a calculation for donation points and save to points in member
+
+                //points get from donating
+                $pointsEarned = floor($amount / 10);
+                $updateSql = "UPDATE members SET points = points + $pointsEarned WHERE memberID = '$memberID'";
+                $conn->query($updateSql);
+
+                echo "<script>alert('Thank you for your donation!'); window.location.href = window.location.href</script>"; //refresh page so that member points refreshed also
+                //do u wan to leave a feedback?
             }
             else{
                 echo "Error: " . $sql . "<br>" . $conn->error;
@@ -238,42 +284,34 @@ if (isset($_GET['action']) && $_GET['action'] == 'getProgress') {
     }
     ?>
     <form method="POST" enctype="multipart/form-data">
-        <div class="donations-buttons"> <!--error handling-->
+        <div class="donations-buttons">
             <button type="button" class="donation-btn" name="amount" value="10">10</button>
             <button type="button" class="donation-btn" name="amount" value="20">20</button>
             <button type="button" class="donation-btn" name="amount" value="50">50</button>
             <button type="button" class="donation-btn" name="amount" value="100">100</button>
         </div>
         <label><input id="donation-input" type="text" name="amount" placeholder="Enter the amount you want to donate..."></label>
-        <button type="button" class="donate-submit" onclick="showConfirmation()">Donate</button>
+        <button type="button" class="donate-submit" onclick="displayDonationPopup()">Donate</button>
+
+        <div id="donation-popup" class="donation-popup" style="display:none;">
+            <h2>Confirm Donation?</h2>
+            <p>You are about to donate: <span id="confirm-amount"></span></p>
+            <input type="hidden" name="confirm-amount" id="confirm-amount-input">
+
+            <label for="payment-method">Choose a payment method:</label>
+            <select name="payment-method" id="payment-method" required>
+                <option value="credit-card">Credit Card</option> <!--link to each different payment page for different methods, same pop up box-->
+                <option value="tng">Touch n Go</option>
+                <option value="bank-transfer">Bank Transfer</option>
+            </select>
+
+            <button type="submit" name="confirmDonate">Yes</button>
+            <button type="button" onclick="closeDonationPopup()">No</button>
+        </div>
+
+        <!--after donate successfully, show do u wanna leave a feedback, same pop up box-->
 
     </form>
-
-    <!--popup-->
-    <div id="confirmation-popup" class="confirmation-popup" style="display: none">
-        <div class="confirmation-content">\
-            <h3>Confirm your Donation</h3>
-            <p>You are about to donate: <span id="confirm-amount"></span></p>
-            <form method="post" enctype="multipart/form-data">
-                <input type="hidden" name="confirm-amount" id="confirm-amount-input">
-                <label for="payment-method">Choose a payment method:</label>
-                <select name="payment-method" id="payment-method" required>
-                    <option value="credit-card">Credit Card</option> <!--link to each different payment page-->
-                    <option value="tng">Touch n Go</option>
-                    <option value="bank-transfer">Bank Transfer</option>
-                </select>
-                <button type="submit" name="confirm-donate">Confirm Donate</button>
-                <button type="button" onclick="closePopUp()">Cancel</button><!--close popup-->
-            </form>
-        </div>
-    </div>
-
-    <div id="feedback-popup" class="feedback-popup" style="display: none">
-        <div class="feedback-content">
-
-        </div>
-    </div>
-
 
     <h2>Where your donations goes?</h2>
     <div class="donations-container">
@@ -297,7 +335,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'getProgress') {
             <canvas id="impactChart" width="400" height="200"></canvas>
         </div>
         <div class="info-container">
-            <p id="mealsText">Meals Provided: <?=$mealsProvided?></p>
+            <p id="mealsText">Meals Provided: <?=$mealsProvided?></p> <!--here show numbers not percentage-->
             <p id="peopleText">People Supported: <?=$peopleSupported?></p>
         </div>
     </div>
@@ -315,56 +353,43 @@ if (isset($_GET['action']) && $_GET['action'] == 'getProgress') {
     }
     ?>
 </main>
-<script src="https://cdn.jsdelivr.net/npm/chart.js@3.7.0"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
     //chart
-    const ctx = document.getElementById('impactChart').getContext('2d');
-    const impactChart = new Chart(ctx, {
-        type: 'bar',
-        data:{
-            labels: ['Meals Provided', 'People Supported'],
-            datasets: [{
-                label: 'Meals Provided',
-                data: [0, 0],
-                backgroundColor: '#4caf50',
-                borderColor: '#388e3c',
-                borderWidth: 1
-            },{
-                label: 'People Supported',
-                data: [0, 0],
-                backgroundColor: '#2196f3',
-                borderColor: '#1976d2',
-                borderWidth: 1
-            }]
-        },
-        options: {
-            responsive: true,
-            scales: {
-                y: {
-                    beginAtZero: true,
-                    max: 100, //0-100%
-                    ticks: {
-                        callback: function (value){
-                            return value % 20 === 0 ? `${value}%` : '';
-                        }
-                    }
-                }
-            },
-            plugins: {
-                tooltip: {
-                    callbacks:{
-                        label: function(tooltipItem){
-                            if (tooltipItem.datasetIndex === 0) {
-                                return `${tooltipItem.dataset.label}: ${tooltipItem.raw}%`;
-                            } else if (tooltipItem.datasetIndex === 1) {
-                                return `${tooltipItem.dataset.label}: ${tooltipItem.raw} people`;
+    fetch('?fetchData=true')
+        .then(response => response.json())
+        .then(data => {
+
+            const ctx = document.getElementById('impactChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['Meals Provided', 'People Supported'],
+                    datasets: [{
+                        label: '% Achieved',
+                        data: [data.mealsPercentage, data.peoplePercentage],
+                        backgroundColor: ['#4CAF50', '#2196F3'],
+                        borderColor: ['#388E3C', '#1976D2'],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 100,
+                            ticks: {
+                                callback: value => value + '%'
                             }
                         }
+                    },
+                    plugins: {
+                        legend: { display: false }
                     }
                 }
-            }
-        }
-    })
+            });
+        })
+        .catch(error => console.error('Error fetching data:', error));
 
     function updateProgress(){
         fetch (window.location.href + '?action=getProgress')
@@ -394,6 +419,8 @@ if (isset($_GET['action']) && $_GET['action'] == 'getProgress') {
     //buttons
     const buttons = document.querySelectorAll('.donation-btn');
     const donationInput = document.getElementById('donation-input');
+    const confirmAmount = document.getElementById('confirm-amount');
+    const confirmAmountInput = document.getElementById('confirm-amount-input');
 
     buttons.forEach(button =>{
         button.addEventListener('click', () => {
@@ -401,14 +428,22 @@ if (isset($_GET['action']) && $_GET['action'] == 'getProgress') {
         })
     })
 
-    function showConfirmation(){
-        const amount = document.getElementById('donation-input').value;
-        document.getElementById('confirm-amount').textContent = `RM ${amount}`;
-        document.getElementById('confirm-amount-input').value =  amount;
-        document.getElementById('confirmation-popup').style.display = 'block';
+    function displayDonationPopup() {
+        const amount = donationInput.value.trim();
+
+        if (amount === "" || isNaN(amount) || parseInt(amount) <= 0) {
+            alert('Please enter a valid donation amount.');
+            return;
+        }
+
+        confirmAmount.textContent = amount;
+        confirmAmountInput.value = amount;
+
+        document.getElementById('donation-popup').style.display = 'block';
     }
-    function closePopUp(){
-        document.getElementById('confirmation-popup').style.display = 'none';
+
+    function closeDonationPopup() {
+        document.getElementById('donation-popup').style.display = 'none';
     }
 </script>
 <footer>
