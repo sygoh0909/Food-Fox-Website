@@ -25,10 +25,10 @@ $visitCount = cookie();
     <nav>
         <div class="navbar">
             <div class="main-links">
-                <a href="admin_main.php">Home</a>
-                <a href="admin_members.php">Members</a>
-                <a href="admin_events.php">Events</a>
-                <a href="admin_donations.php">Donation</a>
+                <a href="admin_main.php" class="roundButton">Home</a>
+                <a href="admin_members.php" class="roundButton">Members</a>
+                <a href="admin_events.php" class="roundButton">Events</a>
+                <a href="admin_donations.php" class="roundButton">Donation</a>
             </div>
             <div class="nav-links">
                 <?php
