@@ -288,9 +288,8 @@ if (isset($_GET['action']) && $_GET['action'] == 'getProgress') {
             <button type="button" class="donation-btn" name="amount" value="100">100</button>
         </div>
         <label><input id="donation-input" type="text" name="amount" placeholder="Enter the amount you want to donate..."></label>
-        <p style="color: red"><?= isset ($errors['amount']) ? $errors['amount'] : '' ?></p>
-
         <button type="button" class="donate-submit" onclick="displayDonationPopup()">Donate</button>
+        <p style="color: red"><?= isset ($errors['amount']) ? $errors['amount'] : '' ?></p>
 
         <div id="donation-popup" class="donation-popup" style="display:none;">
             <h2>Confirm Donation?</h2>
@@ -430,10 +429,10 @@ if (isset($_GET['action']) && $_GET['action'] == 'getProgress') {
     function displayDonationPopup() {
         const amount = donationInput.value.trim();
 
-        if (amount === "" || isNaN(amount) || parseInt(amount) <= 0) {
+        /*if (amount === "" || isNaN(amount) || parseInt(amount) <= 0) {
             alert('Please enter a valid donation amount.');
             return;
-        }
+        }*/
 
         confirmAmount.textContent = amount;
         confirmAmountInput.value = amount;

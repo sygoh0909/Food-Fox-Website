@@ -31,6 +31,7 @@ $visitCount = cookie();
             //details like member email edit through another page not here
 //            $eventName = $_POST['events'];
             $dietaryRestrictions = $_POST['dietaryRestrictions'];
+            $registerType = $_POST['registerType'];
 
         $errors = [];
 
