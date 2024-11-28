@@ -256,10 +256,10 @@ if (isset($_GET['action']) && $_GET['action'] == 'getProgress') {
         $errors = [];
 
         if (empty($amount)) {
-            $errors[] = 'You must enter an amount.';
+            $errors['amount'] = 'You must enter an amount.';
         }
         elseif (!preg_match('/^[1-9][0-9]*$/', $amount)) {
-            $errors[] = 'The amount must be a positive number.';
+            $errors['amount'] = 'The amount must be a positive number.';
         }
 
         if (empty($errors)) {
@@ -278,9 +278,6 @@ if (isset($_GET['action']) && $_GET['action'] == 'getProgress') {
                 echo "Error: " . $sql . "<br>" . $conn->error;
             }
         }
-        foreach ($errors as $error) {
-            echo "<p style='color: red;'>$error</p>";
-        }
     }
     ?>
     <form method="POST" enctype="multipart/form-data">
@@ -291,6 +288,8 @@ if (isset($_GET['action']) && $_GET['action'] == 'getProgress') {
             <button type="button" class="donation-btn" name="amount" value="100">100</button>
         </div>
         <label><input id="donation-input" type="text" name="amount" placeholder="Enter the amount you want to donate..."></label>
+        <p style="color: red"><?= isset ($errors['amount']) ? $errors['amount'] : '' ?></p>
+
         <button type="button" class="donate-submit" onclick="displayDonationPopup()">Donate</button>
 
         <div id="donation-popup" class="donation-popup" style="display:none;">
