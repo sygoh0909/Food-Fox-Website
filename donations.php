@@ -46,8 +46,7 @@ include ('cookie.php');
         }
 
         .chart-container {
-            width: 500px;
-            height: 300px;
+            width: 60%;
         }
 
         .info-container {
@@ -168,8 +167,8 @@ include ('cookie.php');
 <body>
 <?php
 $fundraisingGoal = 5000;
-$maxMealsProvided = 10000;
-$maxPeopleSupported = 5000;
+$maxMealsProvided = 1000;
+$maxPeopleSupported = 500;
 $conn = connection();
 
 $sql = "SELECT SUM(amount) AS total_donations FROM donations";
@@ -195,14 +194,17 @@ if (isset($_GET['action']) && $_GET['action'] == 'getProgress') {
 //        $progressPercentage = 100;
 //    }
 
-    $data = [
-        'totalDonations' => $totalDonations,
-        'progressPercentage' => $progressPercentage,
-        'mealsPercentage' => $mealsProvidedPercentage,
-        'peoplePercentage' => $peopleSupportedPercentage
-    ];
-    echo json_encode($data);
-    exit;
+    if (isset($_GET['fetchData']) && $_GET['fetchData'] === 'true') {
+        $data = [
+            'totalDonations' => $totalDonations,
+            'progressPercentage' => $progressPercentage,
+            'mealsPercentage' => $mealsProvidedPercentage,
+            'peoplePercentage' => $peopleSupportedPercentage
+        ];
+        header('Content-Type: application/json');
+        echo json_encode($data);
+        exit;
+    }
 }
 
 ?>
@@ -303,8 +305,25 @@ if (isset($_GET['action']) && $_GET['action'] == 'getProgress') {
                 <option value="bank-transfer">Bank Transfer</option>
             </select>
 
-            <button type="submit" name="confirmDonate">Yes</button>
-            <button type="button" onclick="closeDonationPopup()">No</button>
+            <button type="button" onclick="proceed()">Proceed</button>
+            <button type="button" onclick="closeDonationPopup()">Cancel</button>
+        </div>
+
+        <div id="payment-popup" class="payment-popup" style="display:none;">
+            <!--check if details correct?-->
+            <div id="credit-card-info" style="display:none;">
+                <p>Please enter your Credit Card details.</p>
+                <!-- Add fields for Credit Card info -->
+            </div>
+            <div id="tng-info" class="payment-popup" style="display:none;">
+                <p>Please provide your Touch n Go details.</p>
+                <!-- Add fields for TNG info -->
+            </div>
+            <div id="bank-transfer-info" class="payment-popup" style="display:none;">
+                <p>Please provide your Bank Transfer details.</p>
+                <!-- Add fields for Bank Transfer info -->
+            </div>
+            <button type="submit" name="confirmDonate">Donate</button>
         </div>
 
         <!--after donate successfully, show do u wanna leave a feedback, same pop up box-->
@@ -354,41 +373,53 @@ if (isset($_GET['action']) && $_GET['action'] == 'getProgress') {
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
     //chart
-    fetch('?fetchData=true')
-        .then(response => response.json())
-        .then(data => {
-
-            const ctx = document.getElementById('impactChart').getContext('2d');
-            new Chart(ctx, {
-                type: 'bar',
-                data: {
-                    labels: ['Meals Provided', 'People Supported'],
-                    datasets: [{
-                        label: '% Achieved',
-                        data: [data.mealsPercentage, data.peoplePercentage],
-                        backgroundColor: ['#4CAF50', '#2196F3'],
-                        borderColor: ['#388E3C', '#1976D2'],
-                        borderWidth: 1
-                    }]
-                },
-                options: {
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            max: 100,
-                            ticks: {
-                                callback: value => value + '%'
-                            }
+    const ctx = document.getElementById('impactChart').getContext('2d');
+    const impactChart = new Chart(ctx, {
+        type: 'bar',
+        data:{
+            labels: ['Meals Provided', 'People Supported'],
+            datasets: [{
+                label: 'Meals Provided',
+                data: [100, 0], //now is hard code
+                backgroundColor: '#4caf50',
+                borderColor: '#388e3c',
+                borderWidth: 1
+            },{
+                label: 'People Supported',
+                data: [0, 80],
+                backgroundColor: '#2196f3',
+                borderColor: '#1976d2',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    max: 100, //0-100%
+                    ticks: {
+                        callback: function (value){
+                            return value % 20 === 0 ? `${value}%` : '';
                         }
-                    },
-                    plugins: {
-                        legend: { display: false }
                     }
                 }
-            });
-        })
-        .catch(error => console.error('Error fetching data:', error));
-
+            },
+            plugins: {
+                tooltip: {
+                    callbacks:{
+                        label: function(tooltipItem){
+                            if (tooltipItem.datasetIndex === 0) {
+                                return `${tooltipItem.dataset.label}: ${tooltipItem.raw}%`;
+                            } else if (tooltipItem.datasetIndex === 1) {
+                                return `${tooltipItem.dataset.label}: ${tooltipItem.raw} people`;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    })
     function updateProgress(){
         fetch (window.location.href + '?action=getProgress')
             .then(response => response.json())
@@ -442,6 +473,28 @@ if (isset($_GET['action']) && $_GET['action'] == 'getProgress') {
 
     function closeDonationPopup() {
         document.getElementById('donation-popup').style.display = 'none';
+        document.getElementById('payment-popup').style.display = 'none'; //not sure needed or not
+    }
+
+    function proceed(){
+
+        var paymentMethod = document.getElementById('payment-method').value;
+
+        document.getElementById('credit-card-info').style.display = 'none';
+        document.getElementById('tng-info').style.display = 'none';
+        document.getElementById('bank-transfer-info').style.display = 'none';
+
+        if (paymentMethod === "credit-card"){
+            document.getElementById('credit-card-info').style.display = 'block';
+        }
+        else if (paymentMethod === "tng") {
+            document.getElementById('tng-info').style.display = 'block'
+        }
+        else if (paymentMethod === "bank-transfer"){
+            document.getElementById('bank-transfer-info').style.display = 'block';
+        }
+
+        document.getElementById('payment-popup').style.display = 'block';
     }
 </script>
 <footer>
