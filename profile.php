@@ -369,6 +369,7 @@ include ('cookie.php')
 
                     <div class="change-password-field" id="change-password-field" style="display: <?= $passwordChangeAttempt ? 'block' : 'none'; ?>;">
                         <label><input type="text" name="currentPassword" placeholder="Enter your current password..."></label>
+                        <a href="forgotpassword.php>"><p>Forgot password?</p></a>
                         <p class="error-message"><?= isset($passwordError['currentPassword']) ? $passwordError['currentPassword'] : '';?></p>
 
                         <label><input type="text" name="newPassword" placeholder="Enter your new password..."></label>
