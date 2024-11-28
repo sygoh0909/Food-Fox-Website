@@ -68,6 +68,17 @@ include ('cookie.php')
         .btn.logout {
             position: absolute;
             bottom: 10px;
+            right: 10px;
+            background-color: #7F6C54;
+            color: #fff;
+            border-radius: 5px;
+            padding: 10px 15px;
+            font-size: 1em;
+        }
+
+        .btn.back {
+            position: absolute;
+            bottom: 10px;
             left: 10px;
             background-color: #7F6C54;
             color: #fff;
@@ -76,7 +87,7 @@ include ('cookie.php')
             font-size: 1em;
         }
 
-        .btn.logout:hover {
+        .btn.logout, .back:hover {
             background-color: #6B5A48;
         }
 
@@ -314,6 +325,7 @@ include ('cookie.php')
                 </div>
                 <button type='button' class="btn" id='editProfileBtn'>Edit Profile</button> <!--if press this user only can edit their info-->
                 <?php
+                echo "<a href='mainpage.php?'><button type='button' class='btn back'>Back to Main Page</button></a>";
                 echo "<form action='' method='POST'><button type='submit' class='btn logout' name='logout'>Log Out</button></form>";
 
                 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['logout'])){
