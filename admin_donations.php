@@ -96,21 +96,49 @@ $visitCount = cookie();
                 </tr>
                 <?php
                 $conn = connection();
-                $sql = "SELECT d.donationID, d.feedback, m.memberName FROM donations d, members m WHERE d.memberID = m.memberID";
+                $sql = "SELECT d.donationID, d.feedback, m.memberName FROM donations d, members m WHERE d.memberID = m.memberID AND d.hidden = 0";
                 $result = $conn->query($sql);
                 if ($result->num_rows > 0) {
                     while($row = $result->fetch_assoc()) {
-                        echo "<tr>";
+                        echo "<tr id='feedback-" . $row["donationID"] . "'>";
                         echo "<td>" . $row["memberName"] . "</td>";
                         echo "<td>" . $row["feedback"] . "</td>";
-                        echo "<td><button type='button' onclick='displayDeletePopup()'>Delete</button>";
+                        echo "<td><button type='button' name='hide' onclick='displayActionPopup(" . $row["donationID"] . ")'>Hide</button>";
                         echo "</tr>";
                     }
                 }
+
+                if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['confirmAction'])) {
+                    $donationID = $_POST['donationID'];
+
+                    $sql = "UPDATE donations SET hidden = 1 WHERE donationID = '$donationID'";
+                    if ($conn->query($sql) === TRUE) {
+                        echo "<script>alert('Feedback hidden successfully!'); window.location.href = window.location.href </script>')";
+                    }
+                }
                 ?>
+                <form method="post" action="">
+                    <div id="action-popup" class="action-popup" style="display:none;">
+                        <h2>Confirm to hide this feedback?</h2>
+                        <input type="hidden" name="donationID" id="donationID">
+                        <button type="submit" name="confirmAction">Yes</button>
+                        <button type="button" onclick="closeActionPopup()">No</button>
+                    </div>
+                </form>
             </table>
         </div>
     </section>
 </main>
+<script>
+    function displayActionPopup(donationID) {
+        document.getElementById('donationID').value = donationID;
+        document.getElementById('action-popup').style.display = 'block';
+    }
+
+    function closeActionPopup() {
+        document.getElementById('action-popup').style.display = 'none';
+    }
+
+</script>
 </body>
 </html>

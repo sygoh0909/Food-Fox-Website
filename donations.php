@@ -344,7 +344,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'getProgress') {
     <?php
     $conn = connection();
 
-    $sql = "SELECT feedback FROM donations";
+    $sql = "SELECT feedback FROM donations WHERE hidden = 0"; //show all feedback not hide by admin
     $result = $conn->query($sql);
     if ($result->num_rows > 0) {
         while($row = $result->fetch_assoc()) {
