@@ -31,9 +31,6 @@ $visitCount = cookie();
             //details like member email edit through another page not here
 //            $eventName = $_POST['events'];
             $dietaryRestrictions = $_POST['dietaryRestrictions'];
-            $sizes = $_POST['sizes'];
-            $specialAccommodation = $_POST['specialAccommodation'];
-            $skills = $_POST['skills'];
 
         $errors = [];
 
@@ -44,13 +41,21 @@ $visitCount = cookie();
 
                 if ($conn->query($sql) === TRUE){
                         if ($registrationInfo['registerType'] == "Participant"){
+                            $sizes = $_POST['sizes'];
+                            $specialAccommodation = $_POST['specialAccommodation'];
+
+                            if (!in_array($sizes, ['XS', 'S', 'M', 'L', 'XL'])) {
+                                $errors['sizes'] = "Invalid T-Shirt size selected";
+                            }
+
                             $sql = "UPDATE participants SET specialAccommodation = '$specialAccommodation', shirtSize = '$sizes' WHERE registrationID = $registrationID";
                         }
                         elseif ($registrationInfo['registerType'] == "Volunteer"){
+                            $skills = $_POST['skills'];
                             $sql = "UPDATE volunteers SET relevantSkills = '$skills' WHERE registrationID = $registrationID";
                         }
                         else{
-                            //error?
+                            //error
                         }
                         if ($conn->query($sql) === TRUE){
                             echo "<script>alert('Registration updated successfully!'); window.location.href='admin_registrations.php?eventID=".$registrationInfo['eventID']."';</script>"; //jump back but with blank?
@@ -64,9 +69,9 @@ $visitCount = cookie();
                 }
             }
         }
-        foreach ($errors as $error) {
-            echo "<p style='color:red;'>$error</p>";
-        }
+//        foreach ($errors as $error) {
+//            echo "<p style='color:red;'>$error</p>";
+//        }
         }
     }
     ?>
@@ -95,7 +100,7 @@ $visitCount = cookie();
             <label><input type="text" name="specialAccommodation" value="<?php echo isset ($registrationInfo['specialAccommodation']) ? $registrationInfo['specialAccommodation'] :'';?>" ></label>
 
             <p>T-Shirt Size</p>
-            <label for="sizes">Choose a T-Shirt Size:</label>
+            <label for="sizes"></label>
             <select name="sizes" id="sizes">
                 <?php
                 $sizes = ['XS', 'S', 'M', 'L', 'XL'];
@@ -105,11 +110,10 @@ $visitCount = cookie();
                 }
                 ?>
             </select>
-            <!--provide t-shirt size chart also-->
         </div>
 
         <div class="volunteer-field" style="display: <?php echo $registrationInfo['registerType'] == "Volunteer" ? "block" : "none"; ?>;">
-            <p>Please note that you should be free the whole day as volunteer. </p>
+            <!--<p>Please note that you should be free the whole day as volunteer. </p>-->
 
             <p>Relevant skills:</p>
             <label><input type="text" name="skills" value="<?php echo isset ($registrationInfo['skills']) ? $registrationInfo['skills']:'';?>"></label>
@@ -117,15 +121,13 @@ $visitCount = cookie();
 
         <button type="button" onclick="displayActionPopup()"><?php echo $registrationID && $action=='edit'?'Update Registration info': 'Delete Registration Info';?></button>
         <?php echo "<a href='admin_registrations.php?eventID=" .$registrationInfo['eventID']."'><button type='button'>Cancel</button></a>"?>
-    </form>
 
-    <div id="action-popup" class="action-popup" style="display:none;">
-        <form id="action-form" method="post" action="">
+        <div id="action-popup" class="action-popup" style="display:none;">
             <h2><?php echo $registrationID && $action=='edit'?'Confirm to update registration info?': 'Confirm to delete registration info?';?></h2>
             <button type="submit" name="confirmAction">Yes</button>
             <button type="button" onclick="closeActionPopup()">No</button>
-        </form>
-    </div>
+        </div>
+    </form>
 
 </main>
 </body>

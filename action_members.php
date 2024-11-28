@@ -150,15 +150,13 @@ $visitCount = cookie();
 
         <button type="button" onclick="displayActionPopup()"><?php echo $memberID && $action=='edit'?'Update member info': 'Delete Member Info'?></button>
         <a href="admin_members.php"><button type="button">Cancel</button></a>
-    </form>
 
-    <div id="action-popup" class="action-popup" style="display:none;">
-        <form id="action-form" method="post" action="">
+        <div id="action-popup" class="action-popup" style="display:none;">
             <h2><?php echo $memberID && $action=='edit'?'Confirm to update member info?':'Confirm to delete member info?'?></h2>
             <button type="submit" name="confirmAction">Yes</button>
             <button type="button" onclick="closeActionPopup()">No</button>
-        </form>
-    </div>
+        </div>
+    </form>
 
 </main>
 </body>

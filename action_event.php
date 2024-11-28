@@ -361,11 +361,11 @@ $visitCount = cookie();
 
         <p>Participants Needed:</p>
         <label><input type="text" name="participantsNeeded" value="<?php echo isset ($eventData['participantsNeeded']) ? $eventData['participantsNeeded']: ''; ?>" placeholder="Enter Participants needed..."></label>
-        <p style="color: red;"><?= isset($errors['participantsNeeded']) ? $errors['participantsNeeded'] : '' ?></p>
+        <p class="error-message"><?= isset($errors['participantsNeeded']) ? $errors['participantsNeeded'] : '' ?></p>
 
         <p>Volunteers Needed:</p>
         <label><input type="text" name="volunteersNeeded" value="<?php echo isset ($eventData['volunteersNeeded']) ? $eventData['volunteersNeeded']: ''; ?>" placeholder="Enter Volunteers needed..."></label>
-        <p style="color: red;"><?= isset($errors['volunteersNeeded']) ? $errors['volunteersNeeded'] : '' ?></p>
+        <p class="error-message"><?= isset($errors['volunteersNeeded']) ? $errors['volunteersNeeded'] : '' ?></p>
 
         <p>Event Status:</p>
         <label><input type="text" name="eventStatus" value="<?php echo isset ($eventData['eventStatus']) ? $eventData['eventStatus']: '';?>" placeholder="Enter Event Type..."></label>
@@ -374,7 +374,7 @@ $visitCount = cookie();
         <?php if ($action == "editPast" || $action == "deletePast"){?>
         <p>Attendees:</p>
         <label><input type="text" name="attendees" value="<?php echo isset ($eventData['attendees']) ? $eventData['attendees']: '';?>"</label>
-        <p style="color: red;"><?= isset($errors['attendees']) ? $errors['attendees'] : '' ?></p>
+        <p class="error-message"><?= isset($errors['attendees']) ? $errors['attendees'] : '' ?></p>
 
         <p>Impact and Outcomes:</p>
         <label><input type="text" name="impact" value="<?php echo isset ($eventData['impact']) ? $eventData['impact']:'';?>"</label>
@@ -404,29 +404,27 @@ $visitCount = cookie();
             <a href="admin_events.php"><button type="button">Cancel</button></a>
         </div>
 
-    </form>
 
-    <div id="action-popup" class="action-popup" style="display:none;">
-        <form id="action-form" method="post" action="">
+        <div id="action-popup" class="action-popup" style="display:none;">
             <h2><?php
-            $buttonText = '';
+                $buttonText = '';
 
-            if ($eventID && ($action == "edit" || $action == "editPast")){
-                $buttonText = "Confirm to update event info?";
-            }
-            elseif ($eventID && ($action == "delete" || $action == "deletePast")){
-                $buttonText = "Confirm to delete event info?";
-            }
-            else{ //actually should set action for add
-                $buttonText = "Confirm to add event?";
-            }
-            echo "{$buttonText}";
-            ?>
+                if ($eventID && ($action == "edit" || $action == "editPast")){
+                    $buttonText = "Confirm to update event info?";
+                }
+                elseif ($eventID && ($action == "delete" || $action == "deletePast")){
+                    $buttonText = "Confirm to delete event info?";
+                }
+                else{ //actually should set action for add
+                    $buttonText = "Confirm to add event?";
+                }
+                echo "{$buttonText}";
+                ?>
             </h2>
             <button type="submit" name="confirmAction">Yes</button>
             <button type="button" onclick="closeActionPopup()">No</button>
-        </form>
-    </div>
+        </div>
+    </form>
 
 </main>
 <script src="main.js">

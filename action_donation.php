@@ -48,6 +48,10 @@ $visitCount = cookie();
 
             $errors = [];
 
+            if (empty($amount)){
+                $errors['amount'] = "Amount is required";
+            }
+
             if (empty($errors)){
                 if ($action == "edit"){ //confirm edit and delete b4 sending to database
                     $sql = "UPDATE donations SET amount = '$amount', feedback = '$feedback' WHERE donationID = $donationID";
@@ -70,9 +74,9 @@ $visitCount = cookie();
                     }
                 }
             }
-            foreach ($errors as $error) {
-                echo "<p style='color:red;'>$error</p>";
-            }
+//            foreach ($errors as $error) {
+//                echo "<p style='color:red;'>$error</p>";
+//            }
         }
         if ($action == "edit"){
             echo "<h2>Update Donation</h2>";
@@ -89,8 +93,9 @@ $visitCount = cookie();
         <p>Member Name</p>
         <?php echo $memberName; ?> <!--show member name-->
 
-        <p>Donation Amount</p>
+        <p>Donation Amount</p> <!--can edit amount a bit weird-->
         <label><input type="text" name="amount" value="<?php echo isset($donationDetails['amount'])?$donationDetails['amount']:'';?>"></label>
+        <p class="error-message"><?= isset($errors['amount']) ? $errors['amount'] :''?></p>
 
         <p>Donation Date</p>
         <?php echo $donationDetails["donationDate"]; ?>
@@ -100,15 +105,14 @@ $visitCount = cookie();
 
         <button type="button" onclick="displayActionPopup()"><?php echo $donationID && $action=="edit"?'Update donation details':'Delete donation details'?></button>
         <a href="admin_donations.php"><button type="button">Cancel</button></a>
-    </form>
 
-    <div id="action-popup" class="action-popup" style="display:none;">
-        <form id="action-form" method="post" action="">
+
+        <div id="action-popup" class="action-popup" style="display:none;">
             <h2><?php echo $donationID && $action=="edit"?'Confirm to update donation details?':'Confirm to delete donation details?'?></h2>
             <button type="submit" name="confirmAction">Yes</button>
             <button type="button" onclick="closeActionPopup()">No</button>
-        </form>
-    </div>
+        </div>
+    </form>
 </main>
 </body>
 <script src="main.js"></script>
