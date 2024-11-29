@@ -25,9 +25,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $loginInput = $_POST['loginInput'];
     $password = $_POST['password'];
 
-    $error = '';
-    if (empty($loginInput) AND empty($password)) {
-        $error = "All fields are required";
+    $error = array();
+    if (empty($loginInput) OR empty($password)) {
+        $errors['emptyFields'] = "All fields are required";
     }
 
     //set an admin username and password
@@ -41,7 +41,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         echo "<script> alert('Login successful!'); window.location.href='admin_main.php'; </script>";
     }
     else{
-        $error = "Admin username or password is incorrect";
+        $errors['incorrectFields'] = "Admin username or password is incorrect";
     }
 }
 ?>
@@ -65,6 +65,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         <p>Password: </p>
         <label><input type="text" name="password"></label>
+        <p class="error-message"><?=isset ($errors['emptyFields']) ? $errors['emptyFields'] :''?></p>
+        <p class="error-message"><?=isset ($errors['incorrectFields']) ? $errors['incorrectFields'] : ''?></p>
 
         <button type="submit">Sign In</button>
     </form>

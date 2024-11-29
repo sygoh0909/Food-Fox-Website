@@ -109,3 +109,7 @@ button:hover {
 .signup-link a:hover, .login-link a:hover {
     text-decoration: underline;
 }
+
+p.error-message{
+    color: red;
+}
