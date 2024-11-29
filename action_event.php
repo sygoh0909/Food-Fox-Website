@@ -114,7 +114,7 @@ include ('cookie.php');
         elseif (!preg_match("/^[a-zA-Z0-9\s,.\-\/]+$/", $location)) {
             $errors['location'] = "Location should only contain letters, numbers, spaces, commas, periods, hyphens, and slashes.";
         }
-        if (empty ($participantsNeeded)){
+        if (empty ($participantsNeeded)){ //can be empty
             $errors['participantsNeeded'] = "Participants Needed is required";
         }
         elseif (!preg_match("/^\d+$/", $participantsNeeded)) {
@@ -220,7 +220,7 @@ include ('cookie.php');
             }
             //add new event
             elseif ($action == "add"){
-                if (empty($errors)){
+//                if (empty($errors)){
                     $query = "INSERT INTO events (eventName, start_dateTime, end_dateTime, location, details, participantsNeeded, volunteersNeeded, eventStatus, eventPic) VALUES ('$eventName', '$startDateTime', '$endDateTime', '$location', '$details', '$participantsNeeded', '$volunteersNeeded', '$eventStatus', '$eventImagePath')";
 
                     if ($conn->query($query) === TRUE) {
@@ -248,7 +248,7 @@ include ('cookie.php');
                         }
                     }
                     echo "<script>alert('New Event Added'); window.location.href='admin_events.php';</script>";
-                }
+//                }
             }
         }
 //        foreach ($errors as $error) {
