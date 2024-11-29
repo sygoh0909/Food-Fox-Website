@@ -159,7 +159,8 @@ include ('cookie.php');
 
 </main>
 </body>
-<script src="main.js">
+<script src="main.js"></script>
+<script>
     function previewMemberProfile() {
         const fileInput = document.getElementById('uploadPic');
         const memberProfile = document.getElementById('memberProfile');
