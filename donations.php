@@ -290,8 +290,8 @@ if (isset($_GET['action']) && $_GET['action'] == 'getProgress') {
 
         $sql = "UPDATE donations SET feedback = '$feedback' WHERE donationID = '$donationID'";
         if ($conn->query($sql) === TRUE) {
-            echo "<script>alert('Thank you for your feedback!'); window.location.href = window.location.href + '?showFeedback=false'</script>";
-            //if straightly make 2nd donation, feedback not showing
+            unset($_SESSION['donationID']);
+            echo "<script>alert('Thank you for your feedback!'); window.location.href = window.location.href.split('?')[0]</script>";
         }
     }
     ?>
@@ -497,6 +497,12 @@ if (isset($_GET['action']) && $_GET['action'] == 'getProgress') {
         document.getElementById('donation-popup').style.display = 'none';
         document.getElementById('feedback-popup').style.display = 'none';
         document.getElementById('payment-popup').style.display = 'none';
+
+        closePopup.style.display = 'none';
+
+        const url = new URL(window.location.href);
+        url.searchParams.delete('showFeedback');
+        window.history.replaceState({}, document.title, url);
     }
 
     function proceed(){
@@ -528,10 +534,10 @@ if (isset($_GET['action']) && $_GET['action'] == 'getProgress') {
 
     if (getURLParameter('showFeedback') === 'true') {
         document.getElementById('feedback-popup').style.display = 'block';
-    }
-    else{
+    } else {
         document.getElementById('feedback-popup').style.display = 'none';
     }
+
 
 </script>
 <footer>
