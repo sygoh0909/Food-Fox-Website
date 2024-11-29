@@ -7,7 +7,9 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="login.css">
     <style>
-
+        p.error-message{
+            color: red;
+        }
     </style>
 </head>
 <body>
@@ -40,25 +42,28 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     //validation
     $errors = [];
     if (empty($name)) {
-        $errors[] = "Name is required";
+        $errors['name'] = "Name is required";
     }
     elseif (!preg_match($namePattern, $name)) {
-        $errors[] = "Name can contain only letters and spaces.";
+        $errors['name'] = "Name can contain only letters and spaces.";
     }
     if (empty($email)) {
-        $errors[] = "Email is required";
+        $errors['email'] = "Email is required";
     }
     elseif (!preg_match($emailPattern, $email)) {
-        $errors[] = "Enter a valid email address.";
+        $errors['email'] = "Enter a valid email address.";
     }
     if (empty($password)) {
-        $errors[] = "Password is required";
+        $errors['password'] = "Password is required";
     }
     elseif (!preg_match($passwordPattern, $password)) {
-        $errors[] = "Password must at least be 8 characters long, with at least one letter and one number.";
+        $errors['password'] = "Password must at least be 8 characters long, with at least one letter and one number.";
     }
     if ($password !== $confirmPassword) {
-        $errors[] = "Passwords do not match.";
+        $errors['confirmPassword'] = "Passwords do not match.";
+    }
+    if (empty($confirmPassword)) {
+        $errors['confirmPassword'] = "Confirm Password is required";
     }
     //if no errors, save to database
     if (empty($errors)) {
@@ -75,11 +80,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             echo "<p>Error: " . mysqli_error($conn) . "</p>";
         }
     }
-        else{
-            foreach ($errors as $error) {
-                echo "<p style='color:red;'>$error</p>";
-            }
-        }
+//        else{
+//            foreach ($errors as $error) {
+//                echo "<p style='color:red;'>$error</p>";
+//            }
+//        }
 }
 ?>
 
@@ -99,15 +104,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <form method="POST" enctype="multipart/form-data">
         <p>Name: </p>
         <label><input type="text" name="name"</label>
+        <p class="error-message"><?= isset ($errors['name']) ? $errors['name'] : ''?></p>
 
         <p>Email Address: </p>
         <label><input type="text" name="email"></label>
+        <p class="error-message"><?= isset ($errors['email']) ? $errors['name'] : ''?></p>
 
         <p>Password: </p>
         <label><input type="text" name="password"></label>
+        <p class="error-message"><?= isset ($errors['password']) ? $errors['password'] : ''?></p>
 
         <p>Confirm your password: </p>
         <label><input type="text" name="confirmPassword"></label>
+        <p class="error-message"><?= isset ($errors['confirmPassword']) ? $errors['confirmPassword'] : ''?></p>
 
         <button type="submit">Sign Up</button>
     </form>
