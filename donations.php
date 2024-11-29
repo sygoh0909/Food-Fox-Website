@@ -269,27 +269,29 @@ if (isset($_GET['action']) && $_GET['action'] == 'getProgress') {
             if ($conn->query($sql) === TRUE) {
 
                 //points get from donating
+                $donationID = $conn->insert_id;
+
                 $pointsEarned = floor($amount / 10);
                 $updateSql = "UPDATE members SET points = points + $pointsEarned WHERE memberID = '$memberID'";
                 $conn->query($updateSql);
 
                 echo "<script>alert('Thank you for your donation!'); window.location.href = window.location.href + '?showFeedback=true'</script>"; //refresh page so that member points refreshed also
-
-
-                if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['submit-feedback'])) {
-                    $feedback = $_POST['feedback'];
-
-                    $sql = "INSERT INTO donations WHERE feedback = '$feedback'";
-                    if ($conn->query($sql) === TRUE) {
-                        echo "<script>alert('Thank you for your feedback!'); window.location.href = window.location.href;</script>";
-                    }
-                }
-
+                $_SESSION['donationID'] = $donationID;
             }
             else{
                 echo "Error: " . $sql . "<br>" . $conn->error;
             }
 
+        }
+    }
+    if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['submit-feedback'])) {
+        $feedback = $_POST['feedback'];
+        $donationID = $_SESSION['donationID'];
+
+        $sql = "UPDATE donations SET feedback = '$feedback' WHERE donationID = '$donationID'";
+        if ($conn->query($sql) === TRUE) {
+            echo "<script>alert('Thank you for your feedback!'); window.location.href = window.location.href + '?showFeedback=false'</script>";
+            //if straightly make 2nd donation, feedback not showing
         }
     }
     ?>
@@ -335,8 +337,11 @@ if (isset($_GET['action']) && $_GET['action'] == 'getProgress') {
                 <!-- Add fields for Bank Transfer info -->
             </div>
             <button type="submit" name="confirmDonate">Donate</button>
+            <button type="button" onclick="closePopup()">Cancel</button>
         </div>
+    </form>
 
+    <form method="post" enctype="multipart/form-data">
         <!--after donate successfully, show do u wanna leave a feedback, pop up-->
         <div id="feedback-popup" class="feedback-popup" style="display: none">
             <h2>Donated successfully!</h2>
@@ -345,7 +350,6 @@ if (isset($_GET['action']) && $_GET['action'] == 'getProgress') {
             <button type="submit" name="submit-feedback">Submit feedback</button>
             <button type="button" onclick="closePopup()">No</button>
         </div>
-
     </form>
 
     <h2>Where your donations goes?</h2>
@@ -492,6 +496,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'getProgress') {
     function closePopup() {
         document.getElementById('donation-popup').style.display = 'none';
         document.getElementById('feedback-popup').style.display = 'none';
+        document.getElementById('payment-popup').style.display = 'none';
     }
 
     function proceed(){
@@ -521,9 +526,11 @@ if (isset($_GET['action']) && $_GET['action'] == 'getProgress') {
         return new URLSearchParams(window.location.search).get(name);
     }
 
-    // Show feedback popup if 'showFeedback' is true in the URL
     if (getURLParameter('showFeedback') === 'true') {
         document.getElementById('feedback-popup').style.display = 'block';
+    }
+    else{
+        document.getElementById('feedback-popup').style.display = 'none';
     }
 
 </script>
