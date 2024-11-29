@@ -16,17 +16,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         }
     }
 
-    // Handle clear cart
     if (isset($_POST['clear_cart'])) {
         $_SESSION['cart'] = array();
         $cartItems = array();
     }
 
-    // Handle checkout
     if (isset($_POST['checkout'])) {
-        // Checkout logic (e.g., update points in database, etc.)
+        //update points, deduct how much they purchase
         echo "<script>alert('Checkout successful!');</script>";
-        $_SESSION['cart'] = array(); // Clear cart after checkout
+        $_SESSION['cart'] = array();
         $cartItems = array();
     }
 }
@@ -38,6 +36,7 @@ if (!empty($cartItems)) {
 } else {
     $result = null;
 }
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -177,7 +176,7 @@ if (!empty($cartItems)) {
         <?php if ($result && mysqli_num_rows($result) > 0) { ?>
             <?php while ($row = mysqli_fetch_assoc($result)) {
                 $rewardID = $row['rewardID'];
-                $quantity = $cartItems[$rewardID]; // Get the quantity from session
+                $quantity = $cartItems[$rewardID];
                 ?>
                 <div class="cart-item">
                     <img src="<?php echo $row['rewardPic']; ?>" alt="Reward Picture">

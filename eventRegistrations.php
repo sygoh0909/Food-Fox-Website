@@ -1,11 +1,10 @@
 <?php
 include("cookie.php");
-$visitCount = cookie();
 
 $conn = connection();
 $selectedEventID = isset($_GET['eventID']) ? $_GET['eventID'] : null;
 $selectedEventData = null;
-$memberID = $_SESSION['memberID']; //is there way to retrieve from cookie idk
+$memberID = $_SESSION['memberID'];
 
 if ($selectedEventID){
     $sql = "SELECT eventName FROM events WHERE eventID = '$selectedEventID'";
@@ -27,7 +26,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if (empty ($registerType)) {
         $errors['registrations'] = "Registration type is required";
     }
-    elseif (in_array($registerType, ['Participant', 'Volunteer'])) {
+    elseif (in_array($registerType, ["Participant", "Volunteer"])) {
         $errors['registrations'] = "Registration type must be either Participant or Volunteer.";
     }
 
