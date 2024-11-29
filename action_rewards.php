@@ -103,8 +103,7 @@ include ('cookie.php');
     }
     ?>
     <form method="post" enctype="multipart/form-data">
-        <p>Reward ID:</p>
-        <?php echo str_repeat('*', strlen($rewardID));?>
+        <!--<p>Reward ID:</p>-->
 
         <p>Reward Picture:</p>
         <div class="reward-picture">
