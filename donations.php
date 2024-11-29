@@ -129,7 +129,7 @@ include ('cookie.php');
             margin: 15px 10px;
         }
 
-        .donation-popup {
+        .donation-popup, .payment-popup, .feedback-popup {
             position: fixed;
             top: 50%;
             left: 50%;
@@ -273,8 +273,17 @@ if (isset($_GET['action']) && $_GET['action'] == 'getProgress') {
                 $updateSql = "UPDATE members SET points = points + $pointsEarned WHERE memberID = '$memberID'";
                 $conn->query($updateSql);
 
-                echo "<script>alert('Thank you for your donation!'); window.location.href = window.location.href</script>"; //refresh page so that member points refreshed also
-                //do u wan to leave a feedback?
+                echo "<script>alert('Thank you for your donation!'); window.location.href = window.location.href + '?showFeedback=true'</script>"; //refresh page so that member points refreshed also
+
+
+                if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['submit-feedback'])) {
+                    $feedback = $_POST['feedback'];
+
+                    $sql = "INSERT INTO donations WHERE feedback = '$feedback'";
+                    if ($conn->query($sql) === TRUE) {
+                        echo "<script>alert('Thank you for your feedback!'); window.location.href = window.location.href;</script>";
+                    }
+                }
 
             }
             else{
@@ -308,7 +317,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'getProgress') {
             </select>
 
             <button type="button" onclick="proceed()">Proceed</button>
-            <button type="button" onclick="closeDonationPopup()">Cancel</button>
+            <button type="button" onclick="closePopup()">Cancel</button>
         </div>
 
         <div id="payment-popup" class="payment-popup" style="display:none;">
@@ -317,23 +326,24 @@ if (isset($_GET['action']) && $_GET['action'] == 'getProgress') {
                 <p>Please enter your Credit Card details.</p>
                 <!-- Add fields for Credit Card info -->
             </div>
-            <div id="tng-info" class="payment-popup" style="display:none;">
+            <div id="tng-info" style="display:none;">
                 <p>Please provide your Touch n Go details.</p>
                 <!-- Add fields for TNG info -->
             </div>
-            <div id="bank-transfer-info" class="payment-popup" style="display:none;">
+            <div id="bank-transfer-info" style="display:none;">
                 <p>Please provide your Bank Transfer details.</p>
                 <!-- Add fields for Bank Transfer info -->
             </div>
             <button type="submit" name="confirmDonate">Donate</button>
         </div>
 
-        <!--after donate successfully, show do u wanna leave a feedback, same pop up box-->
+        <!--after donate successfully, show do u wanna leave a feedback, pop up-->
         <div id="feedback-popup" class="feedback-popup" style="display: none">
             <h2>Donated successfully!</h2>
             <p>Do you want to leave a feedback?</p>
             <label><input type="text" name="feedback" placeholder="Leave your feedback here if you have any..."></label>
             <button type="submit" name="submit-feedback">Submit feedback</button>
+            <button type="button" onclick="closePopup()">No</button>
         </div>
 
     </form>
@@ -479,9 +489,9 @@ if (isset($_GET['action']) && $_GET['action'] == 'getProgress') {
         document.getElementById('donation-popup').style.display = 'block';
     }
 
-    function closeDonationPopup() {
+    function closePopup() {
         document.getElementById('donation-popup').style.display = 'none';
-        document.getElementById('payment-popup').style.display = 'none'; //not sure needed or not
+        document.getElementById('feedback-popup').style.display = 'none';
     }
 
     function proceed(){
@@ -502,8 +512,20 @@ if (isset($_GET['action']) && $_GET['action'] == 'getProgress') {
             document.getElementById('bank-transfer-info').style.display = 'block';
         }
 
+        document.getElementById('donation-popup').style.display = 'none';
         document.getElementById('payment-popup').style.display = 'block';
     }
+
+
+    function getURLParameter(name) {
+        return new URLSearchParams(window.location.search).get(name);
+    }
+
+    // Show feedback popup if 'showFeedback' is true in the URL
+    if (getURLParameter('showFeedback') === 'true') {
+        document.getElementById('feedback-popup').style.display = 'block';
+    }
+
 </script>
 <footer>
     <div class="footer-container">

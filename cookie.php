@@ -88,6 +88,11 @@ function adminLoginSection(){
             }
         }
     }
+    //if admin not logged in, cannot access to admin page, redirect them to admin login
+    if (!isset($_SESSION['adminID'])) {
+        header('Location: login_admin.php');
+        exit();
+    }
 }
 
 function connection(){
