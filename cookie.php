@@ -1,4 +1,5 @@
 <link rel="stylesheet" href="main.css">
+<link rel="stylesheet" href="admin.css">
 <?php
 session_start();
 function cookie(){

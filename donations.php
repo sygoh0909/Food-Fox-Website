@@ -275,10 +275,12 @@ if (isset($_GET['action']) && $_GET['action'] == 'getProgress') {
 
                 echo "<script>alert('Thank you for your donation!'); window.location.href = window.location.href</script>"; //refresh page so that member points refreshed also
                 //do u wan to leave a feedback?
+
             }
             else{
                 echo "Error: " . $sql . "<br>" . $conn->error;
             }
+
         }
     }
     ?>
@@ -327,6 +329,12 @@ if (isset($_GET['action']) && $_GET['action'] == 'getProgress') {
         </div>
 
         <!--after donate successfully, show do u wanna leave a feedback, same pop up box-->
+        <div id="feedback-popup" class="feedback-popup" style="display: none">
+            <h2>Donated successfully!</h2>
+            <p>Do you want to leave a feedback?</p>
+            <label><input type="text" name="feedback" placeholder="Leave your feedback here if you have any..."></label>
+            <button type="submit" name="submit-feedback">Submit feedback</button>
+        </div>
 
     </form>
 

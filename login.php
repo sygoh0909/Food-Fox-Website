@@ -10,7 +10,9 @@ include ('cookie.php');
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="login.css">
     <style>
-
+        p.error-message{
+            color: red;
+        }
     </style>
 </head>
 <body>
@@ -25,13 +27,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $loginInput = $_POST['loginInput'];
     $password = $_POST['password'];
 
-    $error = '';
-    if (empty($loginInput) AND empty($password)) {
-        $error = "All fields are required";
+    $errors[] = array();
+
+    if (empty($loginInput) OR empty($password)) {
+        $errors['emptyFields'] = "All fields are required";
     }
 
     //check from database if password and id/email matches
-    $query = "SELECT * FROM members WHERE memberID = '$loginInput' OR email = '$loginInput'";
+    $query = "SELECT * FROM members WHERE memberID = '$loginInput' OR email = '$loginInput' OR password = '$password'";
     $result = mysqli_query($conn, $query);
     $user = mysqli_fetch_assoc($result);
 
@@ -41,9 +44,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $_SESSION['memberID'] = $user['memberID'];
             echo "<script> alert('Login Successfully!'); window.location.href='mainpage.php'; </script>";
         }
+        $errors['incorrectField'] = "Member ID/email or password is incorrect";
     }
     else{
-        $error = "Member ID or email is incorrect";
+        $errors['incorrectField'] = "Member ID/email or password is incorrect";
     }
 }
 ?>
@@ -67,6 +71,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         <p>Password: </p>
         <label><input type="text" name="password"></label>
+
+        <p class="error-message"><?= isset ($errors['emptyFields']) ? $errors['emptyFields'] : ''?></p>
+        <p class="error-message"><?= isset($errors['incorrectField']) ? $errors['incorrectField'] : ''?></p>
 
         <button type="submit">Sign In</button>
     </form>
