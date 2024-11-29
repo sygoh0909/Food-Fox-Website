@@ -109,6 +109,7 @@ include ('cookie.php');
                 <a href="admin_members.php" class="roundButton">Members</a>
                 <a href="admin_events.php" class="roundButton">Events</a>
                 <a href="admin_donations.php" class="roundButton">Donation</a>
+                <a href="admin_rewards.php" class="roundButton">Rewards</a>
             </div>
             <div class="nav-links">
                 <?php

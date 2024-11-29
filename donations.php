@@ -169,6 +169,7 @@ include ('cookie.php');
 $fundraisingGoal = 5000;
 $maxMealsProvided = 1000;
 $maxPeopleSupported = 500;
+
 $conn = connection();
 
 $sql = "SELECT SUM(amount) AS total_donations FROM donations";
@@ -188,29 +189,28 @@ $peopleSupported = $row['total_people'];
 $peopleSupportedPercentage = min(100, ($peopleSupported / $maxPeopleSupported) * 100);
 
 if (isset($_GET['action']) && $_GET['action'] == 'getProgress') {
-    $progressPercentage = min(100, ($totalDonations / $fundraisingGoal * 100));
+    $progressPercentage = ($totalDonations / $fundraisingGoal) * 100;
+    $progressPercentage = min(100, $progressPercentage);
 
 //    if ($progressPercentage > 100) {
 //        $progressPercentage = 100;
 //    }
+}
 
-    if (isset($_GET['fetchData']) && $_GET['fetchData'] === 'true') {
-        $data = [
-            'totalDonations' => $totalDonations,
-            'progressPercentage' => $progressPercentage,
-            'mealsPercentage' => $mealsProvidedPercentage,
-            'peoplePercentage' => $peopleSupportedPercentage
-        ];
-        header('Content-Type: application/json');
-        echo json_encode($data);
-        exit;
-    }
+if (isset($_GET['fetchData']) && $_GET['fetchData'] === 'true') {
+    $data = [
+        'mealsPercentage' => $mealsProvidedPercentage,
+        'peoplePercentage' => $peopleSupportedPercentage
+    ];
+    header('Content-Type: application/json');
+    echo json_encode($data);
+    exit;
 }
 
 ?>
 <header>
     <nav>
-        <div class="navbar">
+        <div id="navbar" class="navbar">
             <div class="social-media">
                 <a href="https://facebook.com" class="fa fa-facebook"></a>
                 <a href="https://instagram.com" class="fa fa-instagram"></a>
@@ -234,10 +234,10 @@ if (isset($_GET['action']) && $_GET['action'] == 'getProgress') {
 </header>
 <main>
     <h2>Our Fundraising Goal</h2>
-    <p id="progressText">Raised: $<?=$totalDonations?> / $<?=$fundraisingGoal?></p>
+    <p id="progressText">Raised: RM <?=$totalDonations?> / RM <?=$fundraisingGoal?></p>
     <div class="progress-container">
-        <div id="progress-bar" class="progress-bar" style="width:<?= round(($totalDonations / $fundraisingGoal) * 100) ?>%;">
-            <?= floor(($totalDonations / $fundraisingGoal) * 100) ?>%
+        <div id="progress-bar" class="progress-bar" style="width:<?= round(($totalDonations / $fundraisingGoal) *100) ?>%;">
+            <?= floor(($totalDonations / $fundraisingGoal) *100) ?>% <!--min 100% leh-->
         </div>
     </div>
 
@@ -374,8 +374,8 @@ if (isset($_GET['action']) && $_GET['action'] == 'getProgress') {
             <canvas id="impactChart" width="400" height="200"></canvas>
         </div>
         <div class="info-container">
-            <p id="mealsText">Meals Provided: <?=$mealsProvided?></p> <!--here show numbers not percentage-->
-            <p id="peopleText">People Supported: <?=$peopleSupported?></p>
+            <p id="mealsText">Meals Provided: <?=$mealsProvided?><br><?=$mealsProvidedPercentage?></p> <!--here show numbers not percentage-->
+            <p id="peopleText">People Supported: <?=$peopleSupported?><br><?=$peopleSupportedPercentage?></p>
         </div>
     </div>
 
@@ -387,61 +387,82 @@ if (isset($_GET['action']) && $_GET['action'] == 'getProgress') {
     $result = $conn->query($sql);
     if ($result->num_rows > 0) {
         while($row = $result->fetch_assoc()) {
-            echo $row["feedback"];
+//            echo $row["feedback"];
         }
     }
     ?>
 </main>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
+    fetch('?fetchData=true')
+        .then(response => response.json())
+        .then(data => {
+            console.log('Fetched Data:', data);
+            const mealsPercentage = data.mealsPercentage;
+            const peoplePercentage = data.peoplePercentage;
+            updateChart(mealsPercentage, peoplePercentage);
+        })
+        .catch(error => {
+            console.error('Error fetching data:', error);
+        });
+
     //chart
-    const ctx = document.getElementById('impactChart').getContext('2d');
-    const impactChart = new Chart(ctx, {
-        type: 'bar',
-        data:{
-            labels: ['Meals Provided', 'People Supported'],
-            datasets: [{
-                label: 'Meals Provided',
-                data: [100, 0], //now is hard code
-                backgroundColor: '#4caf50',
-                borderColor: '#388e3c',
-                borderWidth: 1
-            },{
-                label: 'People Supported',
-                data: [0, 80],
-                backgroundColor: '#2196f3',
-                borderColor: '#1976d2',
-                borderWidth: 1
-            }]
-        },
-        options: {
-            responsive: true,
-            scales: {
-                y: {
-                    beginAtZero: true,
-                    max: 100, //0-100%
-                    ticks: {
-                        callback: function (value){
-                            return value % 20 === 0 ? `${value}%` : '';
+    function updateChart(mealsPercentage, peoplePercentage){
+        const ctx = document.getElementById('impactChart').getContext('2d');
+
+        if(impactChart){
+            impactChart.destroy();
+        }
+
+        const impactChart = new Chart(ctx, {
+
+            type: 'bar',
+            data:{
+                labels: ['Meals Provided', 'People Supported'],
+                datasets: [{
+                    label: 'Meals Provided',
+                    data: [100, 0],
+                    backgroundColor: '#4caf50',
+                    borderColor: '#388e3c',
+                    borderWidth: 1
+                },{
+                    label: 'People Supported',
+                    data: [0, 80],
+                    backgroundColor: '#2196f3',
+                    borderColor: '#1976d2',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        max: 100, //0-100%
+                        ticks: {
+                            callback: function (value){
+                                return value % 20 === 0 ? `${value}%` : '';
+                            }
                         }
                     }
-                }
-            },
-            plugins: {
-                tooltip: {
-                    callbacks:{
-                        label: function(tooltipItem){
-                            if (tooltipItem.datasetIndex === 0) {
-                                return `${tooltipItem.dataset.label}: ${tooltipItem.raw}%`;
-                            } else if (tooltipItem.datasetIndex === 1) {
-                                return `${tooltipItem.dataset.label}: ${tooltipItem.raw} people`;
+                },
+                plugins: {
+                    tooltip: {
+                        callbacks:{
+                            label: function(tooltipItem){
+                                if (tooltipItem.datasetIndex === 0) {
+                                    return `${tooltipItem.dataset.label}: ${tooltipItem.raw}%`;
+                                } else if (tooltipItem.datasetIndex === 1) {
+                                    return `${tooltipItem.dataset.label}: ${tooltipItem.raw} people`;
+                                }
                             }
                         }
                     }
                 }
             }
-        }
-    })
+        })
+    }
+
     function updateProgress(){
         fetch (window.location.href + '?action=getProgress')
             .then(response => response.json())
