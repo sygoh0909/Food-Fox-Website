@@ -1,6 +1,5 @@
 <?php
 include ('cookie.php');
-$visitCount = cookie();
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -427,7 +426,8 @@ $visitCount = cookie();
     </form>
 
 </main>
-<script src="main.js">
+<script src="main.js"></script>
+<script>
     function previewEventImage(){
         const fileInput = document.getElementById('uploadPic');
         const eventImg = document.getElementById('eventImg');

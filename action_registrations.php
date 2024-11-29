@@ -1,6 +1,5 @@
 <?php
 include ('cookie.php');
-$visitCount = cookie();
 ?>
 <!DOCTYPE html>
 <html lang="en">
