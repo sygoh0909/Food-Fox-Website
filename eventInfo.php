@@ -9,9 +9,10 @@ include ('cookie.php');
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="main.css">
     <style>
-        .main{
+        .main {
             color: white;
         }
+
         .events {
             background-color: #ffffff;
             padding: 20px;
@@ -85,6 +86,76 @@ include ('cookie.php');
         .event-highlight p {
             margin: 0;
         }
+
+        .event-section {
+            margin: 20px 0;
+        }
+
+        .event-section h3 {
+            font-size: 18px;
+            color: #4a4a4a;
+            margin-bottom: 10px;
+        }
+
+        .dropdown-btn {
+            background-color: #d3a029;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            display: inline-block;
+            margin-bottom: 10px;
+            width: fit-content;
+            transition: background-color 0.3s ease;
+        }
+
+        .dropdown-btn:hover {
+            background-color: #7F6C54;
+        }
+
+        .schedule-list {
+            display: none;
+            padding-left: 0;
+            list-style-type: none;
+        }
+
+        .schedule-list li {
+            font-size: 16px;
+            color: #333333;
+            margin: 10px 0;
+            padding: 10px;
+            background-color: #f8f5f2;
+            border-radius: 8px;
+            display: flex;
+            justify-content: space-between;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            transition: background-color 0.3s ease;
+        }
+
+        .schedule-list li:hover {
+            background-color: #7F6C54;
+            color: white;
+        }
+
+        .schedule-row {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+        }
+
+        .schedule-time {
+            font-weight: bold;
+            color: #4a4a4a;
+            flex: 1;
+        }
+
+        .schedule-description {
+            color: #333333;
+            flex: 2;
+        }
+
     </style>
 </head>
 <body>
@@ -120,71 +191,98 @@ include ('cookie.php');
     $eventID = isset($_GET['eventID']) ? $_GET['eventID'] : null;
     $action = isset($_GET['action']) ? $_GET['action'] : null;
     $eventData = null;
-    //must include this or is there way to get from login section
 
     if ($eventID) {
-        if ($action == "upcoming") {
-            $sql = "SELECT * FROM events WHERE eventID = $eventID AND eventStatus='Upcoming' ";
-            $result = $conn->query($sql);
-            if ($result->num_rows > 0) {
-                while($row = $result->fetch_assoc()) {
-                    $eventData = $row;
-                    echo "<div class='events'>";
-                    echo "<h2>Event Name: " . $eventData['eventName'] . "</h2>";
-                    echo "<img src='" . $row['eventPic'] . "' alt='" . $row['eventPic'] . "' width='300' height='200'>";
-                    echo "<div class='event-highlight'>";
-                    echo "<p><strong>Details:</strong> " . $eventData['details'] . "</p>";
-                    echo "<p><strong>Start Date & Time:</strong> " . $eventData['start_dateTime'] . "</p>";
-                    echo "<p><strong>End Date & Time:</strong> " . $eventData['end_dateTime'] . "</p>";
-                    echo "<p><strong>Location:</strong> " . $eventData['location'] . "</p>";
-                    echo "</div>";
-                    echo "<div class='event-highlight'>";
-                    echo "<p><strong>Registrations Needed:</strong> " . $eventData['participantsNeeded'] . "</p>";
-                    echo "<p><strong>Volunteers Needed:</strong> " . $eventData['volunteersNeeded'] . "</p>";
-                    echo "</div>";
-                    echo "<p class='note'><strong>Note:</strong> Participants are those who will attend the event, while volunteers are individuals who help with event operations.</p>";
-                    echo "</div>";
+        $sql = "SELECT e.*, g.*, h.*, s.* FROM events e, eventguests g, eventhighlights h, eventschedules s WHERE e.eventID = $eventID AND  e.eventID = g.eventID AND e.eventID = h.eventID AND e.eventID = s.eventID";
+        $result = $conn->query($sql);
+        if ($result->num_rows > 0) {
+            $eventData = $result->fetch_assoc();
 
-                    if (isset($_SESSION['memberID'])){
-                        echo "<a href='eventRegistrations.php?eventID=" . $row['eventID'] . "'><button>Register Now!</button></a>";
-                    }
-                    else{
-                        echo "<a href='login.php' onclick='return confirm(\"Please login or sign up to register for events\");'><button type='button'>Register Now!</button></a>";
-                    }
+            //events info
+            echo "<div class='events'>";
+            echo "<h2>Event Name: " . $eventData['eventName'] . "</h2>";
+            echo "<img src='" . $eventData['eventPic'] . "' alt='" . $eventData['eventPic'] . "' width='300' height='200'>";
+            echo "<div class='event-highlight'>";
+            echo "<p><strong>Details:</strong> " . $eventData['details'] . "</p>";
+            echo "<p><strong>Start Date & Time:</strong> " . $eventData['start_dateTime'] . "</p>";
+            echo "<p><strong>End Date & Time:</strong> " . $eventData['end_dateTime'] . "</p>";
+            echo "<p><strong>Location:</strong> " . $eventData['location'] . "</p>";
+            echo "</div>";
+
+            $sqlHighlights = "SELECT highlights FROM eventhighlights WHERE eventID = $eventID";
+            $resultHighlights = $conn->query($sqlHighlights);
+            if ($resultHighlights->num_rows > 0) {
+                echo "<div class='event-section'>";
+                echo "<h3>Highlights</h3>";
+                echo "<ul>";
+                while ($highlight = $resultHighlights->fetch_assoc()) {
+                    echo "<li>" . $highlight['highlights'] . "</li>";
+                }
+                echo "</ul>";
+                echo "</div>";
+            }
+
+            $sqlSchedules = "SELECT scheduleDateTime, activityDescription FROM eventschedules WHERE eventID = $eventID";
+            $resultSchedules = $conn->query($sqlSchedules);
+            if ($resultSchedules->num_rows > 0) {
+                echo "<div class='event-section'>";
+                echo "<h3>Schedules</h3>";
+                echo "<button class='dropdown-btn' id='schedule-btn' onclick='toggleSchedule()'>Show Schedules</button>";
+                echo "<ul class='schedule-list' id='schedule-list'>";
+                while ($schedule = $resultSchedules->fetch_assoc()) {
+                    echo "<li>";
+                    echo "<div class='schedule-row'>";
+                    echo "<span class='schedule-time'>" . $schedule['scheduleDateTime'] . "</span>";
+                    echo "<span class='schedule-description'>" . $schedule['activityDescription'] . "</span>";
+                    echo "</div>";
+                    echo "</li>";
+                }
+                echo "</ul>";
+                echo "</div>";
+            }
+
+            $sqlGuests = "SELECT guestName, guestProfilePic, guestBio FROM eventguests WHERE eventID = $eventID";
+            $resultGuests = $conn->query($sqlGuests);
+            if ($resultGuests->num_rows > 0) {
+                echo "<div class='event-section'>";
+                echo "<h3>Guests</h3>";
+                while ($guest = $resultGuests->fetch_assoc()) {
+                    echo "<p>" . $guest['guestName'] . "<br>" . $guest['guestBio'] . "</p>";
+                }
+                echo "</div>";
+            }
+
+            if ($action == "upcoming") {
+                echo "<div class='event-highlight'>";
+                echo "<p><strong>Registrations Needed:</strong> " . $eventData['participantsNeeded'] . "</p>";
+                echo "<p><strong>Volunteers Needed:</strong> " . $eventData['volunteersNeeded'] . "</p>";
+                echo "</div>";
+                echo "<p class='note'><strong>Note:</strong> Participants are those who will attend the event, while volunteers are individuals who help with event operations.</p>";
+                echo "</div>";
+
+                if (isset($_SESSION['memberID'])){
+                    echo "<a href='eventRegistrations.php?eventID=" . $eventID . "'><button>Register Now!</button></a>";
+                }
+                else{
+                    echo "<a href='login.php' onclick='return confirm(\"Please login or sign up to register for events\");'><button type='button'>Register Now!</button></a>";
                 }
             }
-        } elseif ($action == "past") { //past event table/info is not set yet
-            $sql = "SELECT e.*, p.* FROM events e, pastevents p WHERE e.eventID = $eventID AND e.eventID = p.eventID AND e.eventStatus='Past' ";
-            $result = $conn->query($sql);
-            if ($result->num_rows > 0) {
-                while($row = $result->fetch_assoc()) {
-                    $eventData = $row;
-                    echo "<div class='events'>";
-                    echo "<h2>Event Name: " . $eventData['eventName'] . "</h2>";
-                    echo "<img src='" . $eventData['eventPic'] . "' alt='" . $eventData['eventPic'] . "' width='300' height='200'>";
-                    echo "<div class='event-highlight'>";
-                    echo "<p><strong>Details:</strong> " . $eventData['details'] . "</p>";
-                    echo "<p><strong>Start Date & Time:</strong> " . $eventData['start_dateTime'] . "</p>";
-                    echo "<p><strong>End Date & Time:</strong> " . $eventData['end_dateTime'] . "</p>";
-                    echo "<p><strong>Location:</strong> " . $eventData['location'] . "</p>";
-                    echo "</div>";
-                    echo "<div class='event-highlight'>";
-                    echo "<p><strong>Attendees:</strong>" . $eventData['attendees'] . "</p>";
-                    echo "<p><strong>Impact and Outcomes:</strong>" . $eventData['impact'] . "</p>";
-                    echo "</div>";
-                    echo "<p><strong>Photo Gallery:</strong></p><img src='" . $eventData['photoGallery'] . "' alt='" . $eventData['eventName'] . "' width='300' height='200'>";
-                    echo "</div>";
+            elseif ($action == "past") {
+                $sql = "SELECT * FROM pastevents WHERE eventID = $eventID";
+                $result = $conn->query($sql);
+                if ($result->num_rows > 0) {
+                    $pastEventData = $result->fetch_assoc();
 
-//                    if ($memberID){
-//                        echo "<a href='eventRegistrations.php?eventID=" . $row['eventID'] . "'><button>Register Now!</button></a>";
-//                    }
-//                    else{
-//                        echo "<script>alert('Please login or sign up to register for events'); window.location.href='login.php')</script>";
-//                    }
+                    echo "<div class='event-highlight'>";
+                    echo "<p><strong>Attendees:</strong> " . $pastEventData['attendees'] . "</p>";
+                    echo "<p><strong>Impact and Outcomes:</strong> " . $pastEventData['impact'] . "</p>";
+                    echo "</div>";
+                    echo "<p><strong>Photo Gallery:</strong></p><img src='" . $pastEventData['photoGallery'] . "' alt='" . $pastEventData['photoGallery'] . "' width='300' height='200'>";
+                    echo "</div>";
                 }
+            }else{
+                echo "No upcoming or past events.";
             }
-        }else{
-            echo "No upcoming or past events.";
         }
     }
     ?>
@@ -223,5 +321,20 @@ include ('cookie.php');
         <p>&copy; 2024 Food Fox. All rights reserved. | Powered by <a href="https://foodfox.com" target="_blank">Food Fox</a></p>
     </div>
 </footer>
+<script>
+    function toggleSchedule(){
+        var btnText =  document.getElementById('schedule-btn');
+        var scheduleList = document.getElementById('schedule-list')
+
+        if (scheduleList.style.display === 'none' || scheduleList.style.display === ''){
+            scheduleList.style.display = 'block';
+            btnText.innerHTML = "Hide Schedules";
+        }
+        else{
+            scheduleList.style.display = 'none';
+            btnText.innerHTML = "Show Schedules";
+        }
+    }
+</script>
 </body>
 </html>
