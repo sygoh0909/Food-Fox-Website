@@ -101,7 +101,7 @@ include ('cookie.php');
             <h3>Headquarters</h3>
             <p>51, Jalan Binjai, KLCC, KL City Centre, Kuala Lumpur</p>
             <h3>Email</h3>
-            <p><a href="mailto:info@foodfox.org.my">info@foodfox.org.my</a></p>
+            <p><a href="mailto:info@foodfox.org.my">info@foodfox.org.my</a></p> <!--open a mail with auto display email?-->
             <h3>Phone</h3>
             <p>+603-0929 0501</p>
         </div>
