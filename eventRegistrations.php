@@ -26,7 +26,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if (empty ($registerType)) {
         $errors['registrations'] = "Registration type is required";
     }
-    elseif (in_array($registerType, ["Participant", "Volunteer"])) {
+    elseif (!in_array($registerType, ["Participant", "Volunteer"])) {
         $errors['registrations'] = "Registration type must be either Participant or Volunteer.";
     }
 
@@ -47,8 +47,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $sql = "INSERT INTO volunteers (registrationID, relevantSkills) VALUES ('$registrationID', '$relevantSkills')";
                 mysqli_query($conn, $sql);
             }
-            echo "Registration successful!";
+            echo "<script>alert('Registered successfully!'); window.location.href = 'events.php';</script>";
         }
+    }
+    else{
+        //error
     }
 }
 ?>
@@ -154,16 +157,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }?>
 
         <!--sync info from profile (show a note also if wanna change info, change from profile), if user havent fill, pop up a alert message and direct them to profile-->
-        <p class="note">Please note that name, email, and phone number will be automatically synced from your profile.
-        Please direct to profile page to change any information. </p>
+        <p class="note">Please note that name, email, and phone number will be automatically synced from your profile. Please proceed to profile page to change any information. </p>
 
-        <!--do checking for not blank name, email, phoneNum-->
 
-        <p>Name:</p> <!--should check for full name?idk-->
+        <p>Name:</p>
         <?php echo isset($memberData['memberName']) ? $memberData['memberName']: '';
         if (empty($memberData['memberName'])){
             if ($_SERVER["REQUEST_METHOD"] == "POST"){
-                echo "<p style='color:red;'>Please enter your name.</p>";
+                echo "<p class='error-message'>Please enter your name.</p>";
             }
         }?>
 
@@ -171,7 +172,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <?php echo isset($memberData['email']) ? $memberData['email']: '';
     if (empty($memberData['email'])){
         if ($_SERVER["REQUEST_METHOD"] == "POST"){
-            echo "<p style='color:red;'>Please enter an email address.</p>";
+            echo "<p class='error-message'>Please enter an email address.</p>";
         }
     }?>
 
@@ -180,7 +181,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         <?php if (empty($memberData['phoneNum'])):
             if ($_SERVER["REQUEST_METHOD"] == "POST"){
-                echo "<p style='color: red;'>Please enter a phone number.</p>";
+                echo "<p class='error-message''>Please enter a phone number.</p>";
             }
             ?>
             <div class="missing-info-alert">
@@ -199,7 +200,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <option value="Participant">Participant</option>
         <option value="Volunteer">Volunteer</option>
     </select>
-        <p style="color: red;"><?= isset($errors['registrations']) ? $errors['registrations'] : '' ?></p>
+        <p class="error-message""><?= isset($errors['registrations']) ? $errors['registrations'] : '' ?></p>
 
     <div class="participant-field">
 
