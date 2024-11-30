@@ -120,7 +120,6 @@ include ('cookie.php');
     $eventID = isset($_GET['eventID']) ? $_GET['eventID'] : null;
     $action = isset($_GET['action']) ? $_GET['action'] : null;
     $eventData = null;
-    $memberID = $_SESSION['memberID'];
     //must include this or is there way to get from login section
 
     if ($eventID) {
@@ -146,11 +145,11 @@ include ('cookie.php');
                     echo "<p class='note'><strong>Note:</strong> Participants are those who will attend the event, while volunteers are individuals who help with event operations.</p>";
                     echo "</div>";
 
-                    if ($memberID){
+                    if (isset($_SESSION['memberID'])){
                         echo "<a href='eventRegistrations.php?eventID=" . $row['eventID'] . "'><button>Register Now!</button></a>";
                     }
                     else{
-                        echo "<script>alert('Please login or sign up to register for events'); window.location.href='login.php';</script>";
+                        echo "<a href='login.php' onclick='return confirm(\"Please login or sign up to register for events\");'><button type='button'>Register Now!</button></a>";
                     }
                 }
             }

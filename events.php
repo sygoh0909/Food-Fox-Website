@@ -118,7 +118,7 @@ include ('cookie.php');
                     echo "<div class='event-card'>";
                     echo "<img src='" . $row['eventPic'] . "' alt='" . $row['eventPic'] . "'>";
                     echo "<h3>" . $row['eventName'] . "</h3>"; //show last updated when also?
-                    echo "<a href='eventInfo.php?eventID=" .$row['eventID']." &action=upcoming'><button>View more info</button></a>";
+                    echo "<a href='eventInfo.php?eventID=" .$row['eventID']." &action=upcoming'><button type='button'>View more info</button></a>";
                     echo "</div>";
                 }
             } else {
@@ -138,7 +138,7 @@ include ('cookie.php');
                     echo "<div class='event-card'>";
                     echo "<img src='" . $row['eventPic'] . "' alt='" . $row['eventPic'] . "'>";
                     echo "<h3>" . $row['eventName'] . "</h3>";
-                    echo "<a href='eventInfo.php?eventID=" .$row['eventID']." &action=past'><button>View more info</button></a>";
+                    echo "<a href='eventInfo.php?eventID=" .$row['eventID']." &action=past'><button type='button'>View more info</button></a>";
                     echo "</div>";
                 }
             } else {
