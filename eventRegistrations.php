@@ -47,7 +47,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $sql = "INSERT INTO volunteers (registrationID, relevantSkills) VALUES ('$registrationID', '$relevantSkills')";
                 mysqli_query($conn, $sql);
             }
-            echo "<script>alert('Registered successfully!'); window.location.href = 'events.php';</script>";
+            echo "<script>alert('Registered successfully!'); window.location.href = 'registrationInfo.php?registrationID=$registrationID';</script>";
         }
     }
     else{

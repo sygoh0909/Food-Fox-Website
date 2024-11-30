@@ -388,15 +388,15 @@ if (isset($_GET['fetchData']) && $_GET['fetchData'] === 'true') {
     <div class="donations-container">
         <div class="donation-card">
             <h3>Mercy Malaysia</h3>
-            <img src="mercy.png" alt="Mercy Malaysia"> <!--updated when-->
+            <img src="mercy.jpeg" alt="Mercy Malaysia"> <!--updated when-->
         </div>
         <div class="donation-card">
             <h3>Kechara Soup Kitchen</h3>
-            <img src="kechara.png" alt="Kechara Soup Kitchen">
+            <img src="kechara.jpeg" alt="Kechara Soup Kitchen">
         </div>
         <div class="donation-card">
             <h3>The Assembly Soup Kitchen</h3>
-            <img src="assemblysoup.png" alt="The Assembly Soup Kitchen">
+            <img src="assemblysoupkitchen.jpeg" alt="The Assembly Soup Kitchen">
         </div>
     </div>
 
