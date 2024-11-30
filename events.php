@@ -15,12 +15,13 @@ include ('cookie.php');
         .events {
             padding: 20px;
             background-color: #F5EEDC;
+            text-align: center;
         }
         .events h2 {
             font-size: 2rem;
             color: #5C4033;
-            text-align: center;
-            margin-bottom: 30px;
+            margin-bottom: 10px;
+            margin-top: 30px;
             border-bottom: 2px solid #d3a029;
             display: inline-block;
             padding-bottom: 10px;
