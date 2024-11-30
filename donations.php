@@ -15,6 +15,7 @@ include ('cookie.php');
             color: white;
         }
         h2 {
+            font-size: 2em;
             color: #5C4033;
             margin-bottom: 10px;
         }
@@ -41,6 +42,10 @@ include ('cookie.php');
             border-radius: 20px;
             transition: width 0.5s ease-in-out;
             box-shadow: inset 0 -2px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .donations-buttons{
+            text-align: center;
         }
 
         .donation-btn {
@@ -329,7 +334,7 @@ if (isset($_GET['fetchData']) && $_GET['fetchData'] === 'true') {
             <button type="button" class="donation-btn" name="amount" value="50">50</button>
             <button type="button" class="donation-btn" name="amount" value="100">100</button>
         </div>
-        <label><input id="donation-input" type="text" name="amount" placeholder="Enter the amount you want to donate..."></label>
+        <label><input id="donation-input" type="text" name="amount" placeholder="Specify the amount you want to donate..."></label>
         <button type="button" class="donate-submit" onclick="displayDonationPopup()">Donate</button>
         <p style="color: red"><?= isset ($errors['amount']) ? $errors['amount'] : '' ?></p>
 

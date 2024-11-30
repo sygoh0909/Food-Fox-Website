@@ -116,14 +116,18 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         <!--password-->
         <p><span class="required">* </span>Password:</p>
-        <label><input type="text" id="password" name="password" oninput="validatePassword()"></label>
+        <label>
+            <input type="text" id="password" name="password" oninput="validatePassword()">
+        </label>
         <p class="error" id="password-error"></p>
         <p class="error-message"><?= isset ($errors['password']) ? $errors['password'] : ''?></p>
 
         <!--confirm pass-->
         <p><span class="required">* </span>Confirm your password:</p>
-        <label><input type="text" id="confirmPassword" name="confirmPassword" oninput="validatePassword()"></label>
-        <p class="error" id="confirm-password-error"></p>
+        <label>
+            <input type="text" id="confirmPassword" name="confirmPassword" oninput="validatePassword()">
+        </label>
+        <p class="error" id="confirm-password-error"></p> <!--hide php error when javascript error occurs-->
         <p class="error-message"><?= isset ($errors['confirmPassword']) ? $errors['confirmPassword'] : ''?></p>
 
         <button type="submit">Sign Up</button>
@@ -168,7 +172,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
         else if (!emailPattern.test(emailInput)){
             emailError.textContent = "Invalid email format";
-            emailError.style.display = 'visible';
+            emailError.style.visibility = 'visible';
         }
         else{
             emailError.style.display = 'hidden';
@@ -176,11 +180,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 
     function validatePassword(){
-        const passwordInput = document.getElementById('password');
+        const passwordInput = document.getElementById('password').value.trim();
         const passwordError = document.getElementById('password-error');
-        const passwordPattern = '/^(?=.*[a-zA-z])(?=.*\d)[A-Za-z\d]{8,}$/';
+        const passwordPattern = /^(?=.*[a-zA-z])(?=.*\d)[A-Za-z\d]{8,}$/;
 
-        const confirmPasswordInput = document.getElementById('confirmPassword');
+        const confirmPasswordInput = document.getElementById('confirmPassword').value.trim();
         const confirmPasswordError = document.getElementById('confirm-password-error');
 
         if (passwordInput === ''){
