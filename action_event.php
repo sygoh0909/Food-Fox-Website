@@ -83,9 +83,9 @@ include ('cookie.php');
         $startDateTime = $startDate . " " . $startTime;
         $endDateTime = $endDate . " " . $endTime;
 
-        $eventImagePath = $eventData['eventPic'];
-        $guestImagePath = $eventData['guestProfilePic'];
-        $photoGalleryPath = $eventData['photoGallery'];
+        $eventImagePath = $eventData['eventPic'] ?? '';
+        $guestImagePath = $eventData['guestProfilePic'] ?? '';
+        $photoGalleryPath = $eventData['photoGallery'] ?? '';
 
         $errors = [];
 
@@ -151,6 +151,7 @@ include ('cookie.php');
             move_uploaded_file($_FILES["photoGallery"]["tmp_name"], $galleryPath);
         }
 
+        //action
         if ($action=="editPast"){
             //additional info if become past events
             $attendees = $_POST['attendees'];
@@ -196,11 +197,27 @@ include ('cookie.php');
                             $conn->query($guestUpdate);
                         }
                     }
+
+                    if ($eventStatus == "Past"){
+                        $checkQuery = "SELECT * FROM pastevents WHERE eventID = $eventID";
+                        $checkResult = $conn->query($checkQuery);
+
+                        if ($checkResult->num_rows==0){
+                            $sql = "INSERT INTO pastevents(eventID) VALUES($eventID)";;
+                            if ($conn->query($sql) === TRUE) {
+//                                echo "Event successfully moved to past events. Please proceed to past events tables for detailed update.";
+                            }
+                            echo "Error: " . $sql . "<br>" . $conn->error;
+                        }
+//                        echo "Event is already marked as past.";
+                    }
+
                     if ($action=="editPast"){
                         $sql = "UPDATE pastevents SET eventID = '$eventID', attendees = '$attendees', impact = '$impact', photoGallery = '$photoGalleryPath' WHERE eventID = '$eventID'";
                         $conn->query($sql);
                     }
                     echo "<script>alert('Event Updated'); window.location.href='admin_events.php';</script>";
+
                 }
             }
             elseif ($action=="delete" || $action=="deletePast"){
