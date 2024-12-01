@@ -11,6 +11,7 @@ use PHPMailer\PHPMailer\Exception;
 require 'C:/xampp/htdocs/assignment/vendor/autoload.php';
 
 $registrationID = isset($_GET['registrationID']) ? $_GET['registrationID'] : null;
+$registrationData = null;
 
 if ($registrationID) {
     $sql = "SELECT r.*, e.eventName, e.location, e.start_dateTime, e.end_dateTime, m.email FROM registrations r 
