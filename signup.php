@@ -117,7 +117,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <!--password-->
         <p><span class="required">* </span>Password:</p>
         <label>
-            <input type="text" id="password" name="password" oninput="validatePassword()">
+            <input type="password" id="password" name="password" oninput="validatePassword()">
         </label>
         <p class="error" id="password-error"></p>
         <p class="error-message"><?= isset ($errors['password']) ? $errors['password'] : ''?></p>
@@ -125,7 +125,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <!--confirm pass-->
         <p><span class="required">* </span>Confirm your password:</p>
         <label>
-            <input type="text" id="confirmPassword" name="confirmPassword" oninput="validatePassword()">
+            <input type="password" id="confirmPassword" name="confirmPassword" oninput="validatePassword()">
         </label>
         <p class="error" id="confirm-password-error"></p> <!--hide php error when javascript error occurs-->
         <p class="error-message"><?= isset ($errors['confirmPassword']) ? $errors['confirmPassword'] : ''?></p>

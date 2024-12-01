@@ -10,7 +10,9 @@ include ('cookie.php');
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="login.css">
     <style>
-
+        p.error-message {
+            color: red;
+        }
     </style>
 </head>
 <body>
@@ -69,6 +71,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         <p>Password: </p>
         <label><input type="text" name="password"></label>
+        <?php echo "<a href='forgotpassword.php?'><p>Forgot password?</p></a>"?>
 
         <p class="error-message"><?= isset ($errors['emptyFields']) ? $errors['emptyFields'] : ''?></p>
         <p class="error-message"><?= isset($errors['incorrectField']) ? $errors['incorrectField'] : ''?></p>
