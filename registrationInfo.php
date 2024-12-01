@@ -76,10 +76,10 @@ function sendMail($recipientEmail, $registrationData){
 
         }
         $email->send();
-        echo "Email sent successfully!";
+//        echo "Email sent successfully!";
 
     }catch (Exception $e){
-        echo "Email could not be sent. Error: {$email->ErrorInfo}";
+//        echo "Email could not be sent. Error: {$email->ErrorInfo}";
     }
 }
 
@@ -116,14 +116,14 @@ function sendMail($recipientEmail, $registrationData){
             display: inline-block;
             margin-top: 20px;
             padding: 10px 20px;
-            background-color: #4caf50;
+            background-color: #7F6C54;
             color: white;
             text-decoration: none;
             border-radius: 5px;
             transition: background-color 0.3s ease;
         }
         .button-container a:hover {
-            background-color: #45a049;
+            background-color: #6B5A48;
         }
     </style>
 </head>
