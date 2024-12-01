@@ -12,7 +12,7 @@ require 'C:/xampp/htdocs/assignment/vendor/autoload.php';
 if (isset($_POST['submit'])){
     $email = $_POST['email'];
 
-    $sql = "SELECT * FROM members WHERE memberID = $memberID";
+    $sql = "SELECT * FROM members WHERE memberID = $memberID"; //what if user not login but forgot pass
     $result = mysqli_query($conn, $sql);
     $memberData = mysqli_fetch_assoc($result);
 
