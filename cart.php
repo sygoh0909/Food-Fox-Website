@@ -8,12 +8,18 @@ $cartItems = isset($_SESSION['cart']) ? $_SESSION['cart'] : array();
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if (isset($_POST['update_amount'])) {
         $rewardID = $_POST['reward_id'];
-        $newAmount = $_POST['amount'];
+        $newAmount = intval($_POST['amount']); //ensure is integer
 
-        if (isset($cartItems[$rewardID])) {
+        if (isset($cartItems[$rewardID]) && $newAmount > 0) {
             $cartItems[$rewardID] = $newAmount;
             $_SESSION['cart'] = $cartItems;
         }
+    }
+
+    if (isset($_POST['remove_item'])) {
+        $rewardID = $_POST['remove_item'];
+        unset($cartItems[$rewardID]);
+        $_SESSION['cart'] = $cartItems;
     }
 
     if (isset($_POST['clear_cart'])) {
@@ -22,10 +28,42 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
 
     if (isset($_POST['checkout'])) {
-        //update points, deduct how much they purchase
-        echo "<script>alert('Checkout successful!');</script>";
-        $_SESSION['cart'] = array();
-        $cartItems = array();
+        $memberID = isset($_SESSION['memberID']) ? $_SESSION['memberID'] : null;
+        if($memberID) {
+            //must be member, but logically only member can access to reward page which link here
+            $totalPointsRequired = 0;
+            foreach ($cartItems as $rewardID => $quantity){
+                $sql = "SELECT pointsNeeded FROM rewards WHERE rewardID = $rewardID";
+                $result = mysqli_query($conn, $sql);
+
+                if ($result && $row = mysqli_fetch_assoc($result)){
+                    $totalPointsRequired += $row['pointsNeeded'] * $quantity;
+                }
+            }
+
+            $memberSql = "SELECT points FROM members WHERE memberID = $memberID";
+            $memberResult = mysqli_query($conn, $memberSql);
+
+            if ($memberResult && $memberRow = mysqli_fetch_assoc($memberResult)){
+                $memberPoints = $memberRow['points'];
+
+                if ($memberPoints >= $totalPointsRequired){
+                    $newPoints = $memberPoints - $totalPointsRequired;
+                    $updateSql = "UPDATE members SET points = $newPoints WHERE memberID = $memberID";
+                    mysqli_query($conn, $updateSql);
+
+                    //wanna do choose payment method and ask user to fill order details?
+
+                    $_SESSION['cart'] = array();
+                    $cartItems = array();
+                    echo "<script>alert('Checkout successful!');</script>";
+                }
+                else {
+                    echo "<script>alert('Insufficient points!');</script>";
+                }
+            }
+
+        }
     }
 }
 
@@ -90,10 +128,6 @@ if (!empty($cartItems)) {
             font-size: 16px;
             font-weight: bold;
             color: #555;
-        }
-
-        .amount-form {
-            display: inline-block;
         }
 
         .empty-cart {
@@ -174,38 +208,36 @@ if (!empty($cartItems)) {
     <h1>Shopping Cart</h1>
     <div class="cart-container">
         <?php if ($result && mysqli_num_rows($result) > 0) { ?>
+            <form method="post" enctype="multipart/form-data">
             <?php while ($row = mysqli_fetch_assoc($result)) {
                 $rewardID = $row['rewardID'];
                 $quantity = $cartItems[$rewardID];
                 ?>
                 <div class="cart-item">
+                    <input type="checkbox" name="selected_items[]" value="<?php echo $rewardID; ?>" checked>
                     <img src="<?php echo $row['rewardPic']; ?>" alt="Reward Picture">
                     <div class="info">
                         <p><strong>Reward Name:</strong> <?php echo $row['rewardName']; ?></p>
                         <p><strong>Points Needed:</strong> <?php echo $row['pointsNeeded']; ?></p>
                     </div>
                     <div class="amount">
-                        <form method="POST" class="amount-form">
-                            <input type="hidden" name="reward_id" value="<?php echo $rewardID; ?>">
-                            <label for="amount">Amount:</label>
-                            <select name="amount" id="amount" onchange="this.form.submit()">
-                                <?php for ($i = 1; $i <= 10; $i++) { ?>
-                                    <option value="<?php echo $i; ?>" <?php echo $i == $quantity ? 'selected' : ''; ?>>
-                                        <?php echo $i; ?>
-                                    </option>
-                                <?php } ?>
-                            </select>
-                            <input type="hidden" name="update_amount" value="1">
-                        </form>
+                        <label for="amount">Amount:</label>
+                        <select name="amounts[<?php echo $rewardID; ?>]">
+                            <?php for ($i = 1; $i <= 10; $i++) { ?>
+                                <option value="<?php echo $i; ?>" <?php echo $i == $quantity ? 'selected' : ''; ?>>
+                                    <?php echo $i; ?>
+                                </option>
+                            <?php } ?>
+                        </select>
                     </div>
+                    <button type="submit" name="remove_item" value="<?php echo $rewardID; ?>">Remove</button>
                 </div>
             <?php } ?>
-            <div class="cart-buttons">
-                <form method="POST">
+                <div class="cart-buttons">
                     <button type="submit" name="clear_cart">Clear Cart</button>
                     <button type="submit" name="checkout">Checkout</button>
-                </form>
-            </div>
+                </div>
+            </form>
         <?php } else { ?>
             <p class="empty-cart">Your cart is empty</p>
         <?php } ?>

@@ -39,6 +39,35 @@ include ('cookie.php');
             margin-bottom: 20px;
             object-fit: cover;
         }
+        .dynamic-inputs {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .dynamic-inputs label {
+            flex: 1;
+            margin-right: 10px;
+        }
+
+        .dynamic-inputs button {
+            margin-left: 5px;
+        }
+
+        #guest-container {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .guestPic img {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+
     </style>
 </head>
 <body>
@@ -126,11 +155,6 @@ include ('cookie.php');
         elseif (!in_array($eventStatus, ['Upcoming', 'Past', 'Canceled'])) {
             $errors['eventStatus'] = "Event status must be either 'Upcoming' or 'Past' or 'Canceled'.";
         }
-//        foreach ($guestName as $index => $guestName) {
-//            if (!preg_match("/^[a-zA-Z\s]+$/", $guestName)) {
-//                $errors["guestName_$index"] = "Guest name at index $index ('$guestName') should only contain alphabets and spaces.";
-//            }
-//        }
 
         //handle image upload
         if (isset($_FILES['eventImage']) && $_FILES['eventImage']['error'] == 0) {
@@ -357,12 +381,10 @@ include ('cookie.php');
                     echo "</div>";
                     echo "<label><input type='file' id='uploadGuestPic' accept='image/*' onchange='previewGuestImage()'>";
                     echo "<input type='text' name='guestName[]' value='{$guestList['guestName']}' placeholder='Enter guests name...'>";
-                    //display error message for guest Name
                     echo "<input type='text' name='guestBio[]' placeholder='Enter guests bio...'></label>";
                 }
             }
             else{
-                //else if new column is added
                 echo "<div class='dynamic-inputs'><div class='guestPic'><img src='' alt='Guest Picture' id='guestPic' class='roundImage'></div><label><input type='file' id='uploadGuestPic' accept='image/*' onchange='previewGuestImage()'><input type='text' name='guestName[]' placeholder='Enter guests name...'><input type='text' name='guestBio[]' placeholder='Enter guests bio...'></label>";
             }
             ?>
@@ -453,15 +475,13 @@ include ('cookie.php');
         }
     }
 
-    function previewGuestImage(){
-        const fileInput = document.getElementById('uploadGuestPic');
-        const guestPic = document.getElementById('guestPic');
-
-        const file = fileInput.files[0];
+    function previewGuestImage(input) {
+        const file = input.files[0];
         if (file) {
             const reader = new FileReader();
-            reader.onload = function (e){
-                guestPic.src = e.target.result;
+            const img = input.closest(".dynamic-inputs").querySelector(".guestPic img");
+            reader.onload = function (e) {
+                img.src = e.target.result;
             };
             reader.readAsDataURL(file);
         }
@@ -469,39 +489,53 @@ include ('cookie.php');
 
     //preview for event photo gallery pics
 
-    function addHighlights(){
-        const container = document.getElementById('highlights-container');
-        const newInput = document.createElement('div');
-        newInput.classList.add('dynamic-inputs');
-        newInput.innerHTML = `<label><input type="text" name="highlights[]" placeholder="Enter event highlights..."></label>
-                              <button type="button" onclick="removeRow(this)">-</button>`;
-        container.appendChild(newInput);
+    function addHighlights() {
+        const container = document.getElementById("highlights-container");
+        const newHighlight = document.createElement("div");
+        newHighlight.className = "dynamic-inputs";
+        newHighlight.innerHTML = `
+        <label><input type="text" name="highlights[]" placeholder="Enter event highlights..."></label>
+        <button type="button" onclick="removeRow(this)">-</button>
+    `;
+        container.appendChild(newHighlight);
     }
 
-    function addSchedule(){
-        const container = document.getElementById('schedule-container');
-        const newInput = document.createElement('div');
-        newInput.classList.add('dynamic-inputs'); /*add css styles to here*/
-        newInput.innerHTML = `<label><input type="text" name="schedules[]" placeholder="Enter date/time, activity description..."></label>
-                              <button type="button" onclick="removeRow(this)">-</button>`;
-        container.appendChild(newInput);
+    function addSchedule() {
+        const container = document.getElementById("schedule-container");
+        const newSchedule = document.createElement("div");
+        newSchedule.className = "dynamic-inputs";
+        newSchedule.innerHTML = `
+        <label><input type="text" name="schedules[]" placeholder="Enter event schedule..."></label>
+        <button type="button" onclick="removeRow(this)">-</button>
+    `;
+        container.appendChild(newSchedule);
     }
 
-    function addGuest(){
-        const container = document.getElementById('guest-container');
-        const newInput = document.createElement('div');
-        newInput.classList.add('dynamic-inputs');
-        newInput.innerHTML = `<label><input type="file" name="guestImage" accept="image/*" onchange="previewGuestImage()">
-            <img id="guestImagePreview" class="guest-image-preview" alt="Guest Image Preview" style="display: none">
-            <input type="text" name="guestName[]" placeholder="Enter guests name...">
-            <input type="text" name="guestBio[]" placeholder="Enter guests bio...">
-                              <button type="button" onclick="removeRow(this)">-</button>`;
-        container.appendChild(newInput);
+    function addGuest() {
+        const container = document.getElementById("guest-container");
+        const newGuest = document.createElement("div");
+        newGuest.className = "dynamic-inputs";
+
+        newGuest.innerHTML = `
+        <div class="guestPic">
+            <img src="" alt="Guest Picture" class="roundImage">
+        </div>
+        <label>
+            <input type="file" accept="image/*" onchange="previewGuestImage(this)">
+            <input type="text" name="guestName[]" placeholder="Enter guest's name...">
+            <input type="text" name="guestBio[]" placeholder="Enter guest's bio...">
+        </label>
+        <button type="button" onclick="removeRow(this)">-</button>
+    `;
+        container.appendChild(newGuest);
     }
 
-    function removeRow(button){
-        button.parentElement.remove();
+
+    function removeRow(button) {
+        const row = button.parentElement;
+        row.remove();
     }
+
 </script>
 </body>
 </html>
