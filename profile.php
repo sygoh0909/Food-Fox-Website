@@ -229,7 +229,7 @@ include ('cookie.php')
             $bio = isset($_POST['bio']) ? $_POST['bio'] : $memberData['bio'];
 //            $password = $_POST['password'];
 
-            $memberProfilePath = '';
+            $memberProfilePath = $memberData['memberProfile'] ?? '';
 
             if (isset($_FILES['memberProfile']) && $_FILES['memberProfile']['error'] == 0) {
                 $target_dir = "uploads/";

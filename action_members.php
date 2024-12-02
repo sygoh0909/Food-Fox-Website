@@ -37,7 +37,7 @@ include ('cookie.php');
             $password = $_POST["password"];
             $phoneNum = $_POST["phoneNum"];
             $bio = $_POST["bio"];
-            $memberProfilePath = $memberData["memberProfile"];
+            $memberProfilePath = $memberData["memberProfile"] ?? '';
 
             if (isset($_FILES['memberProfile']) && $_FILES['memberProfile']['error'] == 0) {
                 $target_dir = "uploads/";
