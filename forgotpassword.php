@@ -1,7 +1,6 @@
 <?php
 include ('cookie.php');
 $conn = connection();
-$memberID = isset($_GET['memberID']) ? $_GET['memberID']: '';
 $memberData = null;
 
 use PHPMailer\PHPMailer\PHPMailer;
@@ -12,12 +11,12 @@ require 'C:/xampp/htdocs/assignment/vendor/autoload.php';
 if (isset($_POST['submit'])){
     $email = $_POST['email'];
 
-    $sql = "SELECT * FROM members WHERE memberID = $memberID"; //what if user not login but forgot pass
+    $sql = "SELECT * FROM members WHERE email = '$email'";
     $result = mysqli_query($conn, $sql);
-    $memberData = mysqli_fetch_assoc($result);
 
-    if ($memberData['email'] == $email){
-        $row = mysqli_fetch_assoc($result);
+    if (mysqli_num_rows($result) > 0){
+        $memberData = mysqli_fetch_assoc($result);
+        $memberID = $memberData['memberID'];
         $token = bin2hex(random_bytes(50)); //random token
         $expiry = time() + 3600;
         $sql = "INSERT INTO passwordresets(memberID, token, expiry) VALUES ('$memberID', '$token', '$expiry')";
@@ -27,6 +26,7 @@ if (isset($_POST['submit'])){
 
         sendMail($memberData['email'], $resetLink);
     }
+
     else{
         echo "<script>alert('No account found with this email address. Please try again!');</script>";
     }

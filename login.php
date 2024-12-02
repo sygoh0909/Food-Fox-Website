@@ -13,6 +13,12 @@ include ('cookie.php');
         p.error-message {
             color: red;
         }
+        p.forgot-pass{
+            color: #2196f3;
+        }
+        a{
+            color: #2196f3;
+        }
     </style>
 </head>
 <body>
@@ -71,7 +77,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         <p>Password: </p>
         <label><input type="text" name="password"></label>
-        <?php echo "<a href='forgotpassword.php?'><p>Forgot password?</p></a>"?>
+        <a href='forgotpassword.php'><p class="forgot-pass">Forgot password?</p></a>
 
         <p class="error-message"><?= isset ($errors['emptyFields']) ? $errors['emptyFields'] : ''?></p>
         <p class="error-message"><?= isset($errors['incorrectField']) ? $errors['incorrectField'] : ''?></p>
