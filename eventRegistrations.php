@@ -194,7 +194,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <p>Dietary Restrictions:</p>
         <label><input type="text" name="dietaryRestrictions" placeholder="Enter any dietary restrictions if got..."></label>
 
-    <label for="registrations">Registration type: </label>
+    <label for="registrations">Registration type: </label> <!--show full if one of it is full-->
     <select name="registrations" id="registrations" onchange="showFields()">
         <option value="" disabled selected>Select registration type</option>
         <option value="Participant">Participant</option>

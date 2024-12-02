@@ -260,11 +260,38 @@ include ('cookie.php');
                 echo "<p class='note'><strong>Note:</strong> Participants are those who will attend the event, while volunteers are individuals who help with event operations.</p>";
                 echo "</div>";
 
-                if (isset($_SESSION['memberID'])){
-                    echo "<a href='eventRegistrations.php?eventID=" . $eventID . "'><button>Register Now!</button></a>";
+                $sql = "SELECT participantsNeeded, volunteersNeeded FROM events WHERE eventID = $eventID";
+                $result = $conn->query($sql);
+
+                $participantsNeeded = null;
+                $volunteersNeeded = null;
+
+                if ($result->num_rows > 0) {
+                    $limit = $result->fetch_assoc();
+                    $participantsNeeded = $limit['participantsNeeded'];
+                    $volunteersNeeded = $limit['volunteersNeeded'];
                 }
-                else{
-                    echo "<a href='login.php' onclick='return confirm(\"Please login or sign up to register for events\");'><button type='button'>Register Now!</button></a>";
+
+                if (!empty($participantsNeeded) || !empty($volunteersNeeded)) {
+                    $sqlParticipant = "SELECT COUNT(*) AS total_participants FROM participants p, registrations r, events e WHERE p.registrationID = r.registrationID AND r.eventID = e.eventID AND e.eventID = $eventID";
+                    $resultParticipant = $conn->query($sqlParticipant);
+                    $registeredParticipant = $resultParticipant->fetch_assoc()['total_participants'];
+
+                    $sqlVolunteer = "SELECT COUNT(*) AS total_volunteers FROM volunteers v, registrations r, events e WHERE v.registrationID = r.registrationID AND r.eventID = e.eventID AND e.eventID = $eventID";
+                    $resultVolunteer = $conn->query($sqlVolunteer);
+                    $registeredVolunteer = $resultVolunteer->fetch_assoc()['total_volunteers'];
+
+                    if ($resultParticipant >= $participantsNeeded && $registeredVolunteer >= $volunteersNeeded) {
+                        echo "<button>Full</button>";
+                    }
+                    else{
+                        if (isset($_SESSION['memberID'])){
+                            echo "<a href='eventRegistrations.php?eventID=" . $eventID . "'><button>Register Now!</button></a>";
+                        }
+                        else{
+                            echo "<a href='login.php' onclick='return confirm(\"Please login or sign up to register for events\");'><button type='button'>Register Now!</button></a>";
+                        }
+                    }
                 }
             }
             elseif ($action == "past") {
