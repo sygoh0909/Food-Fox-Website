@@ -17,7 +17,7 @@ if ($eventID){
             $memberEmail = $row['email'];
             $eventName = $row['eventName'];
 
-            $loginFormUrl = 'http://localhost/assignment/loginform.php?eventID=' .$eventID . "&memberID=" .$row['memberID'];
+            $loginFormUrl = 'http://localhost:8080/assignment/loginform.php?eventID=' .$eventID . "&memberID=" .$row['memberID'];
             sendMail($eventName, $loginFormUrl, $memberEmail);
 
         }
