@@ -1,5 +1,6 @@
 <?php
 include ('cookie.php');
+ob_start();
 ?>
 <html>
 <head>
