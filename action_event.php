@@ -41,8 +41,9 @@ include ('cookie.php');
         }
         .dynamic-inputs {
             display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
             align-items: center;
-            margin-bottom: 10px;
         }
 
         .dynamic-inputs label {
@@ -347,7 +348,7 @@ include ('cookie.php');
                 echo "<div class='dynamic-inputs'><label><input type='text' name='highlights[]' placeholder='Enter event highlights...'></label><button type='button' onclick='removeRow(this)'>-</button></div>";
             }
             ?>
-            <button type="button" onclick="addHighlights()">+</button>
+            <button type="button" id="add-highlight-button" onclick="addHighlights()">+</button>
         </div>
 
         <p>Event Schedule:</p>
@@ -365,7 +366,7 @@ include ('cookie.php');
                 echo "<div class='dynamic-inputs'><label><input type='text' name='schedules[]' placeholder='Enter event schedule...'></label><button type='button' onclick='removeRow(this)'>-</button></div>";
             }
             ?>
-            <button type="button" onclick="addSchedule()">+</button>
+            <button type="button" id="add-schedule-button" onclick="addSchedule()">+</button>
         </div>
 
         <p>Featured Speaker/Event Guests:</p>
@@ -374,22 +375,35 @@ include ('cookie.php');
             if ($eventID) {
                 $guestQuery = "SELECT * FROM eventguests WHERE eventID = '$eventID'";
                 $result = $conn->query($guestQuery);
+
                 while ($guestList = $result->fetch_assoc()) {
                     echo "<div class='dynamic-inputs'>";
                     echo "<div class='guestPic'>";
-                    echo "<img src='{$guestList['guestProfilePic']}' alt='Guest Picture' id='guestPic' class='roundImage'>";
+                    echo "<img src='{$guestList['guestProfilePic']}' alt='Guest Picture' class='roundImage'>";
                     echo "</div>";
-                    echo "<label><input type='file' id='uploadGuestPic' accept='image/*' onchange='previewGuestImage()'>";
-                    echo "<input type='text' name='guestName[]' value='{$guestList['guestName']}' placeholder='Enter guests name...'>";
-                    echo "<input type='text' name='guestBio[]' placeholder='Enter guests bio...'></label>";
+                    echo "<label>";
+                    echo "<input type='file' accept='image/*' onchange='previewGuestImage(this)'>";
+                    echo "<input type='text' name='guestName[]' value='{$guestList['guestName']}' placeholder='Enter guest's name...'>";
+                    echo "<input type='text' name='guestBio[]' value='{$guestList['guestBio']}' placeholder='Enter guest's bio...'>";
+                    echo "</label>";
+                    echo "<button type='button' onclick='removeRow(this)'>-</button>";
+                    echo "</div>";
                 }
-            }
-            else{
-                echo "<div class='dynamic-inputs'><div class='guestPic'><img src='' alt='Guest Picture' id='guestPic' class='roundImage'></div><label><input type='file' id='uploadGuestPic' accept='image/*' onchange='previewGuestImage()'><input type='text' name='guestName[]' placeholder='Enter guests name...'><input type='text' name='guestBio[]' placeholder='Enter guests bio...'></label>";
+            } else {
+                echo "<div class='dynamic-inputs'>";
+                echo "<div class='guestPic'><img src='' alt='Guest Picture' class='roundImage'></div>";
+                echo "<label>";
+                echo "<input type='file' accept='image/*' onchange='previewGuestImage(this)'>";
+                echo "<input type='text' name='guestName[]' placeholder='Enter guest's name...'>";
+                echo "<input type='text' name='guestBio[]' placeholder='Enter guest's bio...'>";
+                echo "</label>";
+                echo "<button type='button' onclick='removeRow(this)'>-</button>";
+                echo "</div>";
             }
             ?>
-            <button type="button" onclick="addGuest()">+</button>
+            <button type="button" id="add-guest-button" onclick="addGuest()">+</button>
         </div>
+
 
         <p>Participants Needed:</p>
         <label><input type="text" name="participantsNeeded" value="<?php echo isset ($eventData['participantsNeeded']) ? $eventData['participantsNeeded']: ''; ?>" placeholder="Enter Participants needed..."></label>
@@ -475,13 +489,15 @@ include ('cookie.php');
         }
     }
 
-    function previewGuestImage(input) {
-        const file = input.files[0];
+    function previewGuestImage(){
+        const fileInput = document.getElementById('uploadGuestPic');
+        const guestPic = document.getElementById('guestPic');
+
+        const file = fileInput.files[0];
         if (file) {
             const reader = new FileReader();
-            const img = input.closest(".dynamic-inputs").querySelector(".guestPic img");
-            reader.onload = function (e) {
-                img.src = e.target.result;
+            reader.onload = function (e){
+                guestPic.src = e.target.result;
             };
             reader.readAsDataURL(file);
         }
@@ -497,7 +513,8 @@ include ('cookie.php');
         <label><input type="text" name="highlights[]" placeholder="Enter event highlights..."></label>
         <button type="button" onclick="removeRow(this)">-</button>
     `;
-        container.appendChild(newHighlight);
+        const addButton = document.getElementById('add-highlight-button');
+        container.insertBefore(newHighlight, addButton);
     }
 
     function addSchedule() {
@@ -508,11 +525,14 @@ include ('cookie.php');
         <label><input type="text" name="schedules[]" placeholder="Enter event schedule..."></label>
         <button type="button" onclick="removeRow(this)">-</button>
     `;
-        container.appendChild(newSchedule);
+        const addButton = document.getElementById('add-schedule-button');
+        container.insertBefore(newSchedule, addButton);
     }
 
     function addGuest() {
         const container = document.getElementById("guest-container");
+
+        // Create a new input block for the guest
         const newGuest = document.createElement("div");
         newGuest.className = "dynamic-inputs";
 
@@ -527,9 +547,10 @@ include ('cookie.php');
         </label>
         <button type="button" onclick="removeRow(this)">-</button>
     `;
-        container.appendChild(newGuest);
-    }
 
+        const addButton = document.getElementById("add-guest-button");
+        container.insertBefore(newGuest, addButton);
+    }
 
     function removeRow(button) {
         const row = button.parentElement;
