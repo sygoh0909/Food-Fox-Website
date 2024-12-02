@@ -194,11 +194,42 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <p>Dietary Restrictions:</p>
         <label><input type="text" name="dietaryRestrictions" placeholder="Enter any dietary restrictions if got..."></label>
 
-    <label for="registrations">Registration type: </label> <!--show full if one of it is full-->
+        <?php
+        $sql = "SELECT participantsNeeded, volunteersNeeded FROM events WHERE eventID = $selectedEventID";
+        $result = $conn->query($sql);
+
+        $participantsNeeded = null;
+        $volunteersNeeded = null;
+
+        if ($result->num_rows > 0) {
+            $limit = $result->fetch_assoc();
+            $participantsNeeded = $limit['participantsNeeded'];
+            $volunteersNeeded = $limit['volunteersNeeded'];
+        }
+
+        if (!empty($participantsNeeded) || !empty($volunteersNeeded)) {
+        $sqlParticipant = "SELECT COUNT(*) AS total_participants FROM participants p, registrations r, events e WHERE p.registrationID = r.registrationID AND r.eventID = e.eventID AND e.eventID = $selectedEventID";
+        $resultParticipant = $conn->query($sqlParticipant);
+        $registeredParticipant = $resultParticipant->fetch_assoc()['total_participants'];
+
+        $sqlVolunteer = "SELECT COUNT(*) AS total_volunteers FROM volunteers v, registrations r, events e WHERE v.registrationID = r.registrationID AND r.eventID = e.eventID AND e.eventID = $selectedEventID";
+        $resultVolunteer = $conn->query($sqlVolunteer);
+        $registeredVolunteer = $resultVolunteer->fetch_assoc()['total_volunteers'];
+
+        $participantFull = !empty($participantsNeeded) && $registeredParticipant >= $participantsNeeded;
+        $volunteerFull = !empty($volunteersNeeded) && $registeredVolunteer >= $volunteersNeeded;
+        }
+        ?>
+
+    <label for="registrations">Registration type: </label> <!--show participant or volunteer full-->
     <select name="registrations" id="registrations" onchange="showFields()">
         <option value="" disabled selected>Select registration type</option>
+        <?php if (!$participantFull): ?>
         <option value="Participant">Participant</option>
+        <?php endif; ?>
+        <?php if (!$volunteerFull): ?>
         <option value="Volunteer">Volunteer</option>
+        <?php endif; ?>
     </select>
         <p class="error-message""><?= isset($errors['registrations']) ? $errors['registrations'] : '' ?></p>
 

@@ -255,17 +255,14 @@ include ('cookie.php');
 
             if ($action == "upcoming") {
                 echo "<div class='event-highlight'>";
-                echo "<p><strong>Registrations Needed:</strong> " . $eventData['participantsNeeded'] . "</p>";
+                echo "<p><strong>Participants Needed:</strong> " . $eventData['participantsNeeded'] . "</p>";
                 echo "<p><strong>Volunteers Needed:</strong> " . $eventData['volunteersNeeded'] . "</p>";
                 echo "</div>";
                 echo "<p class='note'><strong>Note:</strong> Participants are those who will attend the event, while volunteers are individuals who help with event operations.</p>";
                 echo "</div>";
 
-                $sql = "SELECT participantsNeeded, volunteersNeeded FROM events WHERE eventID = $eventID";
-                $result = $conn->query($sql);
-
-                $participantsNeeded = null;
-                $volunteersNeeded = null;
+                $participantsNeeded = $eventData['participantsNeeded'];
+                $volunteersNeeded = $eventData['volunteersNeeded'];
 
                 if ($result->num_rows > 0) {
                     $limit = $result->fetch_assoc();
@@ -282,7 +279,7 @@ include ('cookie.php');
                     $resultVolunteer = $conn->query($sqlVolunteer);
                     $registeredVolunteer = $resultVolunteer->fetch_assoc()['total_volunteers'];
 
-                    if ($resultParticipant >= $participantsNeeded && $registeredVolunteer >= $volunteersNeeded) {
+                    if (($registeredParticipant >= $participantsNeeded) && ($registeredVolunteer >= $volunteersNeeded)) {
                         echo "<button>Full</button>";
                     }
                     else{
