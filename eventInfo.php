@@ -1,5 +1,4 @@
 <?php
-ob_start();
 include ('cookie.php');
 ?>
 <html>

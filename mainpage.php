@@ -1,5 +1,4 @@
 <?php
-ob_start(); //better to not use this
 include ('cookie.php');
 ?>
 <!DOCTYPE html>
