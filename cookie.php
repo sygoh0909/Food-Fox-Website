@@ -12,7 +12,7 @@ function cookie(){
         $visitCount = 1;
     }
     //set cookie
-    setcookie('visitCount', $visitCount, time() + (86400 * 30), "/"); //expire in 30 days
+    setcookie('visitCount', $visitCount, time() + (86400 * 30), "/"); //set this
     return $visitCount;
 }
 
