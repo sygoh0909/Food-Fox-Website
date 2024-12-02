@@ -31,38 +31,44 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $memberID = isset($_SESSION['memberID']) ? $_SESSION['memberID'] : null;
         if($memberID) {
             //must be member, but logically only member can access to reward page which link here
-            $totalPointsRequired = 0;
-            foreach ($cartItems as $rewardID => $quantity){
-                $sql = "SELECT pointsNeeded FROM rewards WHERE rewardID = $rewardID";
-                $result = mysqli_query($conn, $sql);
+            $selectedItems = isset($_POST['selected_items']) ? $_POST['selected_items'] : array();
 
-                if ($result && $row = mysqli_fetch_assoc($result)){
-                    $totalPointsRequired += $row['pointsNeeded'] * $quantity;
+            if (!empty($selectedItems)){
+                $totalPointsRequired = 0;
+
+                foreach ($cartItems as $rewardID => $quantity){
+                    $sql = "SELECT pointsNeeded FROM rewards WHERE rewardID = $rewardID";
+                    $result = mysqli_query($conn, $sql);
+
+                    if ($result && $row = mysqli_fetch_assoc($result)){
+                        $totalPointsRequired += $row['pointsNeeded'] * $quantity;
+                    }
+                }
+
+                $memberSql = "SELECT points FROM members WHERE memberID = $memberID";
+                $memberResult = mysqli_query($conn, $memberSql);
+
+                if ($memberResult && $memberRow = mysqli_fetch_assoc($memberResult)){
+                    $memberPoints = $memberRow['points'];
+
+                    if ($memberPoints >= $totalPointsRequired){
+                        $newPoints = $memberPoints - $totalPointsRequired;
+                        $updateSql = "UPDATE members SET points = $newPoints WHERE memberID = $memberID";
+                        mysqli_query($conn, $updateSql);
+
+                        //wanna do choose payment method and ask user to fill order details?
+
+                        foreach ($selectedItems as $rewardID) {
+                            unset($cartItems[$rewardID]);
+                        }
+                        $_SESSION['cart'] = $cartItems;
+                        echo "<script>alert('Checkout successful!');</script>";
+                    }
+                    else {
+                        echo "<script>alert('Insufficient points!');</script>";
+                    }
                 }
             }
-
-            $memberSql = "SELECT points FROM members WHERE memberID = $memberID";
-            $memberResult = mysqli_query($conn, $memberSql);
-
-            if ($memberResult && $memberRow = mysqli_fetch_assoc($memberResult)){
-                $memberPoints = $memberRow['points'];
-
-                if ($memberPoints >= $totalPointsRequired){
-                    $newPoints = $memberPoints - $totalPointsRequired;
-                    $updateSql = "UPDATE members SET points = $newPoints WHERE memberID = $memberID";
-                    mysqli_query($conn, $updateSql);
-
-                    //wanna do choose payment method and ask user to fill order details?
-
-                    $_SESSION['cart'] = array();
-                    $cartItems = array();
-                    echo "<script>alert('Checkout successful!');</script>";
-                }
-                else {
-                    echo "<script>alert('Insufficient points!');</script>";
-                }
-            }
-
         }
     }
 }
