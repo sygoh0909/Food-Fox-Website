@@ -22,7 +22,7 @@ if (isset($_POST['submit'])){
         $sql = "INSERT INTO passwordresets(memberID, token, expiry) VALUES ('$memberID', '$token', '$expiry')";
         mysqli_query($conn, $sql);
 
-        $resetLink = "http://localhost:8080/assignment/resetpassword.php?token=$token";
+        $resetLink = "http://localhost/assignment/resetpassword.php?token=$token";
 
         sendMail($memberData['email'], $resetLink);
     }
