@@ -17,7 +17,8 @@ if ($memberID && $eventID){
         $updateSql = "UPDATE registrations SET attendance = 1 WHERE eventID = $eventID AND memberID = $memberID";
         if (mysqli_query($conn, $updateSql)){
             echo "<script>alert('Your attendance has been successfully marked for this event!')</script>";
-            //points?
+            $pointsAdded = "UPDATE members SET points = points + 5 WHERE memberID = $memberID";
+            mysqli_query($conn, $pointsAdded);
         }
         else{
             echo "<script>alert('Failed to mark attendance. Please try again.')</script>";
