@@ -93,6 +93,8 @@ function adminLoginSection(){
     }
 }
 ?>
+<link rel="stylesheet" href="../main.css">
+<link rel="stylesheet" href="../admin.css">
 <script>
     function togglePopup(event) {
         event.preventDefault();
