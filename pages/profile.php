@@ -9,7 +9,7 @@ include('../db/db_conn.php');
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Profile Page</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <link rel="stylesheet" href="../../css%20&%20js/main.css">
+    <link rel="stylesheet" href="../css/main.css">
     <style>
 
         .container {
@@ -436,7 +436,7 @@ include('../db/db_conn.php');
 
 </main>
 </body>
-<script src="../../css%20&%20js/main.js"></script>
+<script src="../css/main.js"></script>
 <script>
     function previewProfilePic() {
         const fileInput = document.getElementById('uploadPic');

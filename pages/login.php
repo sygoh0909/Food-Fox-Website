@@ -1,5 +1,6 @@
 <?php
-include ('cookie.php');
+include('../cookie/cookie.php');
+include('../db/db_conn.php');
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -8,7 +9,7 @@ include ('cookie.php');
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login Page</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <link rel="stylesheet" href="../css%20&%20js/login.css">
+    <link rel="stylesheet" href="../css/login.css">
     <style>
         p.error-message {
             color: red;
@@ -86,7 +87,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     </form>
 
     <p class="signup-link">Haven't had an account? <a href="signup.php">Sign Up now!</a></p>
-    <a href="../admin_pages/login_admin.php"><button>Sign in as admin</button></a>
+    <a href="../admin_pages/main/login_admin.php"><button>Sign in as admin</button></a>
 
 </div>
 </body>

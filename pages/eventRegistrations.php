@@ -70,7 +70,7 @@ if (mysqli_num_rows($result) > 0) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Events Registrations Page</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <link rel="stylesheet" href="form.css">
+    <link rel="stylesheet" href="../css/form.css">
     <style>
         .main{
             color: white;
@@ -131,10 +131,10 @@ if (mysqli_num_rows($result) > 0) {
             </div>
 
             <div class="main-links">
-                <a href="pages/mainpage.php" class="roundButton main">Home</a>
+                <a href="mainpage.php" class="roundButton main">Home</a>
                 <a href="events.php" class="roundButton main">Events</a>
-                <a href="pages/donations.php" class="roundButton main">Donation</a>
-                <a href="pages/contact.php" class="roundButton main">Contact</a>
+                <a href="donations.php" class="roundButton main">Donation</a>
+                <a href="contact.php" class="roundButton main">Contact</a>
             </div>
 
             <div class="nav-links">
@@ -303,10 +303,10 @@ if (mysqli_num_rows($result) > 0) {
         <div class="footer-section">
             <h4>Quick Links</h4>
             <ul>
-                <li><a href="pages/mainpage.php">Home</a></li>
+                <li><a href="mainpage.php">Home</a></li>
                 <li><a href="events.php">Events</a></li>
-                <li><a href="pages/donations.php">Donations</a></li>
-                <li><a href="pages/contact.php">Contact Us</a></li>
+                <li><a href="donations.php">Donations</a></li>
+                <li><a href="contact.php">Contact Us</a></li>
             </ul>
         </div>
         <div class="footer-section">

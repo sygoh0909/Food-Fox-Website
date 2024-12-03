@@ -9,7 +9,7 @@ include('../db/db_conn.php');
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Donation Page</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <link rel="stylesheet" href="../css%20&%20js/main.css">
+    <link rel="stylesheet" href="../css/main.css">
     <style>
         .main{
             color: white;
@@ -237,7 +237,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'getProgress') {
 
             <div class="main-links">
                 <a href="mainpage.php" class="roundButton main">Home</a>
-                <a href="../events.php" class="roundButton main">Events</a>
+                <a href="events.php" class="roundButton main">Events</a>
                 <a href="donations.php" class="roundButton main">Donation</a>
                 <a href="contact.php" class="roundButton main">Contact</a>
             </div>
@@ -597,7 +597,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'getProgress') {
             <h4>Quick Links</h4>
             <ul>
                 <li><a href="mainpage.php">Home</a></li>
-                <li><a href="../events.php">Events</a></li>
+                <li><a href="events.php">Events</a></li>
                 <li><a href="donations.php">Donations</a></li>
                 <li><a href="contact.php">Contact Us</a></li>
             </ul>

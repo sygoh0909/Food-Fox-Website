@@ -90,7 +90,7 @@ if (!empty($cartItems)) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cart Page</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <link rel="stylesheet" href="../css%20&%20js/main.css">
+    <link rel="stylesheet" href="../css/main.css">
     <style>
         .main {
             color: white;
@@ -200,7 +200,7 @@ if (!empty($cartItems)) {
                 <a href="mainpage.php" class="roundButton main">Home</a>
                 <a href="events.php" class="roundButton main">Events</a>
                 <a href="donations.php" class="roundButton main">Donation</a>
-                <a href="main/contact.php" class="roundButton main">Contact</a>
+                <a href="contact.php" class="roundButton main">Contact</a>
             </div>
 
             <div class="nav-links">
@@ -250,7 +250,7 @@ if (!empty($cartItems)) {
         <?php } ?>
     </div>
     <div class="back-to-rewards">
-        <a href="main/rewards.php">Back to Rewards</a>
+        <a href="rewards.php">Back to Rewards</a>
     </div>
 </main>
 <footer>
@@ -265,7 +265,7 @@ if (!empty($cartItems)) {
                 <li><a href="mainpage.php">Home</a></li>
                 <li><a href="events.php">Events</a></li>
                 <li><a href="donations.php">Donations</a></li>
-                <li><a href="main/contact.php">Contact Us</a></li>
+                <li><a href="contact.php">Contact Us</a></li>
             </ul>
         </div>
         <div class="footer-section">
