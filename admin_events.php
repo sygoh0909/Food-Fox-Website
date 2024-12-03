@@ -110,12 +110,12 @@ include ('cookie.php');
                 $conn = connection();
 
                 $searchQuery = isset ($_GET['search']) ? $_GET['search'] : '';
-                $pastSql = "SELECT e.eventID, e.eventName, p.attendees FROM events e INNER JOIN pastevents p ON e.eventID = p.eventID WHERE e.eventStatus='Past'";
+                $pastSql = "SELECT e.eventID, e.eventName, COUNT(r.attendance) AS attendees FROM events e LEFT JOIN registrations r ON e.eventID = r.eventID AND r.attendance = 1 WHERE e.eventStatus = 'Past'";
 
                 if (!empty ($searchQuery)){
                     $pastSql .= " AND (e.eventName LIKE '%$searchQuery%' OR e.eventStatus LIKE '%$searchQuery%')";
                 }
-                $pastSql .= " GROUP BY e.eventID, e.eventName, p.attendees";
+                $pastSql .= " GROUP BY e.eventID, e.eventName";
                 $result = $conn->query($pastSql);
 
                 if ($result->num_rows > 0) {

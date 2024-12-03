@@ -48,7 +48,7 @@ function sendMail($eventName, $loginFormUrl, $memberEmail){
 $loginFormUrl";
 
         $email->send();
-        echo "<p>Email sent successfully!</p>";
+        echo "<script>alert('Login form sent successfully!'); window.location.href = 'admin_events.php';</script>";
     }
     catch (Exception $e){
         echo "Email could not be sent. Error: {$email->ErrorInfo}";
