@@ -40,57 +40,60 @@ include ('cookie.php');
     $action = isset($_GET['action']) ? $_GET['action'] : '';
     $rewardData = null;
 
-    if ($rewardID) {
+    if ($rewardID && ($action == "edit" || $action == "delete")) {
         $sql = "SELECT * FROM rewards WHERE rewardID = '$rewardID'";
         $result = mysqli_query($conn, $sql);
         $rewardData = mysqli_fetch_assoc($result);
+    }
 
-        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 //            $rewardID = $_POST['rewardID'];
-            $rewardName = $_POST['rewardName'];
-            $pointsNeeded = $_POST['pointsNeeded'];
-            $rewardPicPath = $rewardData['rewardPic'];
+        $rewardName = $_POST['rewardName'];
+        $pointsNeeded = $_POST['pointsNeeded'];
+        $rewardPicPath = $rewardData['rewardPic'];
 
-            if (isset($_FILES['rewardPic']) && $_FILES['rewardPic']['error'] == 0) {
-                $target_dir = "uploads/";
-                $rewardPicPath = $target_dir . basename($_FILES['rewardPic']['name']);
-                move_uploaded_file($_FILES['rewardPic']['tmp_name'], $rewardPicPath);
+        if (isset($_FILES['rewardPic']) && $_FILES['rewardPic']['error'] == 0) {
+            $target_dir = "uploads/";
+            $rewardPicPath = $target_dir . basename($_FILES['rewardPic']['name']);
+            move_uploaded_file($_FILES['rewardPic']['tmp_name'], $rewardPicPath);
+        }
+
+        $errors = array();
+
+        if (empty($rewardName)) {
+            $errors[] = "Reward Name is required";
+        }
+        if (empty($pointsNeeded)) {
+            $errors[] = "Points needed is required";
+        }
+        //elseif points needed is not int num
+
+        if (empty($errors)){
+            if ($action == "edit"){
+                $sql = "UPDATE rewards SET rewardName = '$rewardName', pointsNeeded = '$pointsNeeded', rewardPic = '$rewardPicPath' WHERE rewardID = '$rewardID'";
+                if ($conn->query($sql) === TRUE) {
+                    echo "<script>alert('Reward updated successfully'); window.location.href = 'admin_rewards.php';</script>')";
+                }
             }
-
-            $errors = array();
-
-            if (empty($rewardName)) {
-                $errors[] = "Reward Name is required";
+            elseif ($action == "delete"){
+                $sql = "DELETE FROM rewards WHERE rewardID = '$rewardID'";
+                if ($conn->query($sql) === TRUE) {
+                    echo "<script>alert('Reward deleted successfully'); window.location.href = 'admin_rewards.php';</script>";
+                }
             }
-            if (empty($pointsNeeded)) {
-                $errors[] = "Points needed is required";
+            elseif ($action == "add"){
+                $sql = "INSERT INTO rewards (rewardName, pointsNeeded, rewardPic) VALUES ('$rewardName','$pointsNeeded','$rewardPicPath')";
+                if ($conn->query($sql) === TRUE) {
+                    echo "<script>alert('Reward added successfully'); window.location.href = 'admin_rewards.php';</script>";
+                }
             }
-            //elseif points needed is not int num
-
-            if (empty($errors)){
-                if ($action == "edit"){
-                    $sql = "UPDATE rewards SET rewardName = '$rewardName', pointsNeeded = '$pointsNeeded', rewardPic = '$rewardPicPath' WHERE rewardID = '$rewardID'";
-                    if ($conn->query($sql) === TRUE) {
-                        echo "<script>alert('Reward updated successfully'); window.location.href = 'admin_rewards.php';</script>')";
-                    }
-                }
-                elseif ($action == "delete"){
-                    $sql = "DELETE FROM rewards WHERE rewardID = '$rewardID'";
-                    if ($conn->query($sql) === TRUE) {
-                        echo "<script>alert('Reward deleted successfully'); window.location.href = 'admin_rewards.php';</script>";
-                    }
-                }
-                elseif ($action == "add"){
-                    $sql = "INSERT INTO rewards WHERE rewardName = '$rewardName', pointsNeeded = '$pointsNeeded', rewardPic = '$rewardPicPath'";
-                    if ($conn->query($sql) === TRUE) {
-                        echo "<script>alert('Reward added successfully'); window.location.href = 'admin_rewards.php';</script>";
-                    }
-                }
-                else{
-                    echo "Error: " . $sql . "<br>" . $conn->error;
-                }
+            else{
+                echo "Error: " . $sql . "<br>" . $conn->error;
             }
         }
+    }
+    ?>
+    <h2><?php
         if ($action == "edit"){
             echo "<h2>Edit Reward</h2>";
         }
@@ -99,9 +102,7 @@ include ('cookie.php');
         }
         elseif ($action == "add"){
             echo "<h2>Add Reward</h2>";
-        }
-    }
-    ?>
+        }?></h2>
     <form method="post" enctype="multipart/form-data">
         <!--<p>Reward ID:</p>-->
 
@@ -127,7 +128,7 @@ include ('cookie.php');
             elseif ($rewardID && $action == "delete"){
                 $buttonText = "Delete Event";
             }
-            elseif ($rewardID && $action == "add"){
+            elseif ($action == "add"){
                 $buttonText = "Add Event";
             }
             echo "<button type='button' onclick='displayActionPopup()'>{$buttonText}</button>";
@@ -145,7 +146,7 @@ include ('cookie.php');
                 elseif ($rewardID && $action == "delete"){
                     $buttonText = "Confirm to delete reward info?";
                 }
-                elseif ($rewardID && $action == "add"){
+                elseif ($action == "add"){
                     $buttonText = "Confirm to add reward?";
                 }
                 echo "{$buttonText}";
