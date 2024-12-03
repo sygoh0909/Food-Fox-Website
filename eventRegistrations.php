@@ -6,52 +6,60 @@ $selectedEventID = isset($_GET['eventID']) ? $_GET['eventID'] : null;
 $selectedEventData = null;
 $memberID = $_SESSION['memberID'];
 
-if ($selectedEventID){
-    $sql = "SELECT eventName FROM events WHERE eventID = '$selectedEventID'";
-    $result = mysqli_query($conn, $sql);
-    $selectedEventData = mysqli_fetch_assoc($result);
-}
-$sql = "SELECT eventID, eventName FROM events";
+//check if member registered for that event already or not, only can register once for each event
+$sql = "SELECT * FROM registrations WHERE memberID = $memberID AND eventID = $selectedEventID";
 $result = mysqli_query($conn, $sql);
-$events = []; //array to keep events
-while ($row = mysqli_fetch_assoc($result)) {
-    $events[] = $row;
-}
 
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $registerType = isset($_POST['registrations']) ? trim($_POST['registrations']) : '';
-    $dietaryRestrictions = $_POST["dietaryRestrictions"];
-
-    $errors = []; //check for errors
-    if (empty ($registerType)) {
-        $errors['registrations'] = "Registration type is required";
+if (mysqli_num_rows($result) > 0) {
+    echo "<script>alert('You have already registered for this event!'); window.location.href = 'events.php';</script>";
+}else{
+    if ($selectedEventID){
+        $sql = "SELECT eventName FROM events WHERE eventID = '$selectedEventID'";
+        $result = mysqli_query($conn, $sql);
+        $selectedEventData = mysqli_fetch_assoc($result);
     }
-    elseif (!in_array($registerType, ["Participant", "Volunteer"])) {
-        $errors['registrations'] = "Registration type must be either Participant or Volunteer.";
+    $sql = "SELECT eventID, eventName FROM events";
+    $result = mysqli_query($conn, $sql);
+    $events = []; //array to keep events
+    while ($row = mysqli_fetch_assoc($result)) {
+        $events[] = $row;
     }
 
-    if (empty($errors)){
-        //need event id, and member id also
-        $sql = "INSERT INTO registrations (eventID, memberID, registerType, dietaryRestrictions) VALUES ('$selectedEventID', '$memberID', '$registerType', '$dietaryRestrictions')";
-        if (mysqli_query($conn, $sql)){
-            $registrationID = mysqli_insert_id($conn);
+    if ($_SERVER["REQUEST_METHOD"] == "POST") {
+        $registerType = isset($_POST['registrations']) ? trim($_POST['registrations']) : '';
+        $dietaryRestrictions = $_POST["dietaryRestrictions"];
 
-            if ($registerType == "Participant"){
-                $specialAccommodation = $_POST["specialAccommodation"];
-                $sizes = $_POST["sizes"];
-                $sql = "INSERT INTO participants (registrationID, specialAccommodation, shirtSize) VALUES ('$registrationID', '$specialAccommodation', '$sizes')";
-                mysqli_query($conn, $sql);
-            }
-            else if ($registerType == "Volunteer"){
-                $relevantSkills = $_POST["skills"];
-                $sql = "INSERT INTO volunteers (registrationID, relevantSkills) VALUES ('$registrationID', '$relevantSkills')";
-                mysqli_query($conn, $sql);
-            }
-            echo "<script>alert('Registered successfully!'); window.location.href = 'registrationInfo.php?registrationID=$registrationID';</script>";
+        $errors = []; //check for errors
+        if (empty ($registerType)) {
+            $errors['registrations'] = "Registration type is required";
         }
-    }
-    else{
-        //error
+        elseif (!in_array($registerType, ["Participant", "Volunteer"])) {
+            $errors['registrations'] = "Registration type must be either Participant or Volunteer.";
+        }
+
+        if (empty($errors)){
+            //need event id, and member id also
+            $sql = "INSERT INTO registrations (eventID, memberID, registerType, dietaryRestrictions) VALUES ('$selectedEventID', '$memberID', '$registerType', '$dietaryRestrictions')";
+            if (mysqli_query($conn, $sql)){
+                $registrationID = mysqli_insert_id($conn);
+
+                if ($registerType == "Participant"){
+                    $specialAccommodation = $_POST["specialAccommodation"];
+                    $sizes = $_POST["sizes"];
+                    $sql = "INSERT INTO participants (registrationID, specialAccommodation, shirtSize) VALUES ('$registrationID', '$specialAccommodation', '$sizes')";
+                    mysqli_query($conn, $sql);
+                }
+                else if ($registerType == "Volunteer"){
+                    $relevantSkills = $_POST["skills"];
+                    $sql = "INSERT INTO volunteers (registrationID, relevantSkills) VALUES ('$registrationID', '$relevantSkills')";
+                    mysqli_query($conn, $sql);
+                }
+                echo "<script>alert('Registered successfully!'); window.location.href = 'registrationInfo.php?registrationID=$registrationID';</script>";
+            }
+        }
+        else{
+            //error
+        }
     }
 }
 ?>
