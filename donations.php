@@ -14,6 +14,9 @@ include ('db/db_conn.php');
         .main{
             color: white;
         }
+        .navbar{
+            z-index: 100;
+        }
         h2 {
             font-size: 2em;
             color: #5C4033;
@@ -388,7 +391,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'getProgress') {
         <button type="button" class="donate-submit" onclick="alert('Please login or sign up to donate'); window.location.href = 'login.php';">Donate</button>
         <?php } ?>
 
-        <div id="donation-popup" class="donation-popup" style="display:none;">
+        <div id="donation-popup" class="action-popup" style="display:none;">
             <h2>Confirm Donation?</h2>
             <p>You are about to donate: <span id="confirm-amount"></span></p>
             <input type="hidden" name="confirm-amount" id="confirm-amount-input">
@@ -404,7 +407,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'getProgress') {
             <button type="button" onclick="closePopup()">Cancel</button>
         </div>
 
-        <div id="payment-popup" class="payment-popup" style="display:none;">
+        <div id="payment-popup" class="action-popup" style="display:none;">
             <!--check if details correct?-->
             <div id="credit-card-info" style="display:none;">
                 <p>Please enter your Credit Card details.</p>
@@ -425,7 +428,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'getProgress') {
 
     <form method="post" enctype="multipart/form-data">
         <!--after donate successfully, show do u wanna leave a feedback, pop up-->
-        <div id="feedback-popup" class="feedback-popup" style="display: none">
+        <div id="feedback-popup" class="action-popup" style="display: none">
             <h2>Donated successfully!</h2>
             <p>Do you want to leave a feedback?</p>
             <label><input type="text" name="feedback" placeholder="Leave your feedback here if you have any..."></label>

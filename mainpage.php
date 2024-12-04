@@ -12,7 +12,7 @@ include ('db/db_conn.php');
     <link rel="stylesheet" href="main.css">
     <style>
         .navbar {
-            z-index: 100; /*so that it can display on top of banner img*/
+            z-index: 100;
         }
         .banner{
             position: relative;
