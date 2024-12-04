@@ -181,8 +181,8 @@ include ('db/db_conn.php');
         while ($reward = $result->fetch_assoc()) {
             echo "<div class='reward-card'>
                     <img src='{$reward['rewardPic']}' alt='Reward Picture'>
-                    <p>Reward Name: {$reward['rewardName']}</p>
-                    <p>Points Needed: {$reward['pointsNeeded']}</p>
+                    <p>{$reward['rewardName']}</p>
+                    <p>{$reward['pointsNeeded']} points</p>
                     <form method='post' action=''>
                         <input type='hidden' name='rewardID' value='{$reward['rewardID']}'>
                         <button type='submit' name='redeem'>Redeem</button>

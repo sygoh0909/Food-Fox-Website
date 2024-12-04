@@ -12,11 +12,31 @@ function cookie(){
     //set cookie
     setcookie('visitCount', $visitCount, time() + (86400 * 30), "/"); //set this
     return $visitCount;
+
+}
+function checkSessionTimeout($timeout_duration) {
+    if (isset($_SESSION['last_activity'])) {
+        $duration = time() - $_SESSION['last_activity'];
+        if ($duration > $timeout_duration) {
+            session_unset();
+            session_destroy();
+            header("Location: session_timeout.php");
+            exit();
+        }
+    }
+    $_SESSION['last_activity'] = time();
 }
 
 function loginSection(){
 //    $visitCount = cookie();
     cookie();
+    checkSessionTimeout(3600);
+
+    echo '<script type="text/javascript">
+            setTimeout(function(){
+                location.reload();
+            }, 3600000);
+          </script>';
 
     if (isset($_SESSION['memberID'])) {
         $memberID = $_SESSION['memberID'];

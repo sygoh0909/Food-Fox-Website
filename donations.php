@@ -256,7 +256,23 @@ include ('db/db_conn.php');
             font-size: 14px;
             color: #aaa;
         }
-
+        .guest-container {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        .guest-details {
+            margin-left: 10px;
+        }
+        .guest-name {
+            font-weight: bold;
+            font-size: 16px;
+            margin-bottom: 5px;
+        }
+        .guest-bio {
+            font-size: 14px;
+            color: #666;
+        }
     </style>
 </head>
 <body>
@@ -411,15 +427,79 @@ if (isset($_GET['action']) && $_GET['action'] == 'getProgress') {
         <div id="payment-popup" class="action-popup" style="display:none;">
             <div id="credit-card-info" style="display:none;">
                 <p>Please enter your Credit Card details.</p>
-                <!-- Credit Card info -->
+
+                <p>We accept the following credit cards:</p>
+                <ul>
+                    <li>Visa</li>
+                    <li>MasterCard</li>
+                    <li>American Express (AMEX)</li>
+                    <li>PayPal</li>
+                </ul>
+
+                <label for="cardNumber">Card Number:</label><br>
+                <input type="text" id="cardNumber" name="cardNumber" placeholder="1234 5678 9012 3456" required><br><br>
+
+                <label for="expirationDate">Expiration Date:</label><br>
+                <input type="month" id="expirationDate" name="expirationDate" required><br><br>
+
+                <label for="cvv">CVV (Security Code):</label><br>
+                <input type="text" id="cvv" name="cvv" placeholder="123" required><br><br>
+
+                <label for="cardHolderName">Cardholder's Name:</label><br>
+                <input type="text" id="cardHolderName" name="cardHolderName" placeholder="full name" required><br><br>
+
             </div>
             <div id="tng-info" style="display:none;">
-                <p>Please provide your Touch n Go details.</p>
-                <!-- TNG info -->
+                <p>Please provide your Touch 'n Go (TNG) details.</p>
+                <p>To proceed, please provide the following details:</p>
+                <ul>
+                    <li>Phone Number (linked to your TNG account)</li>
+                    <li>PIN/Password for TNG account verification</li>
+                </ul>
+
+                <label for="phoneNumber">Phone Number:</label><br>
+                <input type="tel" id="phoneNumber" name="phoneNumber" placeholder="Enter your phone number" required><br><br>
+
+                <label for="tngPin">TNG 6 digit PIN/Password:</label><br>
+                <input type="password" id="tngPin" name="tngPin" placeholder="Enter your 6 digit PIN/Password" required><br><br>
+
+                <label for="tngAmount">Amount to Reload/Transfer:</label><br>
+                <input type="number" id="tngAmount" name="tngAmount" placeholder="Enter amount" required><br><br>
+
             </div>
             <div id="bank-transfer-info" style="display:none;">
                 <p>Please provide your Bank Transfer details.</p>
-                <!-- Bank Transfer info -->
+                <p>To proceed, please provide the following bank transfer details:</p>
+                <ul>
+                    <li>Your Bank Account Number</li>
+                    <li>Your Bank Name</li>
+                    <li>Recipient's Bank Name</li>
+                    <li>Recipient's Bank Account Number</li>
+                    <li>Amount to Transfer</li>
+                    <li>Reference/Payment Purpose (Optional)</li>
+                </ul>
+
+                <label for="bankAccountNumber">Your Bank Account Number:</label><br>
+                <input type="text" id="bankAccountNumber" name="bankAccountNumber" placeholder="Enter your account number" required><br><br>
+
+                <label for="bankName">Your Bank Name:</label><br>
+                <input type="text" id="bankName" name="bankName" placeholder="Enter your bank name" required><br><br>
+
+                <label for="recipientBankName">Recipient's Bank Name:</label><br>
+                <input type="text" id="recipientBankName" name="recipientBankName" placeholder="Enter recipient's bank name" required><br><br>
+
+                <label for="recipientAccountNumber">Recipient's Bank Account Number:</label><br>
+                <input type="text" id="recipientAccountNumber" name="recipientAccountNumber" placeholder="Enter recipient's account number" required><br><br>
+
+                <label for="transferAmount">Amount to Transfer:</label><br>
+                <input type="number" id="transferAmount" name="transferAmount" placeholder="Enter amount" required><br><br>
+
+                <label for="paymentReference">Reference/Payment Purpose (Optional):</label><br>
+                <input type="text" id="paymentReference" name="paymentReference" placeholder="Enter reference or payment purpose (optional)"><br><br>
+
+                <label for="email">Email (for receipt/confirmation):</label><br>
+                <input type="email" id="email" name="email" placeholder="youremail@example.com" required><br><br>
+
             </div>
             <button type="submit" name="confirmDonate">Donate</button>
             <button type="button" onclick="closePopup()">Cancel</button>
@@ -587,10 +667,10 @@ if (isset($_GET['action']) && $_GET['action'] == 'getProgress') {
                 impactChart.data.datasets[0].data = [data.mealsProvided, 0];
                 impactChart.data.datasets[1].data = [0, data.peopleSupported];
                 impactChart.update();
+                setInterval(updateProgress, 5000) //refresh every 5 seconds
             })
             .catch(error => console.error('Error fetching progress:', error));
     }
-    setInterval(updateProgress, 5000) //refresh every 5 seconds
 
     //buttons
     const buttons = document.querySelectorAll('.donation-btn');

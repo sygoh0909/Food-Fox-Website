@@ -11,49 +11,54 @@ include ('db/db_conn.php');
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="main.css">
     <style>
-
-        .main{
+        .main {
             color: white;
         }
 
         .contact-container {
-            padding: 50px 20px;
+            padding: 50px 30px;
             max-width: 900px;
-            margin: 30px auto;
+            margin: 50px auto;
             text-align: center;
-            background-color: #A89E92;
+            background-color: #faf4ed;
             border-radius: 15px;
-            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
             color: #5C4033;
         }
 
         .contact-heading {
-            font-size: 40px;
+            font-size: 36px;
             margin-bottom: 20px;
             font-weight: bold;
-            color: #C5B4A5;
+            color: #7F6C54;
+            border-bottom: 2px solid #d3a029;
+            display: inline-block;
+            padding-bottom: 5px;
         }
 
         .contact-info h3 {
-            font-size: 28px;
-            margin-top: 20px;
+            font-size: 24px;
+            margin-top: 25px;
             color: #7F6C54;
+            font-weight: bold;
         }
 
         .contact-info p {
             font-size: 18px;
-            line-height: 1.6;
+            line-height: 1.8;
             margin: 10px 0;
+            color: #4a4a4a;
         }
 
         .contact-info a {
-            color: #5C4033;
-            text-decoration: underline;
+            color: #d3a029;
+            text-decoration: none;
+            font-weight: bold;
             transition: color 0.3s ease;
         }
 
         .contact-info a:hover {
-            color: #C5B4A5;
+            color: #7F6C54;
         }
 
         .map-container {
@@ -62,12 +67,16 @@ include ('db/db_conn.php');
 
         .map-container iframe {
             width: 100%;
-            height: 350px;
+            height: 400px;
             border: none;
             border-radius: 10px;
-            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.5);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
         }
 
+        .map-container iframe:hover {
+            transform: scale(1.01);
+        }
     </style>
 </head>
 <body>

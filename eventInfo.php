@@ -101,7 +101,7 @@ include ('db/db_conn.php');
         }
 
         .schedule-list li:hover {
-            background-color: #7F6C54;
+            background-color: #ecdcc6;
             color: white;
         }
 
@@ -278,7 +278,7 @@ include ('db/db_conn.php');
                 echo "<div class='event-section'>";
                 echo "<h3>Guests</h3>";
                 while ($guest = $resultGuests->fetch_assoc()) {
-                    echo "<p>" . $guest['guestName'] . "<br>" . $guest['guestBio'] . "</p>";
+                    echo "<p>" . $guest['guestProfilePic'] . $guest['guestName'] . "<br>" . $guest['guestBio'] . "</p>";
                 }
                 echo "</div>";
             }

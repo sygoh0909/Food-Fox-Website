@@ -58,7 +58,7 @@ button {
     color: white;
     border: none;
     border-radius: 5px;
-    cursor: pointer; /* set how the mouse looks like when pointing on the button */
+    cursor: pointer;
     margin-left: 10px;
     transition: background-color 0.3s;
 }

@@ -280,7 +280,11 @@ include ('db/db_conn.php');
             elseif ($action=="delete" || $action=="deletePast"){
                 $sql = "DELETE FROM events WHERE eventID = '$eventID'";
                 if ($action=="deletePast"){
-                    $sql = "DELETE FROM pastevents WHERE eventID = '$eventID'";
+                    $sqlPast = "DELETE FROM pastevents WHERE eventID = '$eventID'";
+                    $conn->query($sqlPast);
+
+                    $sqlGallery = "DELETE FROM photoGallery WHERE eventID = '$eventID'";
+                    $conn->query($sqlGallery);
                 }
                 if ($conn->query($sql) === TRUE) {
                     echo "<script>alert('Event Deleted'); window.location.href='admin_events.php';</script>";
@@ -312,12 +316,18 @@ include ('db/db_conn.php');
                         }
 
                         //event guest
-                        foreach ($guestName as $name) {
-                            foreach ($guestBio as $bio) {
+                        if (count($guestName) === count($guestBio)) {
+                            for ($i = 0; $i < count($guestName); $i++) {
+                                $name = $conn->real_escape_string($guestName[$i]);
+                                $bio = $conn->real_escape_string($guestBio[$i]);
+                                $guestImagePath = $conn->real_escape_string($guestImagePath[$i] ?? '');
+
                                 $guestUpdate = "INSERT INTO eventguests(eventID, guestName, guestBio, guestProfilePic)".
-                                    " VALUES ('$eventID', '$name', '$bio', '$guestImagePath')";
+                                    "VALUES ('$eventID', '$name', '$bio', '$guestImagePath')";
                                 $conn->query($guestUpdate);
                             }
+                        } else {
+                            echo "Error: Mismatched guest names and bios.";
                         }
                         echo "<script>alert('New Event Added'); window.location.href='admin_events.php';</script>";
                     }
