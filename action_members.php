@@ -49,7 +49,7 @@ include ('db/db_conn.php');
 
             //regular expressions
             $namePattern = '/^[a-zA-Z]+$/';
-            $emailPattern = '/^[\w\-\.]+@[a-zA-Z]+\.[a-zA-Z]{2,}$/';
+//            $emailPattern = '/^[\w\-\.]+@[a-zA-Z]+\.[a-zA-Z]{2,}$/';
             $passwordPattern = '/^(?=.*[a-zA-z])(?=.*\d)[A-Za-z\d]{8,}$/'; //password format maybe need change
 
             //validation
@@ -66,7 +66,7 @@ include ('db/db_conn.php');
             if (empty($email)) {
                 $errors['email'] = "Email is required";
             }
-            elseif (!preg_match($emailPattern, $email)) {
+            elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
                 $errors['email'] = "Enter a valid email address.";
             }
             if (!empty($phoneNum) && !preg_match('/^\+?[0-9]{1,4}?\s?(\(?[0-9]{3}\)?[\s.-]?)?[0-9]{3}[\s.-]?[0-9]{4}$/', $phoneNum)) {

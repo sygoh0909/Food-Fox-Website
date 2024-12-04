@@ -329,9 +329,10 @@ if (isset($_GET['action']) && $_GET['action'] == 'getProgress') {
     $memberID = isset($_SESSION['memberID']) ? $_SESSION['memberID'] : 0;
     //if member only can donate
 
-    if ($conn->connect_error) {
-        die("Connection failed: " . $conn->connect_error);
-    }
+//    if (isset($_SESSION['donationID'])) {
+//        unset($_SESSION['donationID']);
+//    }
+
     if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['confirmDonate'])) {
         $amount = $_POST['confirm-amount'];
         $paymentMethod = $_POST['payment-method'];
@@ -408,7 +409,6 @@ if (isset($_GET['action']) && $_GET['action'] == 'getProgress') {
         </div>
 
         <div id="payment-popup" class="action-popup" style="display:none;">
-            <!--check if details correct?-->
             <div id="credit-card-info" style="display:none;">
                 <p>Please enter your Credit Card details.</p>
                 <!-- Credit Card info -->

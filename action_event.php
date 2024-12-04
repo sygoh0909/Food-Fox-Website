@@ -180,12 +180,12 @@ include ('db/db_conn.php');
 
         //action
         if ($action=="editPast"){
-            $attendees = $_POST['attendees'];
+//            $attendees = $_POST['attendees'];
             $impact = $_POST['impact'];
 
-            if (!preg_match("/^\d+$/", $attendees)) {
-                $errors[] = "Attendees must be a positive number.";
-            }
+//            if (!preg_match("/^\d+$/", $attendees)) {
+//                $errors[] = "Attendees must be a positive number.";
+//            }
         }
 
         //update event
@@ -239,7 +239,7 @@ include ('db/db_conn.php');
                     }
 
                     if ($action=="editPast"){
-                        $sql = "UPDATE pastevents SET eventID = '$eventID', attendees = '$attendees', impact = '$impact', photoGallery = '$photoGalleryPath' WHERE eventID = '$eventID'";
+                        $sql = "UPDATE pastevents SET eventID = '$eventID', impact = '$impact', photoGallery = '$photoGalleryPath' WHERE eventID = '$eventID'";
                     }
                     if ($conn -> query($sql) === TRUE) {
                         echo "<script>alert('Event Updated'); window.location.href='admin_events.php';</script>";
@@ -430,8 +430,7 @@ include ('db/db_conn.php');
                 $attendeesCount = $row['attendees'];
             }
             ?>
-            <label><input type="text" name="attendees" value="<?= $attendeesCount ?>"</label>
-            <p class="error-message"><?= isset($errors['attendees']) ? $errors['attendees'] : '' ?></p>
+            <label><input type="text" name="attendees" value="<?= $attendeesCount ?>" disabled</label>
 
         <p>Impact and Outcomes:</p>
         <label><input type="text" name="impact" value="<?php echo isset ($eventData['impact']) ? $eventData['impact']:'';?>"</label>
