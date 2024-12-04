@@ -102,11 +102,13 @@ include ('db/db_conn.php');
                 $result = $conn->query($sql);
                 if ($result->num_rows > 0) {
                     while($row = $result->fetch_assoc()) {
-                        echo "<tr id='feedback-" . $row["donationID"] . "'>";
-                        echo "<td>" . $row["memberName"] . "</td>";
-                        echo "<td>" . $row["feedback"] . "</td>";
-                        echo "<td><button type='button' name='hide' onclick='displayActionPopup(" . $row["donationID"] . ")'>Hide</button>";
-                        echo "</tr>";
+                        if (!empty($row["feedback"])) {
+                            echo "<tr id='feedback-" . $row["donationID"] . "'>";
+                            echo "<td>" . $row["memberName"] . "</td>";
+                            echo "<td>" . $row["feedback"] . "</td>";
+                            echo "<td><button type='button' name='hide' onclick='displayActionPopup(" . $row["donationID"] . ")'>Hide</button>";
+                            echo "</tr>";
+                        }
                     }
                 }
 
