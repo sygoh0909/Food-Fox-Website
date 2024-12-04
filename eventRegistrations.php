@@ -71,6 +71,7 @@ if (mysqli_num_rows($result) > 0) {
     <title>Events Registrations Page</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="form.css">
+    <link rel="stylesheet" href="main.css">
     <style>
         .main{
             color: white;

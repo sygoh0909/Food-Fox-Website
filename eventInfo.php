@@ -196,8 +196,15 @@ include ('db/db_conn.php');
     if ($eventID) {
         $sql = "SELECT e.*, g.*, h.*, s.* FROM events e, eventguests g, eventhighlights h, eventschedules s WHERE e.eventID = $eventID AND  e.eventID = g.eventID AND e.eventID = h.eventID AND e.eventID = s.eventID";
         $result = $conn->query($sql);
+
         if ($result->num_rows > 0) {
             $eventData = $result->fetch_assoc();
+
+            $startDateTime = new DateTime($eventData['start_dateTime']);
+            $endDateTime = new DateTime($eventData['end_dateTime']);
+
+            $startFormatted = $startDateTime->format('d F y, H:i');
+            $endFormatted = $endDateTime->format('d F y, H:i');
 
             //events info
             echo "<div class='events'>";
@@ -205,8 +212,8 @@ include ('db/db_conn.php');
             echo "<img src='" . $eventData['eventPic'] . "' alt='" . $eventData['eventPic'] . "' width='300' height='200'>";
             echo "<div class='event-highlight'>";
             echo "<p><strong>Details:</strong> " . $eventData['details'] . "</p>";
-            echo "<p><strong>Start Date & Time:</strong> " . $eventData['start_dateTime'] . "</p>";
-            echo "<p><strong>End Date & Time:</strong> " . $eventData['end_dateTime'] . "</p>";
+            echo "<p><strong>Date & Time:</strong> $startFormatted - $endFormatted </p>";
+//            echo "<p><strong>End Date & Time:</strong> " . $eventData['end_dateTime'] . "</p>";
             echo "<p><strong>Location:</strong> " . $eventData['location'] . "</p>";
             echo "</div>";
 

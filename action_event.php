@@ -172,10 +172,27 @@ include ('db/db_conn.php');
             move_uploaded_file($_FILES["guestImage"]["tmp_name"], $guestImagePath);
         }
 
+//        if (isset($_FILES['photoGallery']) && $_FILES['photoGallery']['error'] == 0) {
+//            $target_dir = "uploads/";
+//            $galleryPath = $target_dir . basename($_FILES["photoGallery"]["name"]);
+//            move_uploaded_file($_FILES["photoGallery"]["tmp_name"], $galleryPath);
+//        }
+
         if (isset($_FILES['photoGallery']) && $_FILES['photoGallery']['error'] == 0) {
             $target_dir = "uploads/";
-            $galleryPath = $target_dir . basename($_FILES["photoGallery"]["name"]);
-            move_uploaded_file($_FILES["photoGallery"]["tmp_name"], $galleryPath);
+            $uploadedFiles = [];
+
+             for($i = 0; $i < count($_FILES["photoGallery"]["name"]); $i++){
+                 $fileTmpName = $_FILES["photoGallery"]["tmp_name"][$i];
+                 $fileName = basename($_FILES["photoGallery"]["name"][$i]);
+                 $filePath = $target_dir . $fileName;
+
+                 if (move_uploaded_file($fileTmpName, $filePath)) {
+                     $uploadedFiles[] = $fileName;
+                 }else{
+                     echo "Error uploading file: " . $_FILES['photoGallery']['name'][$i];
+                 }
+             }
         }
 
         //action
@@ -239,7 +256,16 @@ include ('db/db_conn.php');
                     }
 
                     if ($action=="editPast"){
-                        $sql = "UPDATE pastevents SET eventID = '$eventID', impact = '$impact', photoGallery = '$photoGalleryPath' WHERE eventID = '$eventID'";
+                        $sql = "UPDATE pastevents SET impact = '$impact' WHERE eventID = '$eventID'";
+                        if ($conn->query($sql) === TRUE){
+                            $deleteQuery = "DELETE FROM photoGallery WHERE eventID = '$eventID'";
+                            $conn->query($deleteQuery);
+
+                            foreach ($uploadedFiles as $filePath) {
+                                $sql = "INSERT INTO photogallery (eventID, imagePath) VALUES ('$eventID', '$filePath')";
+                                $conn->query($sql);
+                            }
+                        }
                     }
                     echo "<script>alert('Event Updated'); window.location.href='admin_events.php';</script>";
                 }
@@ -433,8 +459,8 @@ include ('db/db_conn.php');
         <label><input type="text" name="impact" value="<?php echo isset ($eventData['impact']) ? $eventData['impact']:'';?>"</label>
 
         <p>Photo Gallery:</p>
-        <label><input type="file" name="photoGallery" accept="image/*" onchange='previewEventImage()'> <!--show the image saved in database-->
-            <img id="photoGallery" class="photo-gallery" alt="Photo Gallery" style="display: none">
+        <label><input type="file" name="photoGallery[]" accept="image/*" multiple onchange='previewPhotoGallery()'> <!--show the image saved in database-->
+            <div id="gallery-preview"></div>
         </label>
 
         <?php } ?>
@@ -493,6 +519,24 @@ include ('db/db_conn.php');
                 eventImg.src = e.target.result;
             };
             reader.readAsDataURL(file);
+        }
+    }
+
+    function previewPhotoGallery(){
+        const files = document.querySelector('input[name="photoGallery[]"]').files;
+        const preview = document.getElementById('gallery-preview');
+
+        preview.innerHTML = '';
+
+        for (let i=0; i<files.length; i++){
+            const reader = new FileReader();
+            reader.onload = function (e){
+                const img = document.createElement('img');
+                img.src = e.target.result;
+                img.classList.add('photo-gallery');
+                preview.appendChild(img);
+            };
+            reader.readAsDataURL(files[i]);
         }
     }
 

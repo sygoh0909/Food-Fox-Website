@@ -22,10 +22,16 @@ if ($registrationID) {
     $registrationData = mysqli_fetch_assoc($result);
 
     if ($registrationData) {
-        sendMail($registrationData['email'], $registrationData);
+        $startDateTime = new DateTime($registrationData['start_dateTime']);
+        $endDateTime = new DateTime($registrationData['end_dateTime']);
+
+        $startFormatted = $startDateTime->format('d F y, H:i');
+        $endFormatted = $endDateTime->format('d F y, H:i');
+
+        sendMail($registrationData['email'], $registrationData, $startFormatted, $endFormatted);
 
     }else{
-
+//error
     }
 
 } else {
@@ -33,7 +39,7 @@ if ($registrationID) {
     exit;
 }
 
-function sendMail($recipientEmail, $registrationData){
+function sendMail($recipientEmail, $registrationData, $startFormatted, $endFormatted){
     global $registrationID, $conn;
     $email = new PHPMailer(true);
 
@@ -54,7 +60,7 @@ function sendMail($recipientEmail, $registrationData){
         $email->Subject = 'Thank you for registering!';
         $email->Body = "<h3>This is your registration details.</h3>
 <p><strong>Event Name: </strong>{$registrationData['eventName']}</p>
-<p><strong>Date and Time: </strong>{$registrationData['start_dateTime']} - {$registrationData['end_dateTime']}</p>
+<p><strong>Date and Time: </strong>$startFormatted - $endFormatted</p>
 <p><strong>Location: </strong>{$registrationData['location']}</p>
 <p><strong>Register Type: </strong>{$registrationData['registerType']}</p>
 <p><strong>Dietary Restrictions: </strong>{$registrationData['dietaryRestrictions']}</p>
@@ -92,6 +98,7 @@ function sendMail($recipientEmail, $registrationData){
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="main.css">
     <title>Registration Info</title>
     <style>
         .registration-info {
