@@ -12,7 +12,7 @@ include ('db/db_conn.php');
     <title>Add/Edit/Delete Event Page</title>
 
     <style>
-        input[type="time"] , [type="date"]{
+        input[type="datetime-local"]{
             padding: 5px;
             font-size: 14px;
             border: 1px solid #ccc;
@@ -98,10 +98,8 @@ include ('db/db_conn.php');
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
         //basic info for events
         $eventName = $_POST['eventName'];
-        $startDate = $_POST['startDate'];
-        $endDate = $_POST['endDate'];
-        $startTime = $_POST['startTime'];
-        $endTime = $_POST['endTime'];
+        $startDateTime = $_POST['startDateTime'];
+        $endDateTime = $_POST['endDateTime'];
         $location = $_POST['location'];
         $details = $_POST['details'];
         $participantsNeeded = $_POST['participantsNeeded'];
@@ -111,9 +109,6 @@ include ('db/db_conn.php');
         $schedules = $_POST['schedules'];
         $guestName = $_POST['guestName'];
         $guestBio = $_POST['guestBio'];
-
-        $startDateTime = $startDate . " " . $startTime;
-        $endDateTime = $endDate . " " . $endTime;
 
         $eventImagePath = $eventData['eventPic'] ?? '';
         $guestImagePath = $eventData['guestProfilePic'] ?? '';
@@ -128,17 +123,11 @@ include ('db/db_conn.php');
 //        elseif (!preg_match("/^[a-zA-Z\s]+$/", $eventName)){
 //            $errors['eventName'] = "Event name should only contain alphabets and spaces.";
 //        }
-        if (empty($startDate)) {
-            $errors['startDate'] = "Start Date is required";
+        if (empty($startDateTime)) {
+            $errors['startDateTime'] = "Start Date and Time is required";
         }
-        if (empty($endDate)) {
-            $errors['endDate'] = "End Date is required";
-        }
-        if (empty($startTime)) {
-            $errors['startTime'] = "Start Time is required";
-        }
-        if (empty($endTime)) {
-            $errors['endTime'] = "End Time is required";
+        if (empty($endDateTime)) {
+            $errors['endDateTime'] = "End Date and Time is required";
         }
         if (empty($location)) {
             $errors['location'] = "Location is required";
@@ -178,21 +167,24 @@ include ('db/db_conn.php');
 //            move_uploaded_file($_FILES["photoGallery"]["tmp_name"], $galleryPath);
 //        }
 
-        if (isset($_FILES['photoGallery']) && $_FILES['photoGallery']['error'] == 0) {
+        if (isset($_FILES['photoGallery'])) {
             $target_dir = "uploads/";
             $uploadedFiles = [];
 
-             for($i = 0; $i < count($_FILES["photoGallery"]["name"]); $i++){
-                 $fileTmpName = $_FILES["photoGallery"]["tmp_name"][$i];
-                 $fileName = basename($_FILES["photoGallery"]["name"][$i]);
-                 $filePath = $target_dir . $fileName;
+            for ($i = 0; $i < count($_FILES["photoGallery"]["name"]); $i++) {
+                $fileTmpName = $_FILES["photoGallery"]["tmp_name"][$i];
+                $fileName = basename($_FILES["photoGallery"]["name"][$i]);
+                $photoGalleryPath = $target_dir . $fileName;
 
-                 if (move_uploaded_file($fileTmpName, $filePath)) {
-                     $uploadedFiles[] = $fileName;
-                 }else{
-                     echo "Error uploading file: " . $_FILES['photoGallery']['name'][$i];
-                 }
-             }
+                // Check for errors in individual files
+                if ($_FILES["photoGallery"]["error"][$i] == 0) {
+                    if (move_uploaded_file($fileTmpName, $photoGalleryPath)) {
+                        $uploadedFiles[] = $photoGalleryPath;
+                    } else {
+                        echo "Error uploading file: " . $_FILES['photoGallery']['name'][$i];
+                    }
+                }
+            }
         }
 
         //action
@@ -215,9 +207,14 @@ include ('db/db_conn.php');
                     $deleteScheduleQuery = "DELETE FROM eventschedules WHERE eventID = '$eventID'";
                     $conn->query($deleteScheduleQuery);
 
-                    foreach ($schedules as $schedule) {
+                    foreach ($schedules['datetime'] as $index => $datetime){
+                        $description = $schedules['description'][$index];
+
+                        $datetime = $conn->real_escape_string($datetime);
+                        $description = $conn->real_escape_string($description);
+
                         $scheduleUpdate = "INSERT INTO eventschedules(eventID, scheduleDateTime, activityDescription)".
-                            " VALUES ('$eventID', '$schedule', '$schedule')";
+                            " VALUES ('$eventID', '$datetime', '$description')";
                         $conn->query($scheduleUpdate);
                     }
 
@@ -257,13 +254,17 @@ include ('db/db_conn.php');
 
                     if ($action=="editPast"){
                         $sql = "UPDATE pastevents SET impact = '$impact' WHERE eventID = '$eventID'";
-                        if ($conn->query($sql) === TRUE){
-                            $deleteQuery = "DELETE FROM photoGallery WHERE eventID = '$eventID'";
+                        if ($conn->query($sql) === TRUE) {
+                            // Clear old images for this event
+                            $deleteQuery = "DELETE FROM photogallery WHERE eventID = '$eventID'";
                             $conn->query($deleteQuery);
 
+                            // Insert new images
                             foreach ($uploadedFiles as $filePath) {
-                                $sql = "INSERT INTO photogallery (eventID, imagePath) VALUES ('$eventID', '$filePath')";
-                                $conn->query($sql);
+                                $sql = "INSERT INTO photogallery (eventID, imagePath) VALUES ('$eventID', '$photoGalleryPath')";
+                                if (!$conn->query($sql)) {
+                                    echo "Error inserting image: " . $conn->error;
+                                }
                             }
                         }
                     }
@@ -281,16 +282,21 @@ include ('db/db_conn.php');
             }
             //add new event
             elseif ($action == "add"){
-//                if (empty($errors)){
+                if (empty($errors)){
                     $query = "INSERT INTO events (eventName, start_dateTime, end_dateTime, location, details, participantsNeeded, volunteersNeeded, eventStatus, eventPic) VALUES ('$eventName', '$startDateTime', '$endDateTime', '$location', '$details', '$participantsNeeded', '$volunteersNeeded', '$eventStatus', '$eventImagePath')";
 
                     if ($conn->query($query) === TRUE) {
                         $eventID = $conn->insert_id;
 
-                        foreach ($schedules as $schedule) { //foreach used for arrays, means loop through the array
-                            $scheduleQuery = "INSERT INTO eventschedules (eventID, scheduleDateTime, activityDescription)"
-                                . "VALUES ('$eventID', '$schedule', '$schedule')";
-                            $conn->query($scheduleQuery);
+                        foreach ($schedules['datetime'] as $index => $datetime){
+                            $description = $schedules['description'][$index];
+
+                            $datetime = $conn->real_escape_string($datetime);
+                            $description = $conn->real_escape_string($description);
+
+                            $scheduleUpdate = "INSERT INTO eventschedules(eventID, scheduleDateTime, activityDescription)".
+                                " VALUES ('$eventID', '$datetime', '$description')";
+                            $conn->query($scheduleUpdate);
                         }
 
                         foreach ($highlights as $highlight) {
@@ -300,16 +306,16 @@ include ('db/db_conn.php');
                         }
 
                         //event guest
-                        foreach ($guestName as $name){
-                            foreach ($guestBio as $bio){
-                                $guestQuery = "INSERT INTO eventguests (eventID, guestName, guestBio, guestProfilePic)".
-                                    "VALUES ('$eventID', '$name', '$bio', '$guestImagePath')";
-                                $conn->query($guestQuery);
+                        foreach ($guestName as $name) {
+                            foreach ($guestBio as $bio) {
+                                $guestUpdate = "INSERT INTO eventguests(eventID, guestName, guestBio, guestProfilePic)".
+                                    " VALUES ('$eventID', '$name', '$bio', '$guestImagePath')";
+                                $conn->query($guestUpdate);
                             }
                         }
+                        echo "<script>alert('New Event Added'); window.location.href='admin_events.php';</script>";
                     }
-                    echo "<script>alert('New Event Added'); window.location.href='admin_events.php';</script>";
-//                }
+                }
             }
         }
 //        foreach ($errors as $error) {
@@ -337,27 +343,23 @@ include ('db/db_conn.php');
         <input type="file" name="eventImage" id="uploadPic" accept="image/*" onchange="previewEventImage()">
 
         <p>Event Name:</p>
-        <label><input type="text" name="eventName" value="<?php echo isset($eventData['eventName']) ? $eventData['eventName'] : ''; ?>" placeholder="Enter event name..."></label>
-        <p class="error-message"><?= isset($errors['eventName']) ? $errors['eventName'] : '' ?></p>
+        <label><input type="text" name="eventName" value="<?php echo $eventData['eventName'] ?? ''; ?>" placeholder="Enter event name..."></label>
+        <p class="error-message"><?= $errors['eventName'] ?? '' ?></p>
 
-        <p>Event Date:</p>
-        <label>Start Date: <input type="date" name="startDate" value="<?php echo isset($eventData['start_dateTime']) ? substr($eventData['start_dateTime'], 0,10) : '';?>"></label>
-        <p class="error-message""><?= isset($errors['startDate']) ? $errors['startDate'] : '' ?></p>
-        <label>End Date: <input type="date" name="endDate" value="<?php echo isset ($eventData['end_dateTime']) ? substr($eventData['end_dateTime'], 0, 10): '';?>"</label>
-        <p class="error-message""><?= isset($errors['endDate']) ? $errors['endDate'] : '' ?></p>
-
-        <p>Event Time:</p>
-        <label>Start Time: <input type="time" name="startTime" value="<?php echo isset($eventData['start_dateTime']) ? substr($eventData['start_dateTime'], 11, 5): '';?>"</label>
-        <p class="error-message"><?= isset($errors['startTime']) ? $errors['startTime'] : '' ?></p>
-        <label>End Time: <input type="time" name="endTime" value="<?php echo isset($eventData['end_dateTime']) ? substr($eventData['end_dateTime'], 11, 5): '';?>"></label>
-        <p class="error-message"><?= isset($errors['endTime']) ? $errors['endTime'] : '' ?></p>
+        <p>Event Date Time:</p>
+        <div class="datetime">
+            <label>Start Date Time: <input type="datetime-local" name="startDateTime" value="<?php echo ($eventData['start_dateTime'])?>"></label>
+            <p class="error-message"><?= $errors['startDateTime'] ?? '' ?></p>
+            <label>End Date Time: <input type="datetime-local" name="endDateTime" value="<?php echo ($eventData['end_dateTime'])?>"</label>
+            <p class="error-message"><?= $errors['endDateTime'] ?? '' ?></p>
+        </div>
 
         <p>Event Location:</p>
-        <label><input type="text" name="location" value="<?php echo isset ($eventData['location']) ? $eventData['location']:'';?>" placeholder="Enter event location..."></label>
-        <p class="error-message"><?= isset($errors['location']) ? $errors['location'] : '' ?></p>
+        <label><input type="text" name="location" value="<?php echo $eventData['location'] ?? '';?>" placeholder="Enter event location..."></label>
+        <p class="error-message"><?= $errors['location'] ?? '' ?></p>
 
         <p>Event Details:</p>
-        <label><input type="text" name="details" value="<?php echo isset ($eventData['details']) ? $eventData['details']: '';?>" placeholder="Enter brief event details..."></label>
+        <label><input type="text" name="details" value="<?php echo $eventData['details'] ?? '';?>" placeholder="Enter brief event details..."></label>
 
         <p>Event Highlights:</p>
         <div id="highlights-container">
@@ -384,11 +386,17 @@ include ('db/db_conn.php');
                 $result = $conn->query($scheduleQuery);
                 while ($schedule = $result->fetch_assoc()){
                     //display schedule time date and activity
-                    echo "<div class='dynamic-inputs'><label><input type='text' name='schedules[]' value='{$schedule['scheduleDateTime']} - {$schedule['activityDescription']}'' placeholder='Enter event schedule...'></label><button type='button' onclick='removeRow(this)'>-</button></div>";
+                    echo "<div class='dynamic-inputs'>
+<label><input type='datetime-local' name='schedules[datetime][]' value='{$schedule['scheduleDateTime']}'</label>
+<label><input type='text' name='schedules[description][]' value='{$schedule['activityDescription']}' placeholder='Enter event schedule...'></label>
+<button type='button' onclick='removeRow(this)'>-</button></div>";
                 }
             }
             else{
-                echo "<div class='dynamic-inputs'><label><input type='text' name='schedules[]' placeholder='Enter event schedule...'></label><button type='button' onclick='removeRow(this)'>-</button></div>";
+                echo "<div class='dynamic-inputs'>
+<label><input type='datetime-local' name='schedules[datetime][]'</label>
+<label><input type='text' name='schedules[description][]' placeholder='Enter event schedule...'></label>
+<button type='button' onclick='removeRow(this)'>-</button></div>";
             }
             ?>
             <button type="button" id="add-schedule-button" onclick="addSchedule()">+</button>
@@ -408,8 +416,8 @@ include ('db/db_conn.php');
                     echo "</div>";
                     echo "<label>";
                     echo "<input type='file' accept='image/*' onchange='previewGuestImage(this)'>";
-                    echo "<input type='text' name='guestName[]' value='{$guestList['guestName']}' placeholder='Enter guest's name...'>";
-                    echo "<input type='text' name='guestBio[]' value='{$guestList['guestBio']}' placeholder='Enter guest's bio...'>";
+                    echo "<input type='text' name='guestName[]' value='{$guestList['guestName']}' placeholder='Enter guest name...'>";
+                    echo "<input type='text' name='guestBio[]' value='{$guestList['guestBio']}' placeholder='Enter guest bio...'>";
                     echo "</label>";
                     echo "<button type='button' onclick='removeRow(this)'>-</button>";
                     echo "</div>";
@@ -419,8 +427,8 @@ include ('db/db_conn.php');
                 echo "<div class='guestPic'><img src='' alt='Guest Picture' class='roundImage'></div>";
                 echo "<label>";
                 echo "<input type='file' accept='image/*' onchange='previewGuestImage(this)'>";
-                echo "<input type='text' name='guestName[]' placeholder='Enter guest's name...'>";
-                echo "<input type='text' name='guestBio[]' placeholder='Enter guest's bio...'>";
+                echo "<input type='text' name='guestName[]' placeholder='Enter guest name...'>";
+                echo "<input type='text' name='guestBio[]' placeholder='Enter guest bio...'>";
                 echo "</label>";
                 echo "<button type='button' onclick='removeRow(this)'>-</button>";
                 echo "</div>";
@@ -431,16 +439,16 @@ include ('db/db_conn.php');
 
 
         <p>Participants Needed:</p>
-        <label><input type="text" name="participantsNeeded" value="<?php echo isset ($eventData['participantsNeeded']) ? $eventData['participantsNeeded']: ''; ?>" placeholder="Enter Participants needed..."></label>
-        <p class="error-message"><?= isset($errors['participantsNeeded']) ? $errors['participantsNeeded'] : '' ?></p>
+        <label><input type="text" name="participantsNeeded" value="<?php echo $eventData['participantsNeeded'] ?? ''; ?>" placeholder="Enter Participants needed..."></label>
+        <p class="error-message"><?= $errors['participantsNeeded'] ?? '' ?></p>
 
         <p>Volunteers Needed:</p>
-        <label><input type="text" name="volunteersNeeded" value="<?php echo isset ($eventData['volunteersNeeded']) ? $eventData['volunteersNeeded']: ''; ?>" placeholder="Enter Volunteers needed..."></label>
-        <p class="error-message"><?= isset($errors['volunteersNeeded']) ? $errors['volunteersNeeded'] : '' ?></p>
+        <label><input type="text" name="volunteersNeeded" value="<?php echo $eventData['volunteersNeeded'] ?? ''; ?>" placeholder="Enter Volunteers needed..."></label>
+        <p class="error-message"><?= $errors['volunteersNeeded'] ?? '' ?></p>
 
         <p>Event Status:</p>
-        <label><input type="text" name="eventStatus" value="<?php echo isset ($eventData['eventStatus']) ? $eventData['eventStatus']: '';?>" placeholder="Enter Event Type..."></label>
-        <p class="error-message"><?= isset($errors['eventStatus']) ? $errors['eventStatus'] : '' ?></p>
+        <label><input type="text" name="eventStatus" value="<?php echo $eventData['eventStatus'] ?? '';?>" placeholder="Enter Event Type..."></label>
+        <p class="error-message"><?= $errors['eventStatus'] ?? '' ?></p>
 
         <?php if ($action == "editPast" || $action == "deletePast"){?>
         <p>Attendees:</p>
@@ -456,7 +464,7 @@ include ('db/db_conn.php');
             <label><input type="text" name="attendees" value="<?= $attendeesCount ?>" disabled</label>
 
         <p>Impact and Outcomes:</p>
-        <label><input type="text" name="impact" value="<?php echo isset ($eventData['impact']) ? $eventData['impact']:'';?>"</label>
+        <label><input type="text" name="impact" value="<?php echo $eventData['impact'] ?? '';?>"</label>
 
         <p>Photo Gallery:</p>
         <label><input type="file" name="photoGallery[]" accept="image/*" multiple onchange='previewPhotoGallery()'> <!--show the image saved in database-->
@@ -554,8 +562,6 @@ include ('db/db_conn.php');
         }
     }
 
-    //preview for event photo gallery pics
-
     function addHighlights() {
         const container = document.getElementById("highlights-container");
         const newHighlight = document.createElement("div");
@@ -573,8 +579,9 @@ include ('db/db_conn.php');
         const newSchedule = document.createElement("div");
         newSchedule.className = "dynamic-inputs";
         newSchedule.innerHTML = `
-        <label><input type="text" name="schedules[]" placeholder="Enter event schedule..."></label>
-        <button type="button" onclick="removeRow(this)">-</button>
+<label><input type='datetime-local' name='schedules[datetime][]'</label>
+<label><input type='text' name='schedules[description][]' placeholder='Enter event schedule...'></label>
+<button type='button' onclick='removeRow(this)'>-</button>
     `;
         const addButton = document.getElementById('add-schedule-button');
         container.insertBefore(newSchedule, addButton);

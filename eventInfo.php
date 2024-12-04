@@ -10,6 +10,7 @@ include ('db/db_conn.php');
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="main.css">
     <style>
+
         .main {
             color: white;
         }
@@ -18,7 +19,7 @@ include ('db/db_conn.php');
             background-color: #ffffff;
             padding: 20px;
             margin: 20px auto;
-            max-width: 800px;
+            max-width: 900px;
             border-radius: 15px;
             box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
             overflow: hidden;
@@ -33,7 +34,7 @@ include ('db/db_conn.php');
         .events h2 {
             color: #4a4a4a;
             margin-bottom: 10px;
-            font-size: 24px;
+            font-size: 28px;
             text-align: center;
         }
 
@@ -48,54 +49,18 @@ include ('db/db_conn.php');
             color: #7F6C54;
         }
 
-        button {
-            background-color: #d3a029;
-            color: white;
-            border: none;
-            padding: 12px 24px;
-            font-size: 16px;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-            display: block;
-            margin: 20px auto 0;
-            width: fit-content;
-        }
-
-        button:hover {
-            background-color: #7F6C54;
-        }
-
-        .note {
-            font-size: 14px;
-            color: #5C4033;
-            margin-top: 10px;
-            text-align: center;
-        }
-
-        .note strong {
-            color: #C5B4A5;
-        }
-
         .event-highlight {
             background-color: #f8f5f2;
-            padding: 10px;
+            padding: 15px;
             border-radius: 8px;
-            margin: 10px 0;
+            margin: 15px 0;
+            border-left: 4px solid #d3a029;
         }
 
         .event-highlight p {
             margin: 0;
-        }
-
-        .event-section {
-            margin: 20px 0;
-        }
-
-        .event-section h3 {
-            font-size: 18px;
+            font-size: 16px;
             color: #4a4a4a;
-            margin-bottom: 10px;
         }
 
         .dropdown-btn {
@@ -157,6 +122,64 @@ include ('db/db_conn.php');
             flex: 2;
         }
 
+        button {
+            background-color: #d3a029;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            display: block;
+            margin: 20px auto 0;
+            width: fit-content;
+        }
+
+        button:hover {
+            background-color: #7F6C54;
+        }
+
+        .note {
+            font-size: 14px;
+            color: #5C4033;
+            margin-top: 10px;
+            text-align: center;
+        }
+
+        .note strong {
+            color: #C5B4A5;
+        }
+
+        .photo-gallery-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            justify-content: center;
+            margin: 20px 0;
+        }
+
+        .gallery-item {
+            width: 150px;
+            height: 150px;
+            overflow: hidden;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .gallery-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 8px;
+        }
+
+        .gallery-item:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+        }
     </style>
 </head>
 <body>
@@ -310,8 +333,22 @@ include ('db/db_conn.php');
                     echo "<p><strong>Attendees:</strong> " . $pastEventData['attendees'] . "</p>";
                     echo "<p><strong>Impact and Outcomes:</strong> " . $pastEventData['impact'] . "</p>";
                     echo "</div>";
-                    echo "<p><strong>Photo Gallery:</strong></p><img src='" . $pastEventData['photoGallery'] . "' alt='" . $pastEventData['photoGallery'] . "' width='300' height='200'>";
-                    echo "</div>";
+//                    echo "<p><strong>Photo Gallery:</strong></p><img src='" . $pastEventData['photoGallery'] . "' alt='" . $pastEventData['photoGallery'] . "' width='300' height='200'>";
+
+                    $sqlGallery = "SELECT * FROM photogallery WHERE eventID = $eventID";
+                    $resultGallery = $conn->query($sqlGallery);
+                    if ($resultGallery->num_rows > 0){
+                        echo "<div class='photo-gallery-container'>";
+                        echo "<h3>Photo Gallery</h3>";
+                        while ($row = $resultGallery->fetch_assoc()){
+                            echo "<div class='gallery-item'</div>";
+                            echo "<img src='" . $row['imagePath'] ."'alt='Photo Gallery'>";
+                            echo "</div>";
+                        }
+                        echo "</div>";
+                        echo "</div>";
+                    }
+                    //no photos
                 }
             }else{
                 echo "No upcoming or past events.";
