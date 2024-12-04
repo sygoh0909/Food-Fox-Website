@@ -24,9 +24,11 @@ include ('db/db_conn.php');
     $registrationInfo = null;
 
     if ($registrationID){
-        $sql = "SELECT r.*, m.memberName, m.email, m.phoneNum, e.eventName FROM registrations r, members m, events e WHERE r.eventID = e.eventID AND r.memberID = m.memberID AND registrationID = $registrationID";
+        $sql = "SELECT r.*, m.memberName, m.email, m.phoneNum, e.eventName, p.*, v.* FROM registrations r JOIN members m ON r.memberID = m.memberID JOIN events e ON r.eventID = e.eventID LEFT JOIN participants p ON r.registrationID = p.registrationID LEFT JOIN volunteers v ON r.registrationID = v.registrationID WHERE r.registrationID = $registrationID";
         $result = mysqli_query($conn, $sql);
-        $registrationInfo = mysqli_fetch_assoc($result);
+        if ($result->num_rows > 0) {
+            $registrationInfo = $result->fetch_assoc();
+        }
 
         if ($_SERVER["REQUEST_METHOD"] == "POST"){
             //details like member email edit through another page not here
@@ -99,16 +101,18 @@ include ('db/db_conn.php');
 
         <div class="participant-field" style="display: <?php echo $registrationInfo['registerType'] == "Participant" ? "block" : "none"; ?>;">
             <p>Special Accommodation:</p>
-            <label><input type="text" name="specialAccommodation" value="<?php echo isset ($registrationInfo['specialAccommodation']) ? $registrationInfo['specialAccommodation'] :'';?>" ></label>
+            <label><input type="text" name="specialAccommodation" value="<?php echo $registrationInfo['specialAccommodation'] ?? '';?>" ></label>
 
             <p>T-Shirt Size</p>
             <label for="sizes"></label>
             <select name="sizes" id="sizes">
                 <?php
                 $sizes = ['XS', 'S', 'M', 'L', 'XL'];
-                foreach ($sizes as $size){
-                    $selectedSize = ($size == $registrationInfo['sizes']) ? "selected" : "";
-                    echo "<option value='$size' $selectedSize>$size</option>";
+                $selectedSize = $registrationInfo['shirtSize'] ?? '';
+
+                foreach ($sizes as $size) {
+                    $selected = ($size == $selectedSize) ? "selected" : "";
+                    echo "<option value='$size' $selected>$size</option>";
                 }
                 ?>
             </select>
@@ -118,7 +122,7 @@ include ('db/db_conn.php');
             <!--<p>Please note that you should be free the whole day as volunteer. </p>-->
 
             <p>Relevant skills:</p>
-            <label><input type="text" name="skills" value="<?php echo isset ($registrationInfo['skills']) ? $registrationInfo['skills']:'';?>"></label>
+            <label><input type="text" name="skills" value="<?php echo $registrationInfo['relevantSkills'] ?? '';?>"></label>
         </div>
 
         <button type="button" onclick="displayActionPopup()"><?php echo $registrationID && $action=='edit'?'Update Registration info': 'Delete Registration Info';?></button>

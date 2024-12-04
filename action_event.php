@@ -241,10 +241,7 @@ include ('db/db_conn.php');
                     if ($action=="editPast"){
                         $sql = "UPDATE pastevents SET eventID = '$eventID', impact = '$impact', photoGallery = '$photoGalleryPath' WHERE eventID = '$eventID'";
                     }
-                    if ($conn -> query($sql) === TRUE) {
-                        echo "<script>alert('Event Updated'); window.location.href='admin_events.php';</script>";
-                    }
-
+                    echo "<script>alert('Event Updated'); window.location.href='admin_events.php';</script>";
                 }
             }
             elseif ($action=="delete" || $action=="deletePast"){
