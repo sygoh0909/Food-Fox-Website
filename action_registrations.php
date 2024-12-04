@@ -48,9 +48,9 @@ include ('db/db_conn.php');
                             $sizes = $_POST['sizes'];
                             $specialAccommodation = $_POST['specialAccommodation'];
 
-                            if (!in_array($sizes, ['XS', 'S', 'M', 'L', 'XL'])) {
-                                $errors['sizes'] = "Invalid T-Shirt size selected";
-                            }
+//                            if (!in_array($sizes, ['XS', 'S', 'M', 'L', 'XL'])) {
+//                                $errors['sizes'] = "Invalid T-Shirt size selected";
+//                            }
 
                             $sql = "UPDATE participants SET specialAccommodation = '$specialAccommodation', shirtSize = '$sizes' WHERE registrationID = $registrationID";
                         }
