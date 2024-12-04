@@ -269,11 +269,18 @@ if (mysqli_num_rows($result) > 0) {
         <label><input type="text" name="skills" placeholder="Enter any relevant skills you have..."></label>
     </div>
 
-    <button type="submit">Submit</button>
+        <button type="button" onclick="displayActionPopup()">Register</button>
+        <a href="events.php"><button type="button">Cancel</button></a>
 
+        <div id="action-popup" class="action-popup" style="display:none;">
+            <h2>Confirm to register?</h2>
+            <button type="submit" name="confirmAction">Yes</button>
+            <button type="button" onclick="closeActionPopup()">No</button>
+        </div>
     </form>
 
 </main>
+<script src="main.js"></script>
 <script>
     function showFields(){
         const registrationType = document.getElementById("registrations").value;
