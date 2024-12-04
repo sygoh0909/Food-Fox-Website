@@ -230,12 +230,18 @@ include ('db/db_conn.php');
                     $deleteGuestQuery = "DELETE FROM eventguests WHERE eventID = '$eventID'";
                     $conn->query($deleteGuestQuery);
 
-                    foreach ($guestName as $name) {
-                        foreach ($guestBio as $bio) {
+                    if (count($guestName) === count($guestBio)) {
+                        for ($i = 0; $i < count($guestName); $i++) {
+                            $name = $conn->real_escape_string($guestName[$i]);
+                            $bio = $conn->real_escape_string($guestBio[$i]);
+                            $guestImagePath = $conn->real_escape_string($guestImagePath[$i] ?? '');
+
                             $guestUpdate = "INSERT INTO eventguests(eventID, guestName, guestBio, guestProfilePic)".
-                                " VALUES ('$eventID', '$name', '$bio', '$guestImagePath')";
+                        "VALUES ('$eventID', '$name', '$bio', '$guestImagePath')";
                             $conn->query($guestUpdate);
                         }
+                    } else {
+                        echo "Error: Mismatched guest names and bios.";
                     }
 
                     if ($eventStatus == "Past"){
@@ -387,15 +393,15 @@ include ('db/db_conn.php');
                 while ($schedule = $result->fetch_assoc()){
                     //display schedule time date and activity
                     echo "<div class='dynamic-inputs'>
-<label><input type='datetime-local' name='schedules[datetime][]' value='{$schedule['scheduleDateTime']}'</label>
-<label><input type='text' name='schedules[description][]' value='{$schedule['activityDescription']}' placeholder='Enter event schedule...'></label>
+<label><input type='datetime-local' name='schedules[datetime][]' value='{$schedule['scheduleDateTime']}'>
+<input type='text' name='schedules[description][]' value='{$schedule['activityDescription']}' placeholder='Enter event schedule...'></label>
 <button type='button' onclick='removeRow(this)'>-</button></div>";
                 }
             }
             else{
                 echo "<div class='dynamic-inputs'>
-<label><input type='datetime-local' name='schedules[datetime][]'</label>
-<label><input type='text' name='schedules[description][]' placeholder='Enter event schedule...'></label>
+<label><input type='datetime-local' name='schedules[datetime][]'>
+<input type='text' name='schedules[description][]' placeholder='Enter event schedule...'></label>
 <button type='button' onclick='removeRow(this)'>-</button></div>";
             }
             ?>
@@ -412,10 +418,10 @@ include ('db/db_conn.php');
                 while ($guestList = $result->fetch_assoc()) {
                     echo "<div class='dynamic-inputs'>";
                     echo "<div class='guestPic'>";
-                    echo "<img src='{$guestList['guestProfilePic']}' alt='Guest Picture' class='roundImage'>";
+                    echo "<img src='{$guestList['guestProfilePic']}' alt='Guest Picture' id='guestPic' class='roundImage'>";
                     echo "</div>";
                     echo "<label>";
-                    echo "<input type='file' accept='image/*' onchange='previewGuestImage(this)'>";
+                    echo "<input type='file' name='guestPic' id='uploadGuestPic' accept='image/*' onchange='previewGuestImage()'>";
                     echo "<input type='text' name='guestName[]' value='{$guestList['guestName']}' placeholder='Enter guest name...'>";
                     echo "<input type='text' name='guestBio[]' value='{$guestList['guestBio']}' placeholder='Enter guest bio...'>";
                     echo "</label>";
@@ -424,9 +430,11 @@ include ('db/db_conn.php');
                 }
             } else {
                 echo "<div class='dynamic-inputs'>";
-                echo "<div class='guestPic'><img src='' alt='Guest Picture' class='roundImage'></div>";
+                echo "<div class='guestPic'>";
+                echo "<img src='' alt='Guest Picture' id='guestPic' class='roundImage'>";
+                echo "</div>";
                 echo "<label>";
-                echo "<input type='file' accept='image/*' onchange='previewGuestImage(this)'>";
+                echo "<input type='file' name='guestPic' id='uploadGuestPic' accept='image/*' onchange='previewGuestImage()'>";
                 echo "<input type='text' name='guestName[]' placeholder='Enter guest name...'>";
                 echo "<input type='text' name='guestBio[]' placeholder='Enter guest bio...'>";
                 echo "</label>";
@@ -579,8 +587,8 @@ include ('db/db_conn.php');
         const newSchedule = document.createElement("div");
         newSchedule.className = "dynamic-inputs";
         newSchedule.innerHTML = `
-<label><input type='datetime-local' name='schedules[datetime][]'</label>
-<label><input type='text' name='schedules[description][]' placeholder='Enter event schedule...'></label>
+<label><input type='datetime-local' name='schedules[datetime][]'>
+<input type='text' name='schedules[description][]' placeholder='Enter event schedule...'></label>
 <button type='button' onclick='removeRow(this)'>-</button>
     `;
         const addButton = document.getElementById('add-schedule-button');
@@ -596,10 +604,10 @@ include ('db/db_conn.php');
 
         newGuest.innerHTML = `
         <div class="guestPic">
-            <img src="" alt="Guest Picture" class="roundImage">
+            <img src='' alt='Guest Picture' id='guestPic' class='roundImage'>
         </div>
         <label>
-            <input type="file" accept="image/*" onchange="previewGuestImage(this)">
+            <input type='file' name='guestPic' id='uploadGuestPic' accept='image/*' onchange='previewGuestImage()'>
             <input type="text" name="guestName[]" placeholder="Enter guest's name...">
             <input type="text" name="guestBio[]" placeholder="Enter guest's bio...">
         </label>
