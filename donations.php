@@ -195,6 +195,7 @@ include ('db/db_conn.php');
             display: flex;
             justify-content: space-between;
             margin-top: 30px;
+            padding-bottom: 20px;
         }
 
         .chart-container {
@@ -243,9 +244,8 @@ include ('db/db_conn.php');
 
         .feedback-row {
             display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 10px;
+            align-items: flex-start;
+            padding-left: 40px;
             margin-bottom: 15px;
             border-bottom: 1px solid #ddd;
             max-width: 100%;
@@ -256,19 +256,26 @@ include ('db/db_conn.php');
             display: flex;
             flex-direction: column;
             align-items: center;
-            margin-bottom: 10px;
+            margin-right: 15px;
         }
 
         .profile-pic {
-            width: 40px;
-            height: 40px;
+            width: 50px;
+            height: 50px;
             border-radius: 50%;
             object-fit: cover;
-            margin-top: 5px;
         }
 
         .feedback-content {
             flex-grow: 1;
+        }
+
+        .feedback-content .member-name {
+            font-weight: bold;
+            font-size: 14px;
+            color: #333;
+            margin-bottom: 5px;
+            text-align: left;
         }
 
         .feedback-content p {
@@ -277,28 +284,13 @@ include ('db/db_conn.php');
             color: #555;
             line-height: 1.4;
             word-wrap: break-word;
-        }
-
-        .member-profile p {
-            font-weight: bold;
-            font-size: 14px;
-            color: #333;
-        }
-
-        .feedback-row:hover {
-            background-color: #f9f9f9;
-            cursor: pointer;
+            text-align: left;
         }
 
         .feedback-row:last-child {
             border-bottom: none;
         }
 
-        .member-profile p, .hidden-name {
-            font-weight: normal;
-            font-size: 14px;
-            color: #aaa;
-        }
 
     </style>
 </head>
@@ -579,7 +571,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'getProgress') {
     <?php
     $conn = connection();
 
-    $sql = "SELECT d.feedback, m.memberName, m.memberProfile FROM donations d JOIN members m ON d.memberID = m.memberID WHERE d.hidden = 0 ORDER BY d.donationDate DESC LIMIT 5";
+    $sql = "SELECT d.feedback, m.memberName, m.memberProfile FROM donations d JOIN members m ON d.memberID = m.memberID WHERE d.hidden = 0 AND d.feedback <> '' AND d.feedback IS NOT NULL ORDER BY d.donationDate DESC LIMIT 5";
 
     $result = $conn->query($sql);
 
@@ -588,11 +580,11 @@ if (isset($_GET['action']) && $_GET['action'] == 'getProgress') {
             echo "<div class='feedback-row'>";
 
             echo "<div class='member-profile'>";
-            echo "<p class='hidden-name'>***</p>";
-            echo "<img src='" . $row["memberProfile"] . "' alt='" . $row["memberName"] . "' class='profile-pic' />";
+            echo "<img src='" . $row["memberProfile"] . "' alt='Member Profile' class='profile-pic' />";
             echo "</div>";
 
             echo "<div class='feedback-content'>";
+            echo "<p class='member-name'>" . str_repeat('*', strlen($row['memberName'])) . "</p>";
             echo "<p>" . $row["feedback"] . "</p>";
             echo "</div>";
 
@@ -635,15 +627,15 @@ if (isset($_GET['action']) && $_GET['action'] == 'getProgress') {
                 datasets: [{
                     label: 'Meals Provided',
                     data: [mealsPercentage, 0],
-                    backgroundColor: '#4caf50',
-                    borderColor: '#388e3c',
+                    backgroundColor: '#d4a373',
+                    borderColor: '#b07b4e',
                     borderWidth: 1
                 },
                     {
                     label: 'People Supported',
                     data: [0, peoplePercentage],
-                    backgroundColor: '#2196f3',
-                    borderColor: '#1976d2',
+                    backgroundColor: '#a3b18a',
+                    borderColor: '#6b8f59',
                     borderWidth: 1
                 },
                 ],
@@ -668,7 +660,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'getProgress') {
                                 if (tooltipItem.datasetIndex === 0) {
                                     return `${tooltipItem.dataset.label}: ${tooltipItem.raw}%`;
                                 } else if (tooltipItem.datasetIndex === 1) {
-                                    return `${tooltipItem.dataset.label}: ${tooltipItem.raw} people`;
+                                    return `${tooltipItem.dataset.label}: ${tooltipItem.raw}%`;
                                 }
                             },
                         },
