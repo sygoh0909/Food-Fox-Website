@@ -52,10 +52,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 //            echo "<script> alert('Login Successfully!'); window.location.href='mainpage.php'; </script>";
             echo "<script>window.location.href='mainpage.php'; </script>";
         }
-        $errors['incorrectField'] = "Member ID/email or password is incorrect";
+        $errors['incorrectField'] = "Member ID/Email or password is incorrect";
     }
     else{
-        $errors['incorrectField'] = "Member ID/email or password is incorrect";
+        $errors['incorrectField'] = "Member ID/Email or password is incorrect";
     }
 }
 ?>
@@ -72,13 +72,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 </div>
 <div class="login-form">
     <h2>Login</h2>
-    <h2>Welcome User!</h2>
     <form method="POST" enctype="multipart/form-data">
-        <p>Member ID/Email: </p>
-        <label><input type="text" name="loginInput"></label>
+        <p><span class="required">* </span>Member ID/Email:</p>
+        <label><input type="text" name="loginInput" required></label>
 
-        <p>Password: </p>
-        <label><input type="text" name="password"></label>
+        <p><span class="required">* </span>Password:</p>
+        <label><input type="password" name="password" required></label>
         <a href='forgotpassword.php'><p class="forgot-pass">Forgot password?</p></a>
 
         <p class="error-message"><?= isset ($errors['emptyFields']) ? $errors['emptyFields'] : ''?></p>

@@ -1,3 +1,7 @@
+<?php
+include('cookie/cookie.php');
+include ('db/db_conn.php');
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -7,10 +11,6 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="login.css">
     <style>
-        .required{
-            color: red;
-            font-weight: bold;
-        }
         p.error{
             color: red;
             visibility: hidden;
@@ -23,9 +23,6 @@
 <body>
 
 <?php
-include('cookie/cookie.php');
-include ('db/db_conn.php');
-
 $conn = connection();
 
 if($conn->connect_error){
@@ -100,18 +97,21 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 </div>
 <div class="sign-up-form">
     <h2>Sign Up</h2>
-    <h2>Welcome User!</h2>
     <form method="POST" enctype="multipart/form-data">
 
         <!--name-->
         <p><span class="required">* </span>Name:</p>
-        <label><input type="text" id="name" name="name" oninput="validateName()"></label>
+        <label>
+            <input type="text" id="name" name="name" oninput="validateName()">
+        </label>
         <p class="error" id="name-error"></p>
         <p class="error-message"><?= isset ($errors['name']) ? $errors['name'] :''?></p>
 
         <!--email-->
         <p><span class="required">* </span>Email Address:</p>
-        <label><input type="text" id="email" name="email" oninput="validateEmail()"></label>
+        <label>
+            <input type="text" id="email" name="email" oninput="validateEmail()">
+        </label>
         <p class="error" id="email-error"></p>
         <p class="error-message"><?= isset ($errors['email']) ? $errors['email'] : ''?></p>
 

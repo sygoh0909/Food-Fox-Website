@@ -62,13 +62,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 </div>
 <div class="login-form">
     <h2>Login</h2>
-    <h2>Welcome Admin!</h2>
     <form method="POST" enctype="multipart/form-data">
-        <p>Admin ID: </p>
-        <label><input type="text" name="loginInput"></label>
+        <p><span class="required">* </span>Admin ID:</p>
+        <label><input type="text" name="loginInput" required></label>
 
-        <p>Password: </p>
-        <label><input type="text" name="password"></label>
+        <p><span class="required">* </span>Password:</p>
+        <label><input type="password" name="password" required></label>
         <p class="error-message"><?=isset ($errors['emptyFields']) ? $errors['emptyFields'] :''?></p>
         <p class="error-message"><?=isset ($errors['incorrectFields']) ? $errors['incorrectFields'] : ''?></p>
 
