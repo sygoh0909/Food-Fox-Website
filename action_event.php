@@ -258,14 +258,18 @@ include ('db/db_conn.php');
 //                        echo "Event is already marked as past.";
                     }
 
+                    if ($eventStatus == "Upcoming"){
+                        $deleteSql = "DELETE FROM pastevents WHERE eventID = $eventID";
+                        $conn->query($deleteSql);
+                    }
+
                     if ($action=="editPast"){
                         $sql = "UPDATE pastevents SET impact = '$impact' WHERE eventID = '$eventID'";
                         if ($conn->query($sql) === TRUE) {
-                            // Clear old images for this event
+
                             $deleteQuery = "DELETE FROM photogallery WHERE eventID = '$eventID'";
                             $conn->query($deleteQuery);
 
-                            // Insert new images
                             foreach ($uploadedFiles as $filePath) {
                                 $sql = "INSERT INTO photogallery (eventID, imagePath) VALUES ('$eventID', '$photoGalleryPath')";
                                 if (!$conn->query($sql)) {

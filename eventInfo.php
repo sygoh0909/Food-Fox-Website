@@ -323,13 +323,12 @@ include ('db/db_conn.php');
                 }
             }
             elseif ($action == "past") {
-                $sql = "SELECT p.*, COUNT(r.attendance) AS attendees FROM pastevents p, registrations r WHERE p.eventID = $eventID AND r.eventID = p.eventID GROUP BY p.eventID";
+                $sql = "SELECT p.*, COUNT(r.attendance) AS attendees FROM pastevents p LEFT JOIN registrations r ON r.eventID = p.eventID WHERE p.eventID = $eventID GROUP BY p.eventID";
                 $result = $conn->query($sql);
                 if ($result->num_rows > 0) {
                     $pastEventData = $result->fetch_assoc();
 
                     echo "<div class='event-highlight'>";
-                    //count from event attendance
                     echo "<p><strong>Attendees:</strong> " . $pastEventData['attendees'] . "</p>";
                     echo "<p><strong>Impact and Outcomes:</strong> " . $pastEventData['impact'] . "</p>";
                     echo "</div>";
