@@ -80,49 +80,68 @@ include ('db/db_conn.php');
     }
     ?>
     <form method="POST" enctype="multipart/form-data">
-        <label for="events">Event Name: </label>
-        <?php echo $registrationInfo['eventName']?>
+        <div class="form-grp">
+            <label for="events">Event Name: </label>
+            <?php echo $registrationInfo['eventName']?>
+        </div>
 
-        <p>Member Name: </p>
-        <?php echo $registrationInfo['memberName']?>
+        <div class="form-grp">
+            <p>Member Name: </p>
+            <?php echo $registrationInfo['memberName']?>
+        </div>
 
-        <p>Email:</p>
-        <?php echo $registrationInfo['email']; ?>
+        <div class="form-grp">
+            <p>Email:</p>
+            <?php echo $registrationInfo['email']; ?>
+        </div>
 
-        <p>Phone Number:</p>
-        <?php echo $registrationInfo['phoneNum']; ?>
+        <div class="form-grp">
+            <p>Phone Number:</p>
+            <?php echo $registrationInfo['phoneNum']; ?>
+        </div>
 
-        <p>Dietary Restrictions:</p>
-        <label><input type="text" name="dietaryRestrictions" value="<?php echo isset ($registrationInfo['dietaryRestrictions']) ? $registrationInfo['dietaryRestrictions'] : ''; ?>"></label>
+        <div class="form-grp">
+            <p>Dietary Restrictions:</p>
+            <label><input type="text" name="dietaryRestrictions" value="<?php echo isset ($registrationInfo['dietaryRestrictions']) ? $registrationInfo['dietaryRestrictions'] : ''; ?>"></label>
+        </div>
 
-        <label for="registrations">Register type: </label>
-        <?php echo $registrationInfo['registerType']; ?>
-        <input type="hidden" name="registrations" value="<?php echo $registrationInfo['registerType']; ?>">
+        <div class="form-grp">
+            <label for="registrations">Register type: </label>
+            <?php echo $registrationInfo['registerType']; ?>
+            <input type="hidden" name="registrations" value="<?php echo $registrationInfo['registerType']; ?>">
+        </div>
 
         <div class="participant-field" style="display: <?php echo $registrationInfo['registerType'] == "Participant" ? "block" : "none"; ?>;">
-            <p>Special Accommodation:</p>
-            <label><input type="text" name="specialAccommodation" value="<?php echo $registrationInfo['specialAccommodation'] ?? '';?>" ></label>
+            <div class="form-grp">
+                <p>Special Accommodation:</p>
+                <label><input type="text" name="specialAccommodation" value="<?php echo $registrationInfo['specialAccommodation'] ?? '';?>" ></label>
+            </div>
 
-            <p>T-Shirt Size</p>
-            <label for="sizes"></label>
-            <select name="sizes" id="sizes">
-                <?php
-                $sizes = ['XS', 'S', 'M', 'L', 'XL'];
-                $selectedSize = $registrationInfo['shirtSize'] ?? '';
+            <div class="form-grp">
+                <p>T-Shirt Size</p>
+                <label for="sizes"></label>
+                <select name="sizes" id="sizes">
+                    <?php
+                    $sizes = ['XS', 'S', 'M', 'L', 'XL'];
+                    $selectedSize = $registrationInfo['shirtSize'] ?? '';
 
-                foreach ($sizes as $size) {
-                    $selected = ($size == $selectedSize) ? "selected" : "";
-                    echo "<option value='$size' $selected>$size</option>";
-                }
-                ?>
-            </select>
+                    foreach ($sizes as $size) {
+                        $selected = ($size == $selectedSize) ? "selected" : "";
+                        echo "<option value='$size' $selected>$size</option>";
+                    }
+                    ?>
+                </select>
+            </div>
         </div>
 
         <div class="volunteer-field" style="display: <?php echo $registrationInfo['registerType'] == "Volunteer" ? "block" : "none"; ?>;">
             <!--<p>Please note that you should be free the whole day as volunteer. </p>-->
 
-            <p>Relevant skills:</p>
-            <label><input type="text" name="skills" value="<?php echo $registrationInfo['relevantSkills'] ?? '';?>"></label>
+            <div class="form-grp">
+                <p>Relevant skills:</p>
+                <label><input type="text" name="skills" value="<?php echo $registrationInfo['relevantSkills'] ?? '';?>"></label>
+            </div>
+
         </div>
 
         <button type="button" onclick="displayActionPopup()"><?php echo $registrationID && $action=='edit'?'Update Registration info': 'Delete Registration Info';?></button>

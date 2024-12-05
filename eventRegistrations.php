@@ -148,16 +148,18 @@ if (mysqli_num_rows($result) > 0) {
 </header>
 <main>
     <form method="POST" enctype="multipart/form-data">
-    <label for="events">Choose an event: </label>
-    <select name="events" id="events">
-        <?php
-        foreach ($events as $event): ?>
-        <option value="<?php echo $event['eventID']; ?>"
-            <?php echo $selectedEventID == $event['eventID'] ? 'selected' : ''; ?>>
-            <?php echo $event['eventName']; ?>
-        </option>
-        <?php endforeach; ?>
-    </select>
+        <div class="form-grp">
+            <label for="events">Choose an event: </label>
+            <select name="events" id="events">
+                <?php
+                foreach ($events as $event): ?>
+                    <option value="<?php echo $event['eventID']; ?>"
+                        <?php echo $selectedEventID == $event['eventID'] ? 'selected' : ''; ?>>
+                        <?php echo $event['eventName']; ?>
+                    </option>
+                <?php endforeach; ?>
+            </select>
+        </div>
 
     <?php
     if ($memberID) {
@@ -169,40 +171,47 @@ if (mysqli_num_rows($result) > 0) {
         <!--sync info from profile (show a note also if wanna change info, change from profile), if user havent fill, pop up a alert message and direct them to profile-->
         <p class="note">Please note that name, email, and phone number will be automatically synced from your profile. Please proceed to profile page to change any information. </p>
 
+        <div class="form-grp">
+            <p>Name:</p>
+            <?php echo isset($memberData['memberName']) ? $memberData['memberName']: '';
+            if (empty($memberData['memberName'])){
+                if ($_SERVER["REQUEST_METHOD"] == "POST"){
+                    echo "<p class='error-message'>Please enter your name.</p>";
+                }
+            }?>
+        </div>
 
-        <p>Name:</p>
-        <?php echo isset($memberData['memberName']) ? $memberData['memberName']: '';
-        if (empty($memberData['memberName'])){
-            if ($_SERVER["REQUEST_METHOD"] == "POST"){
-                echo "<p class='error-message'>Please enter your name.</p>";
-            }
-        }?>
+        <div class="form-grp">
+            <p>Email:</p>
+            <?php echo isset($memberData['email']) ? $memberData['email']: '';
+            if (empty($memberData['email'])){
+                if ($_SERVER["REQUEST_METHOD"] == "POST"){
+                    echo "<p class='error-message'>Please enter an email address.</p>";
+                }
+            }?>
+        </div>
 
-    <p>Email:</p>
-    <?php echo isset($memberData['email']) ? $memberData['email']: '';
-    if (empty($memberData['email'])){
-        if ($_SERVER["REQUEST_METHOD"] == "POST"){
-            echo "<p class='error-message'>Please enter an email address.</p>";
-        }
-    }?>
+        <div class="form-grp">
+            <p>Phone Number:</p>
+            <?php echo isset($memberData['phoneNum']) ? $memberData['phoneNum']:'';?>
 
-    <p>Phone Number:</p>
-    <?php echo isset($memberData['phoneNum']) ? $memberData['phoneNum']:'';?>
+            <?php if (empty($memberData['phoneNum'])):
+                if ($_SERVER["REQUEST_METHOD"] == "POST"){
+                    echo "<p class='error-message''>Please enter a phone number.</p>";
+                }
+                ?>
+                <div class="missing-info-alert">
+                    <p>You haven't provided a phone number in your profile.</p>
+                    <p>Please fill in your phone number in your profile</p>
+                    <?php echo "<a href='profile.php?memberID=". $memberData['memberID']."&action=registration'><button type='button'>Proceed to Profile Page</button></a>"?>
+                </div>
+            <?php endif; ?>
+        </div>
 
-        <?php if (empty($memberData['phoneNum'])):
-            if ($_SERVER["REQUEST_METHOD"] == "POST"){
-                echo "<p class='error-message''>Please enter a phone number.</p>";
-            }
-            ?>
-            <div class="missing-info-alert">
-                <p>You haven't provided a phone number in your profile.</p>
-                <p>Please fill in your phone number in your profile</p>
-                <?php echo "<a href='profile.php?memberID=". $memberData['memberID']."&action=registration'><button type='button'>Proceed to Profile Page</button></a>"?>
-            </div>
-        <?php endif; ?>
-
-        <p>Dietary Restrictions:</p>
-        <label><input type="text" name="dietaryRestrictions" placeholder="Enter any dietary restrictions if got..."></label>
+        <div class="form-grp">
+            <p>Dietary Restrictions:</p>
+            <label><input type="text" name="dietaryRestrictions" placeholder="Enter any dietary restrictions if got..."></label>
+        </div>
 
         <?php
         $sql = "SELECT participantsNeeded, volunteersNeeded FROM events WHERE eventID = $selectedEventID";
@@ -231,42 +240,48 @@ if (mysqli_num_rows($result) > 0) {
         }
         ?>
 
-    <label for="registrations">Registration type: </label> <!--show participant or volunteer full-->
-    <select name="registrations" id="registrations" onchange="showFields()">
-        <option value="" disabled selected>Select registration type</option>
-        <?php if (!$participantFull): ?>
-        <option value="Participant">Participant</option>
-        <?php endif; ?>
-        <?php if (!$volunteerFull): ?>
-        <option value="Volunteer">Volunteer</option>
-        <?php endif; ?>
-    </select>
-        <p class="error-message""><?= isset($errors['registrations']) ? $errors['registrations'] : '' ?></p>
+        <div class="form-grp">
+            <label for="registrations">Registration type: </label> <!--show participant or volunteer full-->
+            <select name="registrations" id="registrations" onchange="showFields()">
+                <option value="" disabled selected>Select registration type</option>
+                <?php if (!$participantFull): ?>
+                    <option value="Participant">Participant</option>
+                <?php endif; ?>
+                <?php if (!$volunteerFull): ?>
+                    <option value="Volunteer">Volunteer</option>
+                <?php endif; ?>
+            </select>
+            <p class="error-message""><?= isset($errors['registrations']) ? $errors['registrations'] : '' ?></p>
+        </div>
 
     <div class="participant-field">
+        <div class="form-grp">
+            <p>Special Accommodation:</p>
+            <label><input type="text" name="specialAccommodation" placeholder="Enter any special accommodation if got..."></label>
+        </div>
 
-        <p>Special Accommodation:</p>
-        <label><input type="text" name="specialAccommodation" placeholder="Enter any special accomodation if got..."></label>
-
-        <p>T-Shirt Size</p>
-        <label for="sizes"></label>
-        <select name="sizes" id="sizes">
-            <option value="" disabled selected>Choose a T-Shirt Size</option>
-            <option>XS</option>
-            <option>S</option>
-            <option>M</option>
-            <option>L</option>
-            <option>XL</option>
-        </select>
-        <!--provide t-shirt size chart also-->
-        <img src="https://www.tshirtprint2u.com.my/images/sizechart_tshirtprint2u.jpg">
+        <div class="form-grp">
+            <p>T-Shirt Size</p>
+            <label for="sizes"></label>
+            <select name="sizes" id="sizes">
+                <option value="" disabled selected>Choose a T-Shirt Size</option>
+                <option>XS</option>
+                <option>S</option>
+                <option>M</option>
+                <option>L</option>
+                <option>XL</option>
+            </select>
+            <!--provide t-shirt size chart also-->
+            <img src="https://www.tshirtprint2u.com.my/images/sizechart_tshirtprint2u.jpg">
+        </div>
     </div>
 
     <div class="volunteer-field">
         <p class="note">Please note that you are expected to be free for the whole day as a volunteer. </p>
-
-        <p>Relevant skills:</p>
-        <label><input type="text" name="skills" placeholder="Enter any relevant skills you have..."></label>
+        <div class="form-grp">
+            <p>Relevant skills:</p>
+            <label><input type="text" name="skills" placeholder="Enter any relevant skills you have..."></label>
+        </div>
     </div>
 
         <button type="button" onclick="displayActionPopup()">Register</button>
