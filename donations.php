@@ -155,14 +155,14 @@ include ('db/db_conn.php');
             text-align: center;
         }
 
-        .donation-popup h2 {
+        .donation-popup h2, .payment-popup h2, .feedback-popup h2 {
             color: #7F6C54;
             font-family: 'Arial', sans-serif;
             font-size: 18px;
             margin-bottom: 15px;
         }
 
-        .donation-popup button {
+        .donation-popup button, .payment-popup button, .feedback-popup button {
             background-color: #7F6C54;
             color: white;
             border: none;
@@ -300,8 +300,7 @@ $peopleSupported = $row['total_people'];
 $peopleSupportedPercentage = min(100, ($peopleSupported / $maxPeopleSupported) * 100);
 
 if (isset($_GET['action']) && $_GET['action'] == 'getProgress') {
-    $progressPercentage = ($totalDonations / $fundraisingGoal) * 100;
-    $progressPercentage = min(100, $progressPercentage);
+    $progressPercentage = min(100,($totalDonations / $fundraisingGoal) * 100);
 
 }
 ?>
@@ -334,7 +333,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'getProgress') {
     <p id="progressText">Raised: RM <?=$totalDonations?> / RM <?=$fundraisingGoal?></p>
     <div class="progress-container">
         <div id="progress-bar" class="progress-bar" style="width:<?= round(($totalDonations / $fundraisingGoal) *100) ?>%;">
-            <?= floor(($totalDonations / $fundraisingGoal) *100) ?>% <!--min 100% leh-->
+            <?= floor(min(100, ($totalDonations / $fundraisingGoal) *100) )?>%
         </div>
     </div>
 
@@ -408,7 +407,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'getProgress') {
         <button type="button" class="donate-submit" onclick="alert('Please login or sign up to donate'); window.location.href = 'login.php';">Donate</button>
         <?php } ?>
 
-        <div id="donation-popup" class="action-popup" style="display:none;">
+        <div id="donation-popup" class="donation-popup" style="display:none;">
             <h2>Confirm Donation?</h2>
             <p>You are about to donate: <span id="confirm-amount"></span></p>
             <input type="hidden" name="confirm-amount" id="confirm-amount-input">
@@ -424,21 +423,80 @@ if (isset($_GET['action']) && $_GET['action'] == 'getProgress') {
             <button type="button" onclick="closePopup()">Cancel</button>
         </div>
 
-        <div id="payment-popup" class="action-popup" style="display:none;">
+        <div id="payment-popup" class="payment-popup" style="display:none;">
             <div id="credit-card-info" style="display:none;">
                 <p>Please enter your Credit Card details.</p>
+                <p>We accept the following credit cards:</p>
+                <ul>
+                    <li>Visa</li>
+                    <li>MasterCard</li>
+                    <li>American Express (AMEX)</li>
+                    <li>PayPal</li>
+                </ul>
 
+                <label for="cardNumber">Card Number:</label><br>
+                <input type="text" id="cardNumber" name="cardNumber" placeholder="1234 5678 9012 3456" required><br><br>
+
+                <label for="expirationDate">Expiration Date:</label><br>
+                <input type="month" id="expirationDate" name="expirationDate" required><br><br>
+
+                <label for="cvv">CVV (Security Code):</label><br>
+                <input type="text" id="cvv" name="cvv" placeholder="123" required><br><br>
+
+                <label for="cardHolderName">Cardholder's Name:</label><br>
+                <input type="text" id="cardHolderName" name="cardHolderName" placeholder="full name" required><br><br>
 
             </div>
             <div id="tng-info" style="display:none;">
                 <p>Please provide your Touch 'n Go (TNG) details.</p>
+                <p>To proceed, please provide the following details:</p>
+                <ul>
+                    <li>Phone Number (linked to your TNG account)</li>
+                    <li>PIN/Password for TNG account verification</li>
+                </ul>
 
+                <label for="phoneNumber">Phone Number:</label><br>
+                <input type="tel" id="phoneNumber" name="phoneNumber" placeholder="Enter your phone number" required><br><br>
 
+                <label for="tngPin">TNG 6 digit PIN/Password:</label><br>
+                <input type="password" id="tngPin" name="tngPin" placeholder="Enter your 6 digit PIN/Password" required><br><br>
+
+                <label for="tngAmount">Amount to Reload/Transfer:</label><br>
+                <input type="number" id="tngAmount" name="tngAmount" placeholder="Enter amount" required><br><br>
             </div>
+
             <div id="bank-transfer-info" style="display:none;">
                 <p>Please provide your Bank Transfer details.</p>
+                <p>To proceed, please provide the following bank transfer details:</p>
+                <ul>
+                    <li>Your Bank Account Number</li>
+                    <li>Your Bank Name</li>
+                    <li>Recipient's Bank Name</li>
+                    <li>Recipient's Bank Account Number</li>
+                    <li>Amount to Transfer</li>
+                    <li>Reference/Payment Purpose (Optional)</li>
+                </ul>
 
+                <label for="bankAccountNumber">Your Bank Account Number:</label><br>
+                <input type="text" id="bankAccountNumber" name="bankAccountNumber" placeholder="Enter your account number" required><br><br>
 
+                <label for="bankName">Your Bank Name:</label><br>
+                <input type="text" id="bankName" name="bankName" placeholder="Enter your bank name" required><br><br>
+
+                <label for="recipientBankName">Recipient's Bank Name:</label><br>
+                <input type="text" id="recipientBankName" name="recipientBankName" placeholder="Enter recipient's bank name" required><br><br>
+
+                <label for="recipientAccountNumber">Recipient's Bank Account Number:</label><br>
+                <input type="text" id="recipientAccountNumber" name="recipientAccountNumber" placeholder="Enter recipient's account number" required><br><br>
+
+                <label for="transferAmount">Amount to Transfer:</label><br>
+                <input type="number" id="transferAmount" name="transferAmount" placeholder="Enter amount" required><br><br>
+
+                <label for="paymentReference">Reference/Payment Purpose (Optional):</label><br>
+                <input type="text" id="paymentReference" name="paymentReference" placeholder="Enter reference or payment purpose (optional)"><br><br>
+
+                <label for="email">Email (for receipt/confirmation):</label><br>
+                <input type="email" id="email" name="email" placeholder="youremail@example.com" required><br><br>
             </div>
 
             <button type="submit" name="confirmDonate">Donate</button>
@@ -448,12 +506,12 @@ if (isset($_GET['action']) && $_GET['action'] == 'getProgress') {
 
     <form method="post" enctype="multipart/form-data">
         <!--after donate successfully, show do u wanna leave a feedback, pop up-->
-        <div id="feedback-popup" class="action-popup" style="display: none">
+        <div id="feedback-popup" class="feedback-popup" style="display: none">
             <h2>Donated successfully!</h2>
             <p>Do you want to leave a feedback?</p>
             <label><input type="text" name="feedback" placeholder="Leave your feedback here if you have any..."></label>
             <button type="submit" name="submit-feedback">Submit feedback</button>
-            <button type="button" onclick="closePopup()">No</button>
+            <button type="button" onclick="closeFeedback()">No</button>
         </div>
     </form>
 
@@ -609,8 +667,9 @@ if (isset($_GET['action']) && $_GET['action'] == 'getProgress') {
                 impactChart.update();
             })
             .catch(error => console.error('Error fetching progress:', error));
-        setInterval(updateProgress, 5000) //refresh every 5 seconds
     }
+    setInterval(updateProgress, 5000) //refresh every 5 seconds
+    updateProgress();
 
     //buttons
     const buttons = document.querySelectorAll('.donation-btn');
@@ -640,10 +699,13 @@ if (isset($_GET['action']) && $_GET['action'] == 'getProgress') {
 
     function closePopup() {
         document.getElementById('donation-popup').style.display = 'none';
-        document.getElementById('feedback-popup').style.display = 'none';
         document.getElementById('payment-popup').style.display = 'none';
 
         closePopup.style.display = 'none';
+    }
+
+    function closeFeedback(){
+        document.getElementById('feedback-popup').style.display = 'none';
 
         const url = new URL(window.location.href);
         url.searchParams.delete('showFeedback');
@@ -652,20 +714,31 @@ if (isset($_GET['action']) && $_GET['action'] == 'getProgress') {
 
     function proceed(){
 
-        var paymentMethod = document.getElementById('payment-method').value;
+        const paymentMethod = document.getElementById('payment-method').value;
 
         document.getElementById('credit-card-info').style.display = 'none';
         document.getElementById('tng-info').style.display = 'none';
         document.getElementById('bank-transfer-info').style.display = 'none';
 
-        if (paymentMethod === "credit-card"){
-            document.getElementById('credit-card-info').style.display = 'block';
+        document.querySelectorAll('#payment-popup input').forEach(input => {
+            input.required = false;
+        });
+
+        let sectionToShow;
+        if (paymentMethod === "credit-card") {
+            sectionToShow = 'credit-card-info';
+        } else if (paymentMethod === "tng") {
+            sectionToShow = 'tng-info';
+        } else if (paymentMethod === "bank-transfer") {
+            sectionToShow = 'bank-transfer-info';
         }
-        else if (paymentMethod === "tng") {
-            document.getElementById('tng-info').style.display = 'block'
-        }
-        else if (paymentMethod === "bank-transfer"){
-            document.getElementById('bank-transfer-info').style.display = 'block';
+
+        //clear required for each input so that it wouldn't capture all even though not choosing that method
+        if (sectionToShow) {
+            document.getElementById(sectionToShow).style.display = 'block';
+            document.querySelectorAll(`#${sectionToShow} input`).forEach(input => {
+                input.required = true;
+            });
         }
 
         document.getElementById('donation-popup').style.display = 'none';
@@ -677,11 +750,13 @@ if (isset($_GET['action']) && $_GET['action'] == 'getProgress') {
         return new URLSearchParams(window.location.search).get(name);
     }
 
-    if (getURLParameter('showFeedback') === 'true') {
-        document.getElementById('feedback-popup').style.display = 'block';
-    } else {
-        document.getElementById('feedback-popup').style.display = 'none';
-    }
+    document.addEventListener('DOMContentLoaded', function () {
+        if (getURLParameter('showFeedback') === 'true') {
+            document.getElementById('feedback-popup').style.display = 'block';
+        } else {
+            document.getElementById('feedback-popup').style.display = 'none';
+        }
+    });
 
 
 </script>

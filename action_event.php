@@ -147,6 +147,9 @@ include ('db/db_conn.php');
         elseif (!in_array($eventStatus, ['Upcoming', 'Past', 'Canceled'])) {
             $errors['eventStatus'] = "Event status must be either 'Upcoming' or 'Past' or 'Canceled'.";
         }
+        elseif($action == "add" && $eventStatus != "Upcoming"){
+            $errors['eventStatus'] = "Event status for new event can be only 'Upcoming'.";
+        }
 
         //handle image upload
         if (isset($_FILES['eventImage']) && $_FILES['eventImage']['error'] == 0) {
