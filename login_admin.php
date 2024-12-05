@@ -41,7 +41,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         session_start();
         $_SESSION['adminID'] = $adminID;
         $_SESSION['password'] = $admin_password;
-        echo "<script> alert('Login successful!'); window.location.href='admin_main.php'; </script>";
+//        echo "<script> alert('Login successful!'); window.location.href='admin_main.php'; </script>";
+        echo "<script>window.location.href='admin_main.php'; </script>";
     }
     else{
         $errors['incorrectFields'] = "Admin username or password is incorrect";

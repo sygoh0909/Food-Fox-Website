@@ -49,7 +49,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         if (password_verify($password, $user['password'])){
             session_start();
             $_SESSION['memberID'] = $user['memberID'];
-            echo "<script> alert('Login Successfully!'); window.location.href='mainpage.php'; </script>";
+//            echo "<script> alert('Login Successfully!'); window.location.href='mainpage.php'; </script>";
+            echo "<script>window.location.href='mainpage.php'; </script>";
         }
         $errors['incorrectField'] = "Member ID/email or password is incorrect";
     }
