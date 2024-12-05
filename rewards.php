@@ -14,8 +14,18 @@ include ('db/db_conn.php');
         .main {
             color: white;
         }
-        h1, h2 {
+        .reward{
             text-align: center;
+        }
+        h1{
+            font-size: 2rem;
+            color: #5C4033;
+            margin-bottom: 10px;
+            margin-top: 30px;
+            display: inline-block;
+            padding-bottom: 10px;
+            padding-top: 10px;
+            border-bottom: 2px solid #d3a029;
         }
         h2 a {
             text-decoration: none;
@@ -34,7 +44,7 @@ include ('db/db_conn.php');
             margin: 20px auto;
             padding: 20px;
             text-align: center;
-            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
         }
         .points-dashboard h2 {
             font-size: 28px;
@@ -49,7 +59,7 @@ include ('db/db_conn.php');
             margin: 10px 0;
         }
         .points-dashboard p {
-            font-size: 16px;
+            font-size: 18px;
             color: #333;
             margin-top: 0;
         }
@@ -122,8 +132,8 @@ include ('db/db_conn.php');
     </nav>
 </header>
 
-<main>
-    <h1>Rewards</h1>
+<main class="reward">
+    <h1 class="reward-text">Rewards</h1>
     <div class="points-dashboard">
         <h2>Your Total Points</h2>
         <?php

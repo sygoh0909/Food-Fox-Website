@@ -11,14 +11,14 @@ include ('db/db_conn.php');
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="main.css">
     <style>
-        body{
-            text-align: center;
-        }
         .main{
             color: white;
         }
         .navbar{
             z-index: 100;
+        }
+        .donation{
+            text-align: center;
         }
         h2 {
             font-size: 2rem;
@@ -89,7 +89,7 @@ include ('db/db_conn.php');
         }
 
         #donation-input {
-            width: 320px;
+            width: 380px;
             padding: 14px;
             border: 2px solid #C5B4A5;
             border-radius: 10px;
@@ -107,14 +107,13 @@ include ('db/db_conn.php');
         }
 
         .donate-submit {
-            padding: 12px 30px;
+            padding: 14px 30px;
             background: linear-gradient(90deg, #C5B4A5, #D9C3AF);
             color: #5C4033;
             border: none;
             border-radius: 12px;
             cursor: pointer;
             font-size: 16px;
-            font-family: 'Arial', sans-serif;
             transition: all 0.3s ease;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
@@ -237,7 +236,8 @@ include ('db/db_conn.php');
             display: flex;
             justify-content: center;
             gap: 20px;
-            margin-right: 60px;
+            margin-right: 100px;
+            margin-top: 160px;
         }
 
         .info-container:hover{
@@ -349,7 +349,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'getProgress') {
         </div>
     </nav>
 </header>
-<main>
+<main class="donation">
     <h2>Our Fundraising Goal</h2>
     <p id="progressText" class="progress-text">Raised: RM <?=$totalDonations?> / RM <?=$fundraisingGoal?></p>
     <div class="progress-container">
@@ -415,12 +415,12 @@ if (isset($_GET['action']) && $_GET['action'] == 'getProgress') {
     ?>
     <form method="POST" enctype="multipart/form-data">
         <div class="donations-buttons">
-            <button type="button" class="donation-btn" name="amount" value="10">10</button>
-            <button type="button" class="donation-btn" name="amount" value="20">20</button>
-            <button type="button" class="donation-btn" name="amount" value="50">50</button>
-            <button type="button" class="donation-btn" name="amount" value="100">100</button>
+            <button type="button" class="donation-btn" name="amount" value="10">RM10</button>
+            <button type="button" class="donation-btn" name="amount" value="20">RM20</button>
+            <button type="button" class="donation-btn" name="amount" value="50">RM50</button>
+            <button type="button" class="donation-btn" name="amount" value="100">RM100</button>
         </div>
-        <label><input id="donation-input" type="text" name="amount" placeholder="Specify the amount you want to donate..."></label>
+        <label><input id="donation-input" type="text" name="amount" placeholder="Specify the amount you want to donate (RM)..."></label>
         <?php if ($memberID) { ?>
         <button type="button" class="donate-submit" onclick="displayDonationPopup()">Donate</button>
         <p style="color: red"><?= isset ($errors['amount']) ? $errors['amount'] : '' ?></p>
@@ -429,8 +429,8 @@ if (isset($_GET['action']) && $_GET['action'] == 'getProgress') {
         <?php } ?>
 
         <div id="donation-popup" class="donation-popup" style="display:none;">
-            <h2>Confirm Donation?</h2>
-            <p>You are about to donate: <span id="confirm-amount"></span></p>
+            <h3>Confirm Donation?</h3>
+            <p>You are about to donate: RM<span id="confirm-amount"></span></p>
             <input type="hidden" name="confirm-amount" id="confirm-amount-input">
 
             <label for="payment-method">Choose a payment method:</label>
