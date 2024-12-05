@@ -66,7 +66,7 @@ include ('db/db_conn.php');
                     <th>Event Name</th>
                     <th>Total Registrations</th>
                     <th>Actions</th>
-                    <th>Login Form</th>
+                    <th>Attendance Link</th>
                 </tr>
                 <?php
                 $conn = connection();
@@ -88,7 +88,7 @@ include ('db/db_conn.php');
                         echo "<td>" . $row["eventName"] . "</td>";
                         echo "<td>" . $row["totalRegistrations"] . "</td>";
                         echo "<td><a href='action_event.php?eventID=" .$row['eventID']. "&action=edit'><button>Edit</button></a><a href='action_event.php?eventID=" .$row['eventID']. "&action=delete'><button>Delete</button></a><a href='admin_registrations.php?eventID=" .$row['eventID']."'><button>View Registrations</button></a></td>";
-                        echo "<td><a href='generateLoginForm.php?eventID=" .$row['eventID'] ."'><button>Generate Login Form</button></a>";
+                        echo "<td><a href='generateLoginForm.php?eventID=" .$row['eventID'] ."'><button>Generate Attendance Link</button></a>";
                         echo "</tr>";
                     }
                 } else {

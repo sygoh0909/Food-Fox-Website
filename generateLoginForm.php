@@ -43,9 +43,9 @@ function sendMail($eventName, $loginFormUrl, $memberEmail){
         $email->addAddress($memberEmail);
 
         $email->isHTML(true);
-        $email->Subject = 'Attendance login form!';
-        $email->Body = "<h3>Attendance login form</h3>
-<p>You have registered for the event $eventName. Please use the link below to access the login form and mark your attendance:</p>
+        $email->Subject = 'Attendance link!';
+        $email->Body = "<h3>Attendance link</h3>
+<p>You have registered for the event $eventName. Please use the link below to mark your attendance:</p>
 $loginFormUrl";
 
         $email->send();

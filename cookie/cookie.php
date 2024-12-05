@@ -85,6 +85,13 @@ function loginSection(){
 
 function adminLoginSection(){
     cookie();
+    checkSessionTimeout(28800);
+
+    echo '<script type="text/javascript">
+            setTimeout(function(){
+                location.reload();
+            }, 28800000);
+          </script>';
 
     if (isset($_SESSION['adminID'])) {
         $adminID = $_SESSION['adminID'];
