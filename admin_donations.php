@@ -22,6 +22,12 @@ include ('db/db_conn.php');
             margin-top: 20px;
             overflow-x: auto;
         }
+        input[type="text"] {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            width: 300px;
+        }
     </style>
 </head>
 <body>
@@ -48,7 +54,7 @@ include ('db/db_conn.php');
         <h2>Donations Management</h2>
         <div class="search">
             <form method="get" action="">
-                <label><input type="text" name="search" placeholder="Search donations..."></label>
+                <label><input type="text" name="search" placeholder="Search by member name, amount, or date..."></label>
                 <button type="submit">Search</button> <!--search feature-->
             </form>
         </div>

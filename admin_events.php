@@ -26,6 +26,12 @@ include ('db/db_conn.php');
             margin-top: 20px;
             overflow-x: auto; /* To allow scrolling on smaller screens */
         }
+        input[type="text"] {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            width: 230px;
+        }
     </style>
 </head>
 <body>
@@ -52,7 +58,7 @@ include ('db/db_conn.php');
         <h2>Events Management</h2>
         <div class="search">
             <form method="get" action="">
-                <label><input type="text" name="search" placeholder="Search events..."></label>
+                <label><input type="text" name="search" placeholder="Search by event name or status..."></label>
                 <button type="submit">Search</button> <!--search feature-->
                 <a href="action_event.php?action=add"><button id="button1" type="button">Add New Event</button></a>
             </form>
@@ -91,7 +97,7 @@ include ('db/db_conn.php');
                         echo "</tr>";
                     }
                 } else {
-                    echo "<tr><td colspan='4' class='no-results'>No upcoming events found.</td></tr>";
+                    echo "<tr><td colspan='5' class='no-results'>No upcoming events found.</td></tr>";
                 }
                 ?>
             </table>

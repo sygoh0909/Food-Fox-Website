@@ -64,13 +64,6 @@ h2 {
     text-align: center
 }
 
-input[type="text"] {
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    width: 200px;
-}
-
 button {
     padding: 10px 15px;
     background-color: #5C4033;

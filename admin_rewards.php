@@ -18,6 +18,12 @@ include ('db/db_conn.php');
             margin-top: 20px;
             overflow-x: auto;
         }
+        input[type="text"] {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            width: 200px;
+        }
     </style>
 </head>
 <body>

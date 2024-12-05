@@ -18,6 +18,12 @@ include ('db/db_conn.php');
             margin-top: 20px;
             overflow-x: auto; /* To allow scrolling on smaller screens */
         }
+        input[type="text"] {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            width: 210px;
+        }
     </style>
 </head>
 <body>
@@ -82,7 +88,7 @@ include ('db/db_conn.php');
                         echo "</tr>";
                     }
                 } else {
-                    echo "<tr><td colspan='4' class='no-results'>No members found.</td></tr>";
+                    echo "<tr><td colspan='5' class='no-results'>No members found.</td></tr>";
                 }
                 ?>
             </table>
