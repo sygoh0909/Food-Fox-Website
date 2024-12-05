@@ -108,17 +108,23 @@ include ('db/db_conn.php');
     <form method="post" enctype="multipart/form-data">
         <!--<p>Reward ID:</p>-->
 
-        <p>Reward Picture:</p>
-        <div class="reward-picture">
-            <img src="<?php echo $rewardData['rewardPic']; ?>" alt="Reward Picture" id="rewardPic" class="image">
+        <div class="form-grp">
+            <p>Reward Picture:</p>
+            <div class="reward-picture">
+                <img src="<?php echo $rewardData['rewardPic']; ?>" alt="Reward Picture" id="rewardPic" class="image">
+            </div>
+            <input type="file" name="rewardPic" id="uploadPic" accept="image/*" onchange="previewRewardPic()">
         </div>
-        <input type="file" name="rewardPic" id="uploadPic" accept="image/*" onchange="previewRewardPic()">
 
-        <p>Reward Name:</p>
-        <label><input type="text" name="rewardName" value="<?php echo isset ($rewardData['rewardName']) ? $rewardData['rewardName'] : '';?>"></label>
+        <div class="form-grp">
+            <p>Reward Name:</p>
+            <label><input type="text" name="rewardName" value="<?php echo isset ($rewardData['rewardName']) ? $rewardData['rewardName'] : '';?>"></label>
+        </div>
 
-        <p>Points Needed:</p>
-        <label><input type="text" name="pointsNeeded" value="<?php echo isset ($rewardData['pointsNeeded']) ? $rewardData['pointsNeeded'] : '';?>"</label>
+        <div class="form-grp">
+            <p>Points Needed:</p>
+            <label><input type="text" name="pointsNeeded" value="<?php echo isset ($rewardData['pointsNeeded']) ? $rewardData['pointsNeeded'] : '';?>"</label>
+        </div>
 
         <div class="button">
             <?php

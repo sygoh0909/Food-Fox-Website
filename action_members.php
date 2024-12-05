@@ -48,9 +48,10 @@ include ('db/db_conn.php');
             }
 
             //regular expressions
-            $namePattern = '/^[a-zA-Z]+$/';
+//            $namePattern = '/^[a-zA-Z]+$/';
 //            $emailPattern = '/^[\w\-\.]+@[a-zA-Z]+\.[a-zA-Z]{2,}$/';
-            $passwordPattern = '/^(?=.*[a-zA-z])(?=.*\d)[A-Za-z\d]{8,}$/'; //password format maybe need change
+            $passwordPattern = '/^(?=.*[a-zA-z])(?=.*\d)[A-Za-z\d]{8,}$/';
+            $phonePattern = '/^\+?[0-9]{1,4}?\s?(\(?[0-9]{3}\)?[\s.-]?)?[0-9]{3}[\s.-]?[0-9]{4}$/';
 
             //validation
             $errors = array();
@@ -60,8 +61,11 @@ include ('db/db_conn.php');
             if (empty($memberName)) {
                 $errors['memberName'] = "Member Name is required";
             }
-            elseif (!preg_match($namePattern, $memberName)) {
-                $errors['memberName'] = "Name can contain only letters and spaces";
+            else {
+                $nameParts = explode(" ", $memberName);
+                if (count($nameParts) < 2) {
+                    $errors['memberName'] = "Please enter your full name (first and last name)";
+                }
             }
             if (empty($email)) {
                 $errors['email'] = "Email is required";
@@ -69,7 +73,7 @@ include ('db/db_conn.php');
             elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
                 $errors['email'] = "Enter a valid email address.";
             }
-            if (!empty($phoneNum) && !preg_match('/^\+?[0-9]{1,4}?\s?(\(?[0-9]{3}\)?[\s.-]?)?[0-9]{3}[\s.-]?[0-9]{4}$/', $phoneNum)) {
+            if (!empty($phoneNum) && !preg_match($phonePattern, $phoneNum)) {
                 $errors['phoneNum'] = "Enter a valid phone number.";
             }
 
@@ -119,36 +123,51 @@ include ('db/db_conn.php');
     ?>
 
     <form method="POST" enctype="multipart/form-data">
+        <div class="form-grp">
+            <p>Member ID:</p> <!--should display member id?-->
+            <?php echo str_repeat('*', strlen($memberID));?>
+        </div>
 
-        <p>Member ID:</p> <!--should display member id?-->
-        <?php echo str_repeat('*', strlen($memberID));?>
+        <div class="form-grp">
+            <p>Member Profile:</p>
+            <img src="<?php echo ($memberData['memberProfile']);?>" alt="Member Profile" id="memberProfile" class="roundImage">
+            <input type="file" name="memberProfile" id="uploadPic" accept="image/*" onchange="previewMemberProfile()">
+        </div>
 
-        <p>Member Profile:</p>
-        <img src="<?php echo ($memberData['memberProfile']);?>" alt="Member Profile" id="memberProfile" class="roundImage">
-        <input type="file" name="memberProfile" id="uploadPic" accept="image/*" onchange="previewMemberProfile()">
+        <div class="form-grp">
+            <p>Member Name:</p>
+            <label><input type="text" name="memberName" value="<?php echo isset($memberData['memberName']) ? $memberData['memberName']:'';?>"></label>
+            <p class="error-message"><?= isset($errors['memberName']) ? $errors['memberName'] : '' ?></p>
+        </div>
 
-        <p>Member Name:</p>
-        <label><input type="text" name="memberName" value="<?php echo isset($memberData['memberName']) ? $memberData['memberName']:'';?>"></label>
-        <p class="error-message"><?= isset($errors['memberName']) ? $errors['memberName'] : '' ?></p>
+        <div class="form-grp">
+            <p>Email:</p>
+            <label><input type="text" name="email" value="<?php echo isset($memberData['email']) ? $memberData['email']:'';?>"></label>
+            <p class="error-message"><?= isset($errors['email']) ? $errors['email'] : '' ?></p>
+        </div>
 
-        <p>Email:</p>
-        <label><input type="text" name="email" value="<?php echo isset($memberData['email']) ? $memberData['email']:'';?>"></label>
-        <p class="error-message"><?= isset($errors['email']) ? $errors['email'] : '' ?></p>
+        <div class="form-grp">
+            <p>Password:</p>
+            <label><input type="text" name="password" placeholder="Enter a new password if you want to change it..."></label>
+            <p class="note">Leave blank to keep the existing password.</p>
+            <p class="error-message"><?= isset($passwordError['password']) ? $passwordError['password'] : '';?></p>
+        </div>
 
-        <p>Password:</p>
-        <label><input type="text" name="password" placeholder="Enter a new password if you want to change it..."></label>
-        <p class="note">Leave blank to keep the existing password.</p>
-        <p class="error-message"><?= isset($passwordError['password']) ? $passwordError['password'] : '';?></p>
+        <div class="form-grp">
+            <p>Phone Number:</p>
+            <label><input type="text" name="phoneNum" value="<?php echo isset($memberData['phoneNum']) ? $memberData['phoneNum']:'';?>"></label>
+            <p class="error-message"><?= isset ($errors['phoneNum']) ? $errors['phoneNum'] :'';?></p>
+        </div>
 
-        <p>Phone Number:</p>
-        <label><input type="text" name="phoneNum" value="<?php echo isset($memberData['phoneNum']) ? $memberData['phoneNum']:'';?>"></label>
-        <p class="error-message"><?= isset ($errors['phoneNum']) ? $errors['phoneNum'] :'';?></p>
+        <div class="form-grp">
+            <p>Bio:</p>
+            <label><input type="text" name="bio" value="<?php echo isset($memberData['bio'])?$memberData['bio']:'';?>"></label>
+        </div>
 
-        <p>Bio:</p>
-        <label><input type="text" name="bio" value="<?php echo isset($memberData['bio'])?$memberData['bio']:'';?>"></label>
-
-        <p>Join Date:</p>
-        <?php echo date("d-m-Y", strtotime($memberData["joinDate"]));?> <br>
+        <div class="form-grp">
+            <p>Join Date:</p>
+            <?php echo date("d-m-Y", strtotime($memberData["joinDate"]));?>
+        </div>
 
         <button type="button" onclick="displayActionPopup()"><?php echo $memberID && $action=='edit'?'Update member info': 'Delete Member Info'?></button>
         <a href="admin_members.php"><button type="button">Cancel</button></a>

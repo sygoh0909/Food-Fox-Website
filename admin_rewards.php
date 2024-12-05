@@ -22,7 +22,7 @@ include ('db/db_conn.php');
             padding: 10px;
             border: 1px solid #ccc;
             border-radius: 5px;
-            width: 200px;
+            width: 290px;
         }
     </style>
 </head>
@@ -50,7 +50,7 @@ include ('db/db_conn.php');
         <h2>Rewards Items Management</h2>
         <div class="search">
             <form method="get" action="">
-                <label><input type="text" name="search" placeholder="Search rewards items..."></label>
+                <label><input type="text" name="search" placeholder="Search by reward name or points needed..."></label>
                 <button type="submit">Search</button>
                 <a href="action_rewards.php?action=add"><button type="button">Add New Rewards</button></a>
             </form>

@@ -21,11 +21,11 @@ include ('db/db_conn.php');
     $conn = connection();
     $donationID = isset($_GET["donationID"])?$_GET["donationID"]:null;
     $action = isset($_GET["action"])?$_GET["action"]:null;
-    $memberName = isset($_GET["memberName"])?$_GET["memberName"]:null;
+//    $memberName = isset($_GET["memberName"])?$_GET["memberName"]:null;
     $donationDetails = null;
 
     if ($donationID){
-        $sql = "SELECT * FROM `donations` WHERE `donationID` = $donationID";
+        $sql = "SELECT m.memberName, d.* FROM donations d, members m WHERE d.memberID = m.memberID AND d.donationID = '$donationID'";
         $result = $conn->query($sql);
         $donationDetails = $result->fetch_assoc();
 
@@ -74,21 +74,31 @@ include ('db/db_conn.php');
     }
     ?>
     <form method="POST" enctype="multipart/form-data">
-        <p>Donation ID</p>
-        <?php echo str_repeat('*', strlen($donationDetails["donationID"]));?>
+        <div class="form-grp">
+            <p>Donation ID</p>
+            <?php echo str_repeat('*', strlen($donationDetails["donationID"]));?>
+        </div>
 
-        <p>Member Name</p>
-        <?php echo $memberName; ?> <!--show member name-->
+        <div class="form-grp">
+            <p>Member Name:</p>
+            <?php echo $donationDetails['memberName']; ?>
+        </div>
 
-        <p>Donation Amount</p> <!--can edit amount a bit weird-->
-        <label><input type="text" name="amount" value="<?php echo isset($donationDetails['amount'])?$donationDetails['amount']:'';?>"></label>
-        <p class="error-message"><?= isset($errors['amount']) ? $errors['amount'] :''?></p>
+        <div class="form-grp">
+            <p>Donation Amount:</p> <!--can edit amount a bit weird-->
+            <label><input type="text" name="amount" value="<?php echo isset($donationDetails['amount'])?$donationDetails['amount']:'';?>"></label>
+            <p class="error-message"><?= isset($errors['amount']) ? $errors['amount'] :''?></p>
+        </div>
 
-        <p>Donation Date</p>
-        <?php echo date('d-m-Y', strtotime($donationDetails["donationDate"]));?>
+        <div class="form-grp">
+            <p>Donation Date:</p>
+            <?php echo date('d-m-Y', strtotime($donationDetails["donationDate"]));?>
+        </div>
 
-        <p>Feedback</p>
-        <label><input type="text" name="feedback" value="<?php echo $donationDetails['feedback'];?>"</label>
+        <div class="form-grp">
+            <p>Feedback:</p>
+            <label><input type="text" name="feedback" value="<?php echo $donationDetails['feedback'];?>"</label>
+        </div>
 
         <button type="button" onclick="displayActionPopup()"><?php echo $donationID && $action=="edit"?'Update donation details':'Delete donation details'?></button>
         <a href="admin_donations.php"><button type="button">Cancel</button></a>
