@@ -75,7 +75,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <button type="submit">Sign In</button>
     </form>
 
-    <p class="login-link">xxx <a href="login.php">Sign in as member!</a></p>
+    <p class="login-link">Not an admin? <a href="login.php">Sign in as member!</a></p>
 
 </div>
 </body>
