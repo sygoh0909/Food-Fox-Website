@@ -270,6 +270,7 @@ include ('db/db_conn.php');
                         $sql = "UPDATE pastevents SET impact = '$impact' WHERE eventID = '$eventID'";
                         if ($conn->query($sql) === TRUE) {
 
+                            //delete and re upload
                             $deleteQuery = "DELETE FROM photogallery WHERE eventID = '$eventID'";
                             $conn->query($deleteQuery);
 

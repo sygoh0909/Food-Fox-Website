@@ -192,7 +192,7 @@ include ('db/db_conn.php');
                     if (isset($_SESSION['memberID'])){
                         echo "<a href='mainpage.php' class='roundButton join'>Join Us Now!</a>";
                     }else{
-                        echo "<a href='signup.php' class='roundButton join'>Join Us Now!</a>"; //sign up or login?
+                        echo "<a href='login.php' class='roundButton join'>Join Us Now!</a>"; //sign up or login?
                     }
                     ?>
                 </div>
