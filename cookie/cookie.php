@@ -85,7 +85,7 @@ function loginSection(){
 
 function adminLoginSection(){
     cookie();
-    checkSessionTimeout(28800);
+    checkSessionTimeout((3600*8)); //8 hours
 
     echo '<script type="text/javascript">
             setTimeout(function(){
@@ -101,7 +101,7 @@ function adminLoginSection(){
             echo "<div class='profile-container'>
                     <p><button class='roundButton admin'>Admin ID: {$adminID}</button></p>
                     <form action='' method='post'>
-                        <button type='submit' name='adminLogout'>Log Out</button>
+                        <button type='submit' name='adminLogout' class='roundButton logout'>Log Out</button>
                     </form>
                   </div>";
 
@@ -120,8 +120,6 @@ function adminLoginSection(){
     }
 }
 ?>
-<link rel="stylesheet" href="../main.css">
-<link rel="stylesheet" href="../admin.css">
 <script>
     function togglePopup(event) {
         event.preventDefault();

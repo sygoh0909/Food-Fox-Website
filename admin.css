@@ -1,17 +1,20 @@
-body {
+body{
     background-color: #F5EEDC;
     margin: 0;
     font-family: Arial, sans-serif;
 }
-
-.navbar {
+.navbar{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     padding: 15px 20px;
     background-color: #5C4033;
+    position: sticky;
+    top: 0;
 }
 
 .main-links {
     display: flex;
-    justify-content: center;
     gap: 40px;
 }
 
@@ -27,11 +30,6 @@ body {
     gap: 30px;
 }
 
-h2 {
-    margin-bottom: 20px;
-    text-align: center;
-}
-
 .roundButton{
     padding: 8px 20px;
     border-radius: 25px;
@@ -39,19 +37,40 @@ h2 {
     font-weight: bold;
 }
 
-.roundButton:hover{
-    border-radius: 25px;
-    background-color: rgba(255,255,255,0.2);
+.admin{
+    background-color: white;
+    color: #5C4033;
+    font-size: smaller;
 }
+
+.profile-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.profile-container > * {
+    margin: 0;
+    padding: 0;
+    line-height: 1;
+}
+
+h2 {
+    margin-bottom: 20px;
+    text-align: center;
+}
+
 .search{
     text-align: center
 }
+
 input[type="text"] {
     padding: 10px;
     border: 1px solid #ccc;
     border-radius: 5px;
     width: 200px;
 }
+
 button {
     padding: 10px 15px;
     background-color: #5C4033;
@@ -62,19 +81,23 @@ button {
     margin-left: 10px;
     transition: background-color 0.3s;
 }
-button:hover {
+
+button:hover, .roundButton:hover {
     background-color: #7B5A46;
 }
+
 table {
     width: 100%;
     border-collapse: collapse;
     margin-top: 10px;
 }
+
 table th, table td {
     border: 1px solid black;
     padding: 10px;
     text-align: left;
 }
+
 table th {
     background-color: #5C4033;
     color: white;

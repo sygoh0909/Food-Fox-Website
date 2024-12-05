@@ -106,9 +106,11 @@ form a button {
 form a button:hover {
     background-color: #A89E92;
 }
+
 .error-message{
     color: red;
 }
+
 .roundImage {
     width: 100px;
     height: 100px;

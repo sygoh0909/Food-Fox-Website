@@ -49,17 +49,11 @@ body{
     color: #6B5A48;
     font-size: smaller;
 }
-.admin{
-    background-color: white;
-    color: #5C4033;
-    font-size: smaller;
-}
 
 .profile-container {
     display: flex;
     justify-content: space-between;
     align-items: center;
-
 }
 
 .popup {

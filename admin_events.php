@@ -8,7 +8,6 @@ include ('db/db_conn.php');
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="admin.css">
-    <link rel="stylesheet" href="main.css">
     <title>Admin Events Management Page</title>
 
     <style>

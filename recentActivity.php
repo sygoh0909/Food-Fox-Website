@@ -33,8 +33,8 @@ include ('db/db_conn.php');
             display: flex;
             flex-direction: column;
             padding: 20px;
-            background-color: #dfe6e9;
-            border: 1px solid #b2bec3;
+            background-color: #f8f9fa;
+            border: 1px solid #e0e0e0;
             border-radius: 10px;
             box-shadow: 0 3px 5px rgba(0, 0, 0, 0.15);
             transition: transform 0.3s ease, background-color 0.3s ease;
@@ -42,7 +42,7 @@ include ('db/db_conn.php');
         }
 
         .activity-item:hover {
-            background-color: #ced6e0;
+            background-color: #f1f3f4;
             transform: scale(1.02);
         }
 
@@ -111,13 +111,14 @@ include ('db/db_conn.php');
     if (mysqli_num_rows($result) > 0) {
         echo "<div class='activity-list'>"; // Container for activities
         while ($row = mysqli_fetch_assoc($result)) {
+
+            $dateFormatted = date('d-m-Y', strtotime($row['registrationDate']));
             $eventName = $row['eventName'];
-            $registrationDate = $row['registrationDate'];
             $registerType = $row['registerType'];
 
             echo "<div class='activity-item'>";
             echo "<span class='event-name'>Registered Event: $eventName</span>";
-            echo "<span>Registered Date: $registrationDate</span>";
+            echo "<span>Registered Date: $dateFormatted</span>";
             echo "<span class='register-type'>Register Type: $registerType</span>";
             echo "</div>";
         }
