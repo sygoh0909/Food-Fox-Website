@@ -283,8 +283,8 @@ include ('db/db_conn.php');
                     echo "<div class='guest-container'>";
                     echo "<img src='" . $guest['guestProfilePic'] . "' alt='Guest Profile' class='guest-image' />";
                     echo "<div class='guest-details'>";
-                    echo "<p class='guest-name'>" . htmlspecialchars($guest['guestName']) . "</p>";
-                    echo "<p class='guest-bio'>" . htmlspecialchars($guest['guestBio']) . "</p>";
+                    echo "<p class='guest-name'>" . $guest['guestName'] . "</p>";
+                    echo "<p class='guest-bio'>" . $guest['guestBio'] . "</p>";
                     echo "</div>";
                     echo "</div>";
             }

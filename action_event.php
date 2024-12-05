@@ -69,7 +69,25 @@ include ('db/db_conn.php');
             border-radius: 50%;
             object-fit: cover;
         }
+        .datetime {
+            display: inline-flex;
+            gap: 20px;
+            align-items: baseline;
+        }
 
+        .datetime label {
+            font-size: 0.9em;
+            white-space: nowrap;
+        }
+
+        .add-remove-btn{
+            width: 50px;
+            height: 35px;
+            font-size: 1.2em;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
 
     </style>
 </head>
@@ -158,17 +176,36 @@ include ('db/db_conn.php');
             move_uploaded_file($_FILES["eventImage"]["tmp_name"], $eventImagePath);
         }
 
-        if (isset($_FILES['guestImage']) && $_FILES['guestImage']['error'] == 0) {
-            $target_dir = "uploads/";
-            $guestImagePath = $target_dir . basename($_FILES["guestImage"]["name"]);
-            move_uploaded_file($_FILES["guestImage"]["tmp_name"], $guestImagePath);
-        }
+//        if (isset($_FILES['guestImage']) && $_FILES['guestImage']['error'] == 0) {
+//            $target_dir = "uploads/";
+//            $guestImagePath = $target_dir . basename($_FILES["guestImage"]["name"]);
+//            move_uploaded_file($_FILES["guestImage"]["tmp_name"], $guestImagePath);
+//        }
 
 //        if (isset($_FILES['photoGallery']) && $_FILES['photoGallery']['error'] == 0) {
 //            $target_dir = "uploads/";
 //            $galleryPath = $target_dir . basename($_FILES["photoGallery"]["name"]);
 //            move_uploaded_file($_FILES["photoGallery"]["tmp_name"], $galleryPath);
 //        }
+
+        if (isset($_FILES['guestPic'])) {
+            $target_dir = "uploads/";
+            $uploadedFiles = [];
+
+            for ($i = 0; $i < count($_FILES["guestPic"]["name"]); $i++) {
+                $fileTmpName = $_FILES["guestPic"]["tmp_name"][$i];
+                $fileName = basename($_FILES["guestPic"]["name"][$i]);
+                $guestImagePath = $target_dir . $fileName;
+
+                if ($_FILES["guestPic"]["error"][$i] == 0) {
+                    if (move_uploaded_file($fileTmpName, $guestImagePath)) {
+                        $uploadedFiles[] = $guestImagePath;
+                    } else {
+                        echo "Error uploading file: " . $_FILES['guestPic']['name'][$i];
+                    }
+                }
+            }
+        }
 
         if (isset($_FILES['photoGallery'])) {
             $target_dir = "uploads/";
@@ -233,18 +270,23 @@ include ('db/db_conn.php');
                     $deleteGuestQuery = "DELETE FROM eventguests WHERE eventID = '$eventID'";
                     $conn->query($deleteGuestQuery);
 
-                    if (count($guestName) === count($guestBio)) {
+                    if (count($guestName) === count($guestBio) && count($guestName) === count($uploadedFiles)) {
                         for ($i = 0; $i < count($guestName); $i++) {
                             $name = $conn->real_escape_string($guestName[$i]);
                             $bio = $conn->real_escape_string($guestBio[$i]);
-                            $guestImagePath = $conn->real_escape_string($guestImagePath[$i] ?? '');
+                            $imagePath = $conn->real_escape_string($uploadedFiles[$i]);
 
-                            $guestUpdate = "INSERT INTO eventguests(eventID, guestName, guestBio, guestProfilePic)".
-                        "VALUES ('$eventID', '$name', '$bio', '$guestImagePath')";
-                            $conn->query($guestUpdate);
+                            $guestUpdate = "INSERT INTO eventguests (eventID, guestName, guestBio, guestProfilePic)
+                        VALUES ('$eventID', '$name', '$bio', '$imagePath')";
+
+                            if ($conn->query($guestUpdate) === TRUE) {
+                                echo "Guest $name added successfully.<br>";
+                            } else {
+                                echo "Error adding guest $name: " . $conn->error . "<br>";
+                            }
                         }
                     } else {
-                        echo "Error: Mismatched guest names and bios.";
+                        echo "Error: Mismatched guest names, bios, or images.<br>";
                     }
 
                     if ($eventStatus == "Past"){
@@ -323,19 +365,23 @@ include ('db/db_conn.php');
                             $conn->query($highlightQuery);
                         }
 
-                        //event guest
-                        if (count($guestName) === count($guestBio)) {
+                        if (count($guestName) === count($guestBio) && count($guestName) === count($uploadedFiles)) {
                             for ($i = 0; $i < count($guestName); $i++) {
                                 $name = $conn->real_escape_string($guestName[$i]);
                                 $bio = $conn->real_escape_string($guestBio[$i]);
-                                $guestImagePath = $conn->real_escape_string($guestImagePath[$i] ?? '');
+                                $imagePath = $conn->real_escape_string($uploadedFiles[$i]);
 
-                                $guestUpdate = "INSERT INTO eventguests(eventID, guestName, guestBio, guestProfilePic)".
-                                    "VALUES ('$eventID', '$name', '$bio', '$guestImagePath')";
-                                $conn->query($guestUpdate);
+                                $guestUpdate = "INSERT INTO eventguests (eventID, guestName, guestBio, guestProfilePic)
+                        VALUES ('$eventID', '$name', '$bio', '$imagePath')";
+
+                                if ($conn->query($guestUpdate) === TRUE) {
+                                    echo "Guest $name added successfully.<br>";
+                                } else {
+                                    echo "Error adding guest $name: " . $conn->error . "<br>";
+                                }
                             }
                         } else {
-                            echo "Error: Mismatched guest names and bios.";
+                            echo "Error: Mismatched guest names, bios, or images.<br>";
                         }
                         echo "<script>alert('New Event Added'); window.location.href='admin_events.php';</script>";
                     }
@@ -360,142 +406,179 @@ include ('db/db_conn.php');
     ?>
 
     <form method="POST" enctype="multipart/form-data">
-        <p>Event Image:</p>
-        <div class="event-image">
-            <img src="<?php echo ($eventData['eventPic'])?>" alt="Event Image" id="eventImg" class="image">
-        </div>
-        <input type="file" name="eventImage" id="uploadPic" accept="image/*" onchange="previewEventImage()">
-
-        <p>Event Name:</p>
-        <label><input type="text" name="eventName" value="<?php echo $eventData['eventName'] ?? ''; ?>" placeholder="Enter event name..."></label>
-        <p class="error-message"><?= $errors['eventName'] ?? '' ?></p>
-
-        <p>Event Date Time:</p>
-        <div class="datetime">
-            <label>Start Date Time: <input type="datetime-local" name="startDateTime" value="<?php echo ($eventData['start_dateTime'])?>"></label>
-            <p class="error-message"><?= $errors['startDateTime'] ?? '' ?></p>
-            <label>End Date Time: <input type="datetime-local" name="endDateTime" value="<?php echo ($eventData['end_dateTime'])?>"</label>
-            <p class="error-message"><?= $errors['endDateTime'] ?? '' ?></p>
+        <div class="form-grp">
+            <p>Event Image:</p>
+            <div class="event-image">
+                <img src="<?php echo ($eventData['eventPic'])?>" alt="Event Image" id="eventImg" class="image">
+            </div>
+            <input type="file" name="eventImage" id="uploadPic" accept="image/*" onchange="previewEventImage()">
         </div>
 
-        <p>Event Location:</p>
-        <label><input type="text" name="location" value="<?php echo $eventData['location'] ?? '';?>" placeholder="Enter event location..."></label>
-        <p class="error-message"><?= $errors['location'] ?? '' ?></p>
+        <div class="form-grp">
+            <p>Event Name:</p>
+            <label><input type="text" name="eventName" value="<?php echo $eventData['eventName'] ?? ''; ?>" placeholder="Enter event name..."></label>
+            <p class="error-message"><?= $errors['eventName'] ?? '' ?></p>
+        </div>
 
-        <p>Event Details:</p>
-        <label><input type="text" name="details" value="<?php echo $eventData['details'] ?? '';?>" placeholder="Enter brief event details..."></label>
+        <div class="form-grp">
+            <p>Event DateTime:</p>
+            <div class="datetime">
+                <label>Start DateTime: <input type="datetime-local" name="startDateTime" value="<?php echo ($eventData['start_dateTime'])?>"></label>
+                <p class="error-message"><?= $errors['startDateTime'] ?? '' ?></p>
+                <label>End DateTime: <input type="datetime-local" name="endDateTime" value="<?php echo ($eventData['end_dateTime'])?>"</label>
+                <p class="error-message"><?= $errors['endDateTime'] ?? '' ?></p>
+            </div>
+        </div>
 
-        <p>Event Highlights:</p>
-        <div id="highlights-container">
-            <?php
-            if ($eventID){
-                $highlightQuery = "SELECT * FROM eventhighlights WHERE eventId = '$eventID'";
-                $result = $conn->query($highlightQuery);
-                while ($highlight = $result->fetch_assoc()){
-                    echo "<div class='dynamic-inputs'><label><input type='text' name='highlights[]' value='{$highlight['highlights']}' placeholder='Enter event highlights...'></label><button type='button' onclick='removeRow(this)'>-</button></div>";
+        <div class="form-grp">
+            <p>Event Location:</p>
+            <label><input type="text" name="location" value="<?php echo $eventData['location'] ?? '';?>" placeholder="Enter event location..."></label>
+            <p class="error-message"><?= $errors['location'] ?? '' ?></p>
+        </div>
+
+        <div class="form-grp">
+            <p>Event Details:</p>
+            <label><input type="text" name="details" value="<?php echo $eventData['details'] ?? '';?>" placeholder="Enter brief event details..."></label>
+        </div>
+
+        <div class="form-grp">
+            <p>Event Highlights:</p>
+            <div id="highlights-container">
+                <?php
+                if ($eventID){
+                    $highlightQuery = "SELECT * FROM eventhighlights WHERE eventId = '$eventID'";
+                    $result = $conn->query($highlightQuery);
+                    while ($highlight = $result->fetch_assoc()){
+                        echo "<div class='dynamic-inputs'><label><input type='text' name='highlights[]' value='{$highlight['highlights']}' placeholder='Enter event highlights...'></label><button type='button' class='add-remove-btn' onclick='removeRow(this)'>-</button></div>";
+                    }
                 }
-            }
-            else{
-                echo "<div class='dynamic-inputs'><label><input type='text' name='highlights[]' placeholder='Enter event highlights...'></label><button type='button' onclick='removeRow(this)'>-</button></div>";
-            }
-            ?>
-            <button type="button" id="add-highlight-button" onclick="addHighlights()">+</button>
+                else{
+                    echo "<div class='dynamic-inputs'><label><input type='text' name='highlights[]' placeholder='Enter event highlights...'></label><button type='button' class='add-remove-btn' onclick='removeRow(this)'>-</button></div>";
+                }
+                ?>
+                <button type="button" class="add-remove-btn" id="add-highlight-button" onclick="addHighlights()">+</button>
+            </div>
         </div>
 
-        <p>Event Schedule:</p>
-        <div id="schedule-container">
-            <?php
-            if ($eventID){
-                $scheduleQuery = "SELECT * FROM eventschedules WHERE eventID = '$eventID'";
-                $result = $conn->query($scheduleQuery);
-                while ($schedule = $result->fetch_assoc()){
-                    //display schedule time date and activity
-                    echo "<div class='dynamic-inputs'>
+        <div class="form-grp">
+            <p>Event Schedule:</p>
+            <div id="schedule-container">
+                <?php
+                if ($eventID){
+                    $scheduleQuery = "SELECT * FROM eventschedules WHERE eventID = '$eventID'";
+                    $result = $conn->query($scheduleQuery);
+                    while ($schedule = $result->fetch_assoc()){
+                        //display schedule time date and activity
+                        echo "<div class='dynamic-inputs'>
 <label><input type='datetime-local' name='schedules[datetime][]' value='{$schedule['scheduleDateTime']}'>
 <input type='text' name='schedules[description][]' value='{$schedule['activityDescription']}' placeholder='Enter event schedule...'></label>
-<button type='button' onclick='removeRow(this)'>-</button></div>";
+<button type='button' class='add-remove-btn' onclick='removeRow(this)'>-</button></div>";
+                    }
                 }
-            }
-            else{
-                echo "<div class='dynamic-inputs'>
+                else{
+                    echo "<div class='dynamic-inputs'>
 <label><input type='datetime-local' name='schedules[datetime][]'>
 <input type='text' name='schedules[description][]' placeholder='Enter event schedule...'></label>
-<button type='button' onclick='removeRow(this)'>-</button></div>";
-            }
-            ?>
-            <button type="button" id="add-schedule-button" onclick="addSchedule()">+</button>
+<button type='button' class='add-remove-btn' onclick='removeRow(this)'>-</button></div>";
+                }
+                ?>
+                <button type="button" id="add-schedule-button" class="add-remove-btn" onclick="addSchedule()">+</button>
+            </div>
         </div>
 
-        <p>Featured Speaker/Event Guests:</p>
-        <div id="guest-container">
-            <?php
-            if ($eventID) {
-                $guestQuery = "SELECT * FROM eventguests WHERE eventID = '$eventID'";
-                $result = $conn->query($guestQuery);
+        <div class="form-grp">
+            <p>Featured Speaker/Event Guests:</p>
+            <div id="guest-container">
+                <?php
+                $guestCounter = 0;
 
-                while ($guestList = $result->fetch_assoc()) {
+                if ($eventID) {
+                    $guestQuery = "SELECT * FROM eventguests WHERE eventID = '$eventID'";
+                    $result = $conn->query($guestQuery);
+
+                    while ($guestList = $result->fetch_assoc()) {
+                        $guestCounter++;
+                        $imgId = "guestPic-$guestCounter";
+                        $inputId = "uploadGuestPic-$guestCounter";
+
+                        echo "<div class='dynamic-inputs'>";
+                        echo "<div class='guestPic'>";
+                        echo "<img src='{$guestList['guestProfilePic']}' alt='Guest Picture' id='$imgId' class='roundImage'>";
+                        echo "</div>";
+                        echo "<label>";
+                        echo "<input type='file' name='guestPic[]' id='$inputId' accept='image/*' onchange='previewGuestImage(this, \"$imgId\")'>";
+                        echo "<input type='text' name='guestName[]' value='{$guestList['guestName']}' placeholder='Enter guest name...'>";
+                        echo "<input type='text' name='guestBio[]' value='{$guestList['guestBio']}' placeholder='Enter guest bio...'>";
+                        echo "</label>";
+                        echo "<button type='button' class='add-remove-btn' onclick='removeRow(this)'>-</button>";
+                        echo "</div>";
+                    }
+                } else {
+                    $guestCounter++;
+                    $imgId = "guestPic-$guestCounter";
+                    $inputId = "uploadGuestPic-$guestCounter";
+
                     echo "<div class='dynamic-inputs'>";
                     echo "<div class='guestPic'>";
-                    echo "<img src='{$guestList['guestProfilePic']}' alt='Guest Picture' id='guestPic' class='roundImage'>";
+                    echo "<img src='' alt='Guest Picture' id='$imgId' class='roundImage'>";
                     echo "</div>";
                     echo "<label>";
-                    echo "<input type='file' name='guestPic' id='uploadGuestPic' accept='image/*' onchange='previewGuestImage()'>";
-                    echo "<input type='text' name='guestName[]' value='{$guestList['guestName']}' placeholder='Enter guest name...'>";
-                    echo "<input type='text' name='guestBio[]' value='{$guestList['guestBio']}' placeholder='Enter guest bio...'>";
+                    echo "<input type='file' name='guestPic[]' id='$inputId' accept='image/*' onchange='previewGuestImage(this, \"$imgId\")'>";
+                    echo "<input type='text' name='guestName[]' placeholder='Enter guest name...'>";
+                    echo "<input type='text' name='guestBio[]' placeholder='Enter guest bio...'>";
                     echo "</label>";
-                    echo "<button type='button' onclick='removeRow(this)'>-</button>";
+                    echo "<button type='button' class='add-remove-btn' onclick='removeRow(this)'>-</button>";
                     echo "</div>";
                 }
-            } else {
-                echo "<div class='dynamic-inputs'>";
-                echo "<div class='guestPic'>";
-                echo "<img src='' alt='Guest Picture' id='guestPic' class='roundImage'>";
-                echo "</div>";
-                echo "<label>";
-                echo "<input type='file' name='guestPic' id='uploadGuestPic' accept='image/*' onchange='previewGuestImage()'>";
-                echo "<input type='text' name='guestName[]' placeholder='Enter guest name...'>";
-                echo "<input type='text' name='guestBio[]' placeholder='Enter guest bio...'>";
-                echo "</label>";
-                echo "<button type='button' onclick='removeRow(this)'>-</button>";
-                echo "</div>";
-            }
-            ?>
-            <button type="button" id="add-guest-button" onclick="addGuest()">+</button>
+                ?>
+                <button type="button" id="add-guest-button" class="add-remove-btn" onclick="addGuest()">+</button>
+            </div>
         </div>
 
+        <div class="form-grp">
+            <p>Participants Needed:</p>
+            <label><input type="text" name="participantsNeeded" value="<?php echo $eventData['participantsNeeded'] ?? ''; ?>" placeholder="Enter Participants needed..."></label>
+            <p class="error-message"><?= $errors['participantsNeeded'] ?? '' ?></p>
+        </div>
 
-        <p>Participants Needed:</p>
-        <label><input type="text" name="participantsNeeded" value="<?php echo $eventData['participantsNeeded'] ?? ''; ?>" placeholder="Enter Participants needed..."></label>
-        <p class="error-message"><?= $errors['participantsNeeded'] ?? '' ?></p>
+        <div class="form-grp">
+            <p>Volunteers Needed:</p>
+            <label><input type="text" name="volunteersNeeded" value="<?php echo $eventData['volunteersNeeded'] ?? ''; ?>" placeholder="Enter Volunteers needed..."></label>
+            <p class="error-message"><?= $errors['volunteersNeeded'] ?? '' ?></p>
+        </div>
 
-        <p>Volunteers Needed:</p>
-        <label><input type="text" name="volunteersNeeded" value="<?php echo $eventData['volunteersNeeded'] ?? ''; ?>" placeholder="Enter Volunteers needed..."></label>
-        <p class="error-message"><?= $errors['volunteersNeeded'] ?? '' ?></p>
-
-        <p>Event Status:</p>
-        <label><input type="text" name="eventStatus" value="<?php echo $eventData['eventStatus'] ?? '';?>" placeholder="Enter Event Type..."></label>
-        <p class="error-message"><?= $errors['eventStatus'] ?? '' ?></p>
+        <div class="form-grp">
+            <p>Event Status:</p>
+            <label><input type="text" name="eventStatus" value="<?php echo $eventData['eventStatus'] ?? '';?>" placeholder="Enter Event Type..."></label>
+            <p class="error-message"><?= $errors['eventStatus'] ?? '' ?></p>
+        </div>
 
         <?php if ($action == "editPast" || $action == "deletePast"){?>
-        <p>Attendees:</p>
-            <?php
-            $sql = "SELECT COUNT(r.attendance) AS attendees FROM registrations r JOIN events e ON r.eventID = e.eventID WHERE r.eventID = {$eventID} AND r.attendance = 1";
-            $result = $conn->query($sql);
-            $attendeesCount = 0;
-            if ($result->num_rows > 0) {
-                $row  = $result->fetch_assoc();
-                $attendeesCount = $row['attendees'];
-            }
-            ?>
-            <label><input type="text" name="attendees" value="<?= $attendeesCount ?>" disabled</label>
+            <div class="form-grp">
+                <p>Attendees:</p>
+                <?php
+                $sql = "SELECT COUNT(r.attendance) AS attendees FROM registrations r JOIN events e ON r.eventID = e.eventID WHERE r.eventID = {$eventID} AND r.attendance = 1";
+                $result = $conn->query($sql);
+                $attendeesCount = 0;
+                if ($result->num_rows > 0) {
+                    $row  = $result->fetch_assoc();
+                    $attendeesCount = $row['attendees'];
+                }
+                ?>
+                <label><input type="text" name="attendees" value="<?= $attendeesCount ?>" disabled></label>
+            </div>
 
-        <p>Impact and Outcomes:</p>
-        <label><input type="text" name="impact" value="<?php echo $eventData['impact'] ?? '';?>"</label>
+            <div class="form-grp">
+                <p>Impact and Outcomes:</p>
+                <label><input type="text" name="impact" value="<?php echo $eventData['impact'] ?? '';?>"</label>
+            </div>
 
-        <p>Photo Gallery:</p>
-        <label><input type="file" name="photoGallery[]" accept="image/*" multiple onchange='previewPhotoGallery()'> <!--show the image saved in database-->
-            <div id="gallery-preview"></div>
-        </label>
+            <div class="form-grp">
+                <p>Photo Gallery:</p>
+                <label><input type="file" name="photoGallery[]" accept="image/*" multiple onchange='previewPhotoGallery()'> <!--show the image saved in database-->
+                    <div id="gallery-preview"></div>
+                </label>
+            </div>
 
         <?php } ?>
 
@@ -574,15 +657,13 @@ include ('db/db_conn.php');
         }
     }
 
-    function previewGuestImage(){
-        const fileInput = document.getElementById('uploadGuestPic');
-        const guestPic = document.getElementById('guestPic');
-
-        const file = fileInput.files[0];
+    function previewGuestImage(inputElement, imgElementId) {
+        const file = inputElement.files[0];
         if (file) {
             const reader = new FileReader();
-            reader.onload = function (e){
-                guestPic.src = e.target.result;
+            reader.onload = function (e) {
+                const imgElement = document.getElementById(imgElementId);
+                imgElement.src = e.target.result;
             };
             reader.readAsDataURL(file);
         }
@@ -613,19 +694,25 @@ include ('db/db_conn.php');
         container.insertBefore(newSchedule, addButton);
     }
 
+    let guestCounter = <?php echo $guestCounter; ?>;
+
     function addGuest() {
         const container = document.getElementById("guest-container");
 
-        // Create a new input block for the guest
+        guestCounter++;
+
         const newGuest = document.createElement("div");
         newGuest.className = "dynamic-inputs";
 
+        const imgId = `guestPic-${guestCounter}`;
+        const inputId = `uploadGuestPic-${guestCounter}`;
+
         newGuest.innerHTML = `
         <div class="guestPic">
-            <img src='' alt='Guest Picture' id='guestPic' class='roundImage'>
+            <img src='' alt='Guest Picture' id='${imgId}' class='roundImage'>
         </div>
         <label>
-            <input type='file' name='guestPic' id='uploadGuestPic' accept='image/*' onchange='previewGuestImage()'>
+            <input type='file' name='guestPic[]' id='${inputId}' accept='image/*' onchange='previewGuestImage(this, "${imgId}")'>
             <input type="text" name="guestName[]" placeholder="Enter guest's name...">
             <input type="text" name="guestBio[]" placeholder="Enter guest's bio...">
         </label>
