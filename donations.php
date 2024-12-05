@@ -34,6 +34,7 @@ include ('db/db_conn.php');
         .progress-text{
             text-align: left;
             padding-left: 10px;
+            margin-bottom: 0;
         }
 
         .progress-container {
@@ -43,8 +44,9 @@ include ('db/db_conn.php');
             background-color: #f2e9df;
             overflow: hidden;
             box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
-            margin: 30px 0;
             position: relative;
+            margin-top: 0;
+            margin-bottom: 10px;
         }
 
         .progress-bar {
