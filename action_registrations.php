@@ -78,6 +78,12 @@ include ('db/db_conn.php');
 //        }
         }
     }
+    if ($registrationID && $action == "edit"){
+        echo "<h2>Update registration</h2>";
+    }
+    elseif ($registrationID && $action == "delete"){
+        echo "<h2>Delete registration</h2>";
+    }
     ?>
     <form method="POST" enctype="multipart/form-data">
         <div class="form-grp">
