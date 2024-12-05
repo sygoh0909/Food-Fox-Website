@@ -181,6 +181,48 @@ include ('db/db_conn.php');
             box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
         }
 
+        .guest-container {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background-color: #f9f9f9;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .guest-image {
+            flex-shrink: 0;
+            margin-right: 15px;
+        }
+
+        .guest-image img {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid #ccc;
+        }
+
+        .guest-details {
+            flex-grow: 1;
+        }
+
+        .guest-name {
+            font-size: 16px;
+            font-weight: bold;
+            margin: 0 0 5px;
+            color: #333;
+        }
+
+        .guest-bio {
+            font-size: 14px;
+            color: #666;
+            margin: 0;
+            line-height: 1.4;
+        }
+
     </style>
 </head>
 <body>
@@ -281,13 +323,15 @@ include ('db/db_conn.php');
 
                 while ($guest = $resultGuests->fetch_assoc()) {
                     echo "<div class='guest-container'>";
-                    echo "<img src='" . $guest['guestProfilePic'] . "' alt='Guest Profile' class='guest-image' />";
+                    echo "<div class='guest-image'>";
+                    echo "<img src='" . $guest['guestProfilePic'] . "' alt='Guest Profile'/>";
+                    echo "</div>";
                     echo "<div class='guest-details'>";
                     echo "<p class='guest-name'>" . $guest['guestName'] . "</p>";
                     echo "<p class='guest-bio'>" . $guest['guestBio'] . "</p>";
                     echo "</div>";
                     echo "</div>";
-            }
+                }
                 echo "</div>";
             }
 
