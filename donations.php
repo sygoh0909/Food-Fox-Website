@@ -11,6 +11,9 @@ include ('db/db_conn.php');
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="main.css">
     <style>
+        body{
+            text-align: center;
+        }
         .main{
             color: white;
         }
@@ -18,9 +21,19 @@ include ('db/db_conn.php');
             z-index: 100;
         }
         h2 {
-            font-size: 2em;
+            font-size: 2rem;
             color: #5C4033;
             margin-bottom: 10px;
+            margin-top: 30px;
+            display: inline-block;
+            padding-bottom: 10px;
+            padding-top: 10px;
+            border-bottom: 2px solid #d3a029;
+        }
+
+        .progress-text{
+            text-align: left;
+            padding-left: 10px;
         }
 
         .progress-container {
@@ -49,6 +62,8 @@ include ('db/db_conn.php');
 
         .donations-buttons{
             text-align: center;
+            padding-top: 20px;
+            padding-bottom: 5px;
         }
 
         .donation-btn {
@@ -113,7 +128,8 @@ include ('db/db_conn.php');
             flex-wrap: wrap;
             justify-content: center;
             gap: 20px;
-            margin-top: 20px;
+            margin-top: 30px;
+            margin-bottom: 20px;
         }
         .donation-card {
             background-color: white;
@@ -183,19 +199,46 @@ include ('db/db_conn.php');
 
         .chart-container {
             width: 60%;
+            padding-left: 40px;
         }
 
         .info-container {
-            width: 35%;
-            padding: 20px;
-            background-color: #f4f4f4;
+            width: 200px;
+            height: 200px;
+            background-color: #f5ead9;
             border-radius: 10px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin: 10px;
+            transition: transform 0.3s, box-shadow 0.3s;
         }
 
-        .info-container p {
-            font-size: 1.2rem;
-            margin-bottom: 15px;
+        .info-container .number {
+            font-size: 3.7rem;
+            font-weight: bold;
+            color: #3e3e3e;
+            margin: 0;
+        }
+
+        .info-container h1 {
+            font-size: 1.1rem;
+            font-weight: normal;
+            color: #3e3e3e;
+            margin: 10px 0 0;
+        }
+
+        .info-row {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-right: 60px;
+        }
+
+        .info-container:hover{
+            transform: translateY(-5px);
         }
 
         .feedback-row {
@@ -251,28 +294,12 @@ include ('db/db_conn.php');
             border-bottom: none;
         }
 
-        .member-profile p.hidden-name {
+        .member-profile p, .hidden-name {
             font-weight: normal;
             font-size: 14px;
             color: #aaa;
         }
-        .guest-container {
-            display: flex;
-            align-items: center;
-            margin-bottom: 15px;
-        }
-        .guest-details {
-            margin-left: 10px;
-        }
-        .guest-name {
-            font-weight: bold;
-            font-size: 16px;
-            margin-bottom: 5px;
-        }
-        .guest-bio {
-            font-size: 14px;
-            color: #666;
-        }
+
     </style>
 </head>
 <body>
@@ -288,7 +315,7 @@ $result = $conn->query($sql);
 $totalDonations = ($result->num_rows > 0) ? $result->fetch_assoc()['total_donations'] : 0;
 
 $mealsProvided = floor($totalDonations / 10);
-$mealsProvidedPercentage = min(100, ($mealsProvided / $maxMealsProvided) * 100); //cap at 100%
+$mealsProvidedPercentage = floor(min(100, ($mealsProvided / $maxMealsProvided) * 100)); //cap at 100%
 
 $count = "SELECT COUNT(*) AS total_people FROM donations";
 $result = $conn->query($count);
@@ -297,10 +324,10 @@ if ($result->num_rows > 0) {
 }
 
 $peopleSupported = $row['total_people'];
-$peopleSupportedPercentage = min(100, ($peopleSupported / $maxPeopleSupported) * 100);
+$peopleSupportedPercentage = floor(min(100, ($peopleSupported / $maxPeopleSupported) * 100));
 
 if (isset($_GET['action']) && $_GET['action'] == 'getProgress') {
-    $progressPercentage = min(100,($totalDonations / $fundraisingGoal) * 100);
+    $progressPercentage = floor(min(100,($totalDonations / $fundraisingGoal) * 100));
 
 }
 ?>
@@ -330,7 +357,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'getProgress') {
 </header>
 <main>
     <h2>Our Fundraising Goal</h2>
-    <p id="progressText">Raised: RM <?=$totalDonations?> / RM <?=$fundraisingGoal?></p>
+    <p id="progressText" class="progress-text">Raised: RM <?=$totalDonations?> / RM <?=$fundraisingGoal?></p>
     <div class="progress-container">
         <div id="progress-bar" class="progress-bar" style="width:<?= round(($totalDonations / $fundraisingGoal) *100) ?>%;">
             <?= floor(min(100, ($totalDonations / $fundraisingGoal) *100) )?>%
@@ -536,9 +563,15 @@ if (isset($_GET['action']) && $_GET['action'] == 'getProgress') {
         <div class="chart-container">
             <canvas id="impactChart" width="400" height="200"></canvas>
         </div>
-        <div class="info-container">
-            <p id="mealsText">Meals Provided: <?=$mealsProvided?><br><?=$mealsProvidedPercentage?></p> <!--here show numbers not percentage-->
-            <p id="peopleText">People Supported: <?=$peopleSupported?><br><?=$peopleSupportedPercentage?></p>
+        <div class="info-row">
+            <div class="info-container">
+                <div class="number" id="mealsText"><?= $mealsProvided ?></div>
+                <h1>Total Meals Provided</h1>
+            </div>
+            <div class="info-container">
+                <div class="number" id="peopleText"><?= $peopleSupported ?></div>
+                <h1>Total People Supported</h1>
+            </div>
         </div>
     </div>
 

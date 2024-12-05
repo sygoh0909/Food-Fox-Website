@@ -13,7 +13,7 @@ $result = $conn->query($sql);
 $totalDonations = ($result->num_rows > 0) ? $result->fetch_assoc()['total_donations'] : 0;
 
 $mealsProvided = floor($totalDonations / 10);
-$mealsProvidedPercentage = min(100, ($mealsProvided / $maxMealsProvided) * 100); //cap at 100%
+$mealsProvidedPercentage = floor(min(100, ($mealsProvided / $maxMealsProvided) * 100)); //cap at 100%
 
 $count = "SELECT COUNT(*) AS total_people FROM donations";
 $result = $conn->query($count);
@@ -22,11 +22,10 @@ if ($result->num_rows > 0) {
 }
 
 $peopleSupported = $row['total_people'];
-$peopleSupportedPercentage = min(100, ($peopleSupported / $maxPeopleSupported) * 100);
+$peopleSupportedPercentage = floor(min(100, ($peopleSupported / $maxPeopleSupported) * 100));
 
 if (isset($_GET['action']) && $_GET['action'] == 'getProgress') {
-    $progressPercentage = ($totalDonations / $fundraisingGoal) * 100;
-    $progressPercentage = min(100, $progressPercentage);
+    $progressPercentage = floor(min(100,($totalDonations / $fundraisingGoal) * 100));
 }
 
 if (isset($_GET['fetchData']) && $_GET['fetchData'] === 'true') {
