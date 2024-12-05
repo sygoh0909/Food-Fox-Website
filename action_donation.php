@@ -85,7 +85,7 @@ include ('db/db_conn.php');
         <p class="error-message"><?= isset($errors['amount']) ? $errors['amount'] :''?></p>
 
         <p>Donation Date</p>
-        <?php echo $donationDetails["donationDate"]; ?>
+        <?php echo date('d-m-Y', strtotime($donationDetails["donationDate"]));?>
 
         <p>Feedback</p>
         <label><input type="text" name="feedback" value="<?php echo $donationDetails['feedback'];?>"</label>

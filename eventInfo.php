@@ -180,6 +180,7 @@ include ('db/db_conn.php');
             transform: scale(1.05);
             box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
         }
+
     </style>
 </head>
 <body>
@@ -277,9 +278,16 @@ include ('db/db_conn.php');
             if ($resultGuests->num_rows > 0) {
                 echo "<div class='event-section'>";
                 echo "<h3>Guests</h3>";
+
                 while ($guest = $resultGuests->fetch_assoc()) {
-                    echo "<p>" . $guest['guestProfilePic'] . $guest['guestName'] . "<br>" . $guest['guestBio'] . "</p>";
-                }
+                    echo "<div class='guest-container'>";
+                    echo "<img src='" . $guest['guestProfilePic'] . "' alt='Guest Profile' class='guest-image' />";
+                    echo "<div class='guest-details'>";
+                    echo "<p class='guest-name'>" . htmlspecialchars($guest['guestName']) . "</p>";
+                    echo "<p class='guest-bio'>" . htmlspecialchars($guest['guestBio']) . "</p>";
+                    echo "</div>";
+                    echo "</div>";
+            }
                 echo "</div>";
             }
 

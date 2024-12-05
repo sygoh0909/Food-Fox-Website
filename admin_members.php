@@ -73,11 +73,12 @@ include ('db/db_conn.php');
                 $result = $conn->query($sql);
                 if ($result->num_rows > 0) {
                     while($row = $result->fetch_assoc()) {
+                        $dateFormatted = date("d-m-Y", strtotime($row["joinDate"]));
                         echo "<tr>";
                         echo "<td data-member-id='" . htmlspecialchars($row["memberID"]) . "'>" . str_repeat('*', strlen($row["memberID"])) . "</td>";
                         echo "<td>" . $row["memberName"] . "</td>";
                         echo "<td>" . $row["email"] . "</td>";
-                        echo "<td>" . $row["joinDate"] . "</td>";
+                        echo "<td>" . $dateFormatted . "</td>";
                         echo "<td><a href='action_members.php?memberID=" .$row['memberID']. "&action=edit'><button>Edit</button></a><a href='action_members.php?memberID=" .$row['memberID']. "&action=delete'><button>Delete</button></a></td>";
                         echo "</tr>";
                     }

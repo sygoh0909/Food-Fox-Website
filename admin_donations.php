@@ -76,11 +76,12 @@ include ('db/db_conn.php');
                 $result = $conn->query($sql);
                 if ($result->num_rows > 0) {
                     while($row = $result->fetch_assoc()) {
+                        $dateFormatted = date('d-m-Y', strtotime($row["donationDate"]));
                         echo "<tr>";
                         echo "<td data-donation-id='" .htmlspecialchars($row["donationID"]) ."'>" .str_repeat('*', strlen($row["donationID"]))."</td>";
                         echo "<td>" . $row["memberName"] . "</td>";
                         echo "<td>" . $row["amount"] . "</td>";
-                        echo "<td>" . $row["donationDate"] . "</td>";
+                        echo "<td>" . $dateFormatted . "</td>";
                         echo "<td><a href='action_donation.php?donationID=" . $row["donationID"] . "&action=edit '><button>Edit</button></a><a href='action_donation.php?donationID=" . $row["donationID"] . "&action=delete '><button>Delete</button></a></td>";
                         echo "</tr>";
                     }

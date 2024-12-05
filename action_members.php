@@ -148,7 +148,7 @@ include ('db/db_conn.php');
         <label><input type="text" name="bio" value="<?php echo isset($memberData['bio'])?$memberData['bio']:'';?>"></label>
 
         <p>Join Date:</p>
-        <?php echo $memberData['joinDate'];?> <br>
+        <?php echo date("d-m-Y", strtotime($memberData["joinDate"]));?> <br>
 
         <button type="button" onclick="displayActionPopup()"><?php echo $memberID && $action=='edit'?'Update member info': 'Delete Member Info'?></button>
         <a href="admin_members.php"><button type="button">Cancel</button></a>
