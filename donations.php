@@ -529,7 +529,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'getProgress') {
     <form method="post" enctype="multipart/form-data">
         <!--after donate successfully, show do u wanna leave a feedback, pop up-->
         <div id="feedback-popup" class="feedback-popup" style="display: none">
-            <h2>Donated successfully!</h2>
+            <h3>Donated successfully!</h3>
             <p>Do you want to leave a feedback?</p>
             <label><input type="text" name="feedback" placeholder="Leave your feedback here if you have any..."></label>
             <button type="submit" name="submit-feedback">Submit feedback</button>

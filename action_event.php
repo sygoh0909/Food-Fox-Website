@@ -197,12 +197,12 @@ include ('db/db_conn.php');
                 $fileName = basename($_FILES["guestPic"]["name"][$i]);
                 $guestImagePath = $target_dir . $fileName;
 
-                if ($_FILES["guestPic"]["error"][$i] == 0) {
-                    if (move_uploaded_file($fileTmpName, $guestImagePath)) {
-                        $uploadedFiles[] = $guestImagePath;
-                    } else {
-                        echo "Error uploading file: " . $_FILES['guestPic']['name'][$i];
-                    }
+                // Check if a file is uploaded for this guest
+                if ($_FILES["guestPic"]["error"][$i] == 0 && move_uploaded_file($fileTmpName, $guestImagePath)) {
+                    $uploadedFiles[] = $guestImagePath; // New image uploaded
+                } else {
+                    // Use the existing image if no new file is uploaded
+                    $uploadedFiles[] = $guestList['guestProfilePic'] ?? '';
                 }
             }
         }
@@ -267,9 +267,6 @@ include ('db/db_conn.php');
                         $conn->query($highlightUpdate);
                     }
 
-                    $deleteGuestQuery = "DELETE FROM eventguests WHERE eventID = '$eventID'";
-                    $conn->query($deleteGuestQuery);
-
                     if (count($guestName) === count($guestBio) && count($guestName) === count($uploadedFiles)) {
                         for ($i = 0; $i < count($guestName); $i++) {
                             $name = $conn->real_escape_string($guestName[$i]);
@@ -277,17 +274,19 @@ include ('db/db_conn.php');
                             $imagePath = $conn->real_escape_string($uploadedFiles[$i]);
 
                             $guestUpdate = "INSERT INTO eventguests (eventID, guestName, guestBio, guestProfilePic)
-                        VALUES ('$eventID', '$name', '$bio', '$imagePath')";
+            VALUES ('$eventID', '$name', '$bio', '$imagePath')
+            ON DUPLICATE KEY UPDATE 
+                guestBio = VALUES(guestBio), 
+                guestProfilePic = IF(VALUES(guestProfilePic) = '', guestProfilePic, VALUES(guestProfilePic))";
 
                             if ($conn->query($guestUpdate) === TRUE) {
-                                echo "Guest $name added successfully.<br>";
+                                echo "Guest $name added or updated successfully.<br>";
                             } else {
-                                echo "Error adding guest $name: " . $conn->error . "<br>";
+                                echo "Error adding/updating guest $name: " . $conn->error . "<br>";
                             }
                         }
-                    } else {
-                        echo "Error: Mismatched guest names, bios, or images.<br>";
                     }
+
 
                     if ($eventStatus == "Past"){
                         $checkQuery = "SELECT * FROM pastevents WHERE eventID = $eventID";
@@ -372,7 +371,8 @@ include ('db/db_conn.php');
                                 $imagePath = $conn->real_escape_string($uploadedFiles[$i]);
 
                                 $guestUpdate = "INSERT INTO eventguests (eventID, guestName, guestBio, guestProfilePic)
-                        VALUES ('$eventID', '$name', '$bio', '$imagePath')";
+            VALUES ('$eventID', '$name', '$bio', '$imagePath')
+            ON DUPLICATE KEY UPDATE guestName = VALUES(guestName), guestBio = VALUES(guestBio), guestProfilePic = VALUES(guestProfilePic)";
 
                                 if ($conn->query($guestUpdate) === TRUE) {
                                     echo "Guest $name added successfully.<br>";
