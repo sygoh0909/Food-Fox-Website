@@ -117,8 +117,12 @@ include ('db/db_conn.php');
         </div>
         <div class="map-container">
             <h3>Find Us Here</h3>
+            <h3>Find Us Here</h3>
             <iframe
-                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3180.123456789012!2d101.7110857164569!3d3.157853360123!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x31cc49562a654321%3A0xabcdef123456789!2sKLCC!5e0!3m2!1sen!2smy!4v1691234567890"
+                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d15955.470981641436!2d101.715123!3d3.155348!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x31cc49562a6b123f%3A0xabcde1234567890!2s51%2C%20Jalan%20Binjai%2C%20KLCC%2C%20KL%20City%20Centre%2C%20Kuala%20Lumpur!5e0!3m2!1sen!2smy!4v1691234567890"
+                    width="100%"
+                    height="400"
+                    style="border:0;"
                     allowfullscreen=""
                     loading="lazy">
             </iframe>
