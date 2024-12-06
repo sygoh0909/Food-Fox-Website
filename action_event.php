@@ -372,16 +372,16 @@ include ('db/db_conn.php');
 
                                 $guestUpdate = "INSERT INTO eventguests (eventID, guestName, guestBio, guestProfilePic)
             VALUES ('$eventID', '$name', '$bio', '$imagePath')
-            ON DUPLICATE KEY UPDATE guestName = VALUES(guestName), guestBio = VALUES(guestBio), guestProfilePic = VALUES(guestProfilePic)";
+            ON DUPLICATE KEY UPDATE 
+                guestBio = VALUES(guestBio), 
+                guestProfilePic = IF(VALUES(guestProfilePic) = '', guestProfilePic, VALUES(guestProfilePic))";
 
                                 if ($conn->query($guestUpdate) === TRUE) {
-                                    echo "Guest $name added successfully.<br>";
+                                    echo "Guest $name added or updated successfully.<br>";
                                 } else {
-                                    echo "Error adding guest $name: " . $conn->error . "<br>";
+                                    echo "Error adding/updating guest $name: " . $conn->error . "<br>";
                                 }
                             }
-                        } else {
-                            echo "Error: Mismatched guest names, bios, or images.<br>";
                         }
                         echo "<script>alert('New Event Added'); window.location.href='admin_events.php';</script>";
                     }
