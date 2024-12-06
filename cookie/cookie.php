@@ -48,6 +48,7 @@ function loginSection(){
             $result = $conn->query($sql);
             if ($result->num_rows > 0) {
                 $memberInfo = $result->fetch_assoc();
+                $dateFormatted = date('d-m-Y', strtotime($memberInfo['joinDate']));
 
             echo "
         <div class='profile-container'>
@@ -56,7 +57,7 @@ function loginSection(){
         <p><img src='{$memberInfo['memberProfile']}' class='roundImage'></p><!--display profile as a circle-->
         <p>Member ID: {$memberInfo['memberID']}</p>
         <p>Member Name: {$memberInfo['memberName']}</p>
-        <p>Join Date: {$memberInfo['joinDate']}</p>
+        <p>Join Date: {$dateFormatted}</p>
         <a href='profile.php?memberID=". $memberInfo['memberID']."'><button>Profile</button></a>
         <p>Points: {$memberInfo['points']}</p>
         <a href='rewards.php'><button>Rewards</button></a>

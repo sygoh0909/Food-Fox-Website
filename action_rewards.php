@@ -123,7 +123,7 @@ include ('db/db_conn.php');
 
         <div class="form-grp">
             <p>Points Needed:</p>
-            <label><input type="text" name="pointsNeeded" value="<?php echo isset ($rewardData['pointsNeeded']) ? $rewardData['pointsNeeded'] : '';?>"</label>
+            <label><input type="text" name="pointsNeeded" value="<?php echo isset ($rewardData['pointsNeeded']) ? $rewardData['pointsNeeded'] : '';?>"></label>
         </div>
 
         <div class="button">

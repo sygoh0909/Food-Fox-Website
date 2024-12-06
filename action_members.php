@@ -42,7 +42,7 @@ include ('db/db_conn.php');
             $memberProfilePath = $memberData["memberProfile"] ?? '';
 
             if (isset($_FILES['memberProfile']) && $_FILES['memberProfile']['error'] == 0) {
-                $target_dir = "../../uploads/";
+                $target_dir = "uploads/";
                 $memberProfilePath = $target_dir . basename($_FILES["memberProfile"]["name"]);
                 move_uploaded_file($_FILES["memberProfile"]["tmp_name"], $memberProfilePath);
             }

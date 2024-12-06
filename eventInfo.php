@@ -16,51 +16,88 @@ include ('db/db_conn.php');
         }
 
         .events {
+            display: flex;
+            flex-wrap: wrap;
             background-color: #ffffff;
             padding: 20px;
             margin: 20px auto;
-            max-width: 900px;
+            max-width: 1200px;
             border-radius: 15px;
             box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
             overflow: hidden;
+            position: relative;
         }
 
-        .events img {
-            width: 100%;
+        .events-left {
+            flex: 1;
+            max-width: 40%;
+            margin: 10px;
+            padding: 20px;
+            text-align: center;
+            background: linear-gradient(135deg, #f9e4bd, #f8f5f2);
+            border-radius: 15px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .events-left h2 {
+            color: #4a4a4a;
+            margin-bottom: 20px;
+            font-size: 36px;
+            font-weight: bold;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
+        }
+
+        .events-left img {
+            width: 90%;
             height: auto;
-            border-radius: 15px 15px 0 0;
+            margin-bottom: 20px;
+            border-radius: 15px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
         }
 
-        .events h2 {
+        .events-left p {
+            font-size: 16px;
             color: #4a4a4a;
             margin-bottom: 10px;
-            font-size: 28px;
-            text-align: center;
+            line-height: 1.8;
         }
 
-        .events p {
-            font-size: 16px;
-            color: #333333;
-            margin: 10px 0;
-            line-height: 1.5;
+        .events-right {
+            flex: 2;
+            max-width: 60%;
+            margin: 10px;
+            padding: 20px;
         }
 
-        .events p strong {
-            color: #7F6C54;
-        }
-
-        .event-highlight {
-            background-color: #f8f5f2;
+        .event-highlight, .event-section {
+            background-color: #ffffff;
             padding: 15px;
             border-radius: 8px;
-            margin: 15px 0;
+            margin-bottom: 15px;
             border-left: 4px solid #d3a029;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
 
-        .event-highlight p {
-            margin: 0;
-            font-size: 16px;
+        .event-section h3 {
+            margin-top: 0;
+            font-size: 20px;
             color: #4a4a4a;
+        }
+
+        .register-btn {
+            background-color: #d3a029;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            font-size: 18px;
+            border-radius: 5px;
+            cursor: pointer;
+            display: inline-block;
+            transition: background-color 0.3s ease;
+        }
+
+        .register-btn:hover {
+            background-color: #7F6C54;
         }
 
         .dropdown-btn {
@@ -140,89 +177,46 @@ include ('db/db_conn.php');
             background-color: #7F6C54;
         }
 
-        .note {
-            font-size: 14px;
-            color: #5C4033;
-            margin-top: 10px;
-            text-align: center;
-        }
-
-        .note strong {
-            color: #C5B4A5;
-        }
-
-        .photo-gallery-container {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 15px;
-            justify-content: center;
-            margin: 20px 0;
-        }
-
-        .gallery-item {
-            width: 150px;
-            height: 150px;
-            overflow: hidden;
-            border: 1px solid #ccc;
-            border-radius: 8px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            transition: transform 0.3s ease;
-        }
-
-        .gallery-item img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            border-radius: 8px;
-        }
-
-        .gallery-item:hover {
-            transform: scale(1.05);
-            box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
-        }
-
         .guest-container {
             display: flex;
             align-items: center;
-            padding: 10px;
             margin-bottom: 15px;
-            border: 1px solid #ddd;
-            border-radius: 8px;
+            padding: 10px;
             background-color: #f9f9f9;
+            border-radius: 8px;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
-
-        .guest-image {
-            flex-shrink: 0;
-            margin-right: 15px;
         }
 
         .guest-image img {
             width: 60px;
             height: 60px;
             border-radius: 50%;
-            object-fit: cover;
-            border: 2px solid #ccc;
         }
 
         .guest-details {
-            flex-grow: 1;
+            margin-left: 15px;
         }
 
-        .guest-name {
-            font-size: 16px;
-            font-weight: bold;
-            margin: 0 0 5px;
-            color: #333;
+        .photo-gallery-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
         }
 
-        .guest-bio {
-            font-size: 14px;
-            color: #666;
-            margin: 0;
-            line-height: 1.4;
+        .gallery-item {
+            width: 100px;
+            height: 100px;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
 
+        .gallery-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
     </style>
 </head>
 <body>
@@ -274,18 +268,21 @@ include ('db/db_conn.php');
 
             //events info
             echo "<div class='events'>";
-            echo "<h2>Event Name: " . $eventData['eventName'] . "</h2>";
+            echo "<div class='events-left'>";
+            echo "<h2>" . $eventData['eventName'] . "</h2>";
             echo "<img src='" . $eventData['eventPic'] . "' alt='" . $eventData['eventPic'] . "' width='300' height='200'>";
             echo "<div class='event-highlight'>";
-            echo "<p><strong>Details:</strong> " . $eventData['details'] . "</p>";
-            echo "<p><strong>Date & Time:</strong> $startFormatted - $endFormatted </p>";
+            echo "<p><strong>Details:</strong><br> " . $eventData['details'] . "</p>";
+            echo "<p><strong>Date & Time:</strong><br> $startFormatted - $endFormatted </p>";
 //            echo "<p><strong>End Date & Time:</strong> " . $eventData['end_dateTime'] . "</p>";
-            echo "<p><strong>Location:</strong> " . $eventData['location'] . "</p>";
+            echo "<p><strong>Location:</strong><br> " . $eventData['location'] . "</p>";
+            echo "</div>";
             echo "</div>";
 
             $sqlHighlights = "SELECT highlights FROM eventhighlights WHERE eventID = $eventID";
             $resultHighlights = $conn->query($sqlHighlights);
             if ($resultHighlights->num_rows > 0) {
+                echo "<div class='events-right'>";
                 echo "<div class='event-section'>";
                 echo "<h3>Highlights</h3>";
                 echo "<ul>";
@@ -341,7 +338,7 @@ include ('db/db_conn.php');
                 echo "<p><strong>Volunteers Needed:</strong> " . $eventData['volunteersNeeded'] . "</p>";
                 echo "</div>";
                 echo "<p class='note'><strong>Note:</strong> Participants are those who will attend the event, while volunteers are individuals who help with event operations.</p>";
-                echo "</div>";
+//                echo "</div>";
 
                 $participantsNeeded = $eventData['participantsNeeded'];
                 $volunteersNeeded = $eventData['volunteersNeeded'];
@@ -362,14 +359,14 @@ include ('db/db_conn.php');
                     $registeredVolunteer = $resultVolunteer->fetch_assoc()['total_volunteers'];
 
                     if (($registeredParticipant >= $participantsNeeded) && ($registeredVolunteer >= $volunteersNeeded)) {
-                        echo "<button>Full</button>";
+                        echo "<button class='register-btn'>Full</button>";
                     }
                     else{
                         if (isset($_SESSION['memberID'])){
-                            echo "<a href='eventRegistrations.php?eventID=" . $eventID . "'><button>Register Now!</button></a>";
+                            echo "<a href='eventRegistrations.php?eventID=" . $eventID . "'><button class='register-btn'>Register Now!</button></a>";
                         }
                         else{
-                            echo "<a href='login.php' onclick='return confirm(\"Please login or sign up to register for events\");'><button type='button'>Register Now!</button></a>";
+                            echo "<a href='login.php' onclick='return confirm(\"Please login or sign up to register for events\");'><button type='button' class='register-btn'>Register Now!</button></a>";
                         }
                     }
                 }
@@ -397,13 +394,14 @@ include ('db/db_conn.php');
                             echo "</div>";
                         }
                         echo "</div>";
-                        echo "</div>";
                     }
                     //no photos
                 }
             }else{
                 echo "No upcoming or past events.";
             }
+            echo "</div>";
+            echo "</div>";
         }
     }
     ?>

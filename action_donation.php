@@ -97,7 +97,7 @@ include ('db/db_conn.php');
 
         <div class="form-grp">
             <p>Feedback:</p>
-            <label><input type="text" name="feedback" value="<?php echo $donationDetails['feedback'];?>"</label>
+            <label><input type="text" name="feedback" value="<?php echo $donationDetails['feedback'];?>"></label>
         </div>
 
         <button type="button" onclick="displayActionPopup()"><?php echo $donationID && $action=="edit"?'Update donation details':'Delete donation details'?></button>

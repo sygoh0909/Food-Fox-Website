@@ -236,8 +236,9 @@ include ('db/db_conn.php');
             display: flex;
             justify-content: center;
             gap: 20px;
-            margin-right: 100px;
-            margin-top: 160px;
+            margin-right: 50px;
+            padding-left: 20px;
+            margin-top: 100px;
         }
 
         .info-container:hover{

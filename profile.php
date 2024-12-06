@@ -398,10 +398,11 @@ include ('db/db_conn.php');
                         while ($row = mysqli_fetch_assoc($result)) {
                             $eventName = $row['eventName'];
                             $registrationDate = $row['registrationDate'];
+                            $dateFormatted = date('d-m-Y', strtotime($registrationDate));
 
                             echo "<div class='activity-item'>";
                             echo "<span>Event: $eventName</span>";
-                            echo "<span>Register Date: $registrationDate</span>";
+                            echo "<span>Register Date: $dateFormatted</span>";
                             echo "</div>";
                         }
                         echo "<a href='recentActivity.php?memberID=" . $memberData['memberID'] ."'><button type='button' class='btn'>Check out more!</button></a>";
