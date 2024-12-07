@@ -147,7 +147,6 @@ include ('db/db_conn.php');
             margin-top: 10px;
             color: #5C4033;
             font-size: 1rem;
-            font-weight: bold;
         }
 
         .getinvolved img,
@@ -207,7 +206,7 @@ include ('db/db_conn.php');
         <div class="main-info">
             <section class="aboutus">
                 <h2>About Us</h2>
-                <p>xxx</p>
+                <p>Food Fox is a Malaysian-based non-profit organisation dedicated to addressing the issue of of food insecurity and hunger in Malaysia.</p>
                 <div class="about-us-images">
                     <img src="aboutus1.jpeg" alt="About Us 1">
                     <img src="aboutus2.jpeg" alt="About Us 2">
@@ -218,22 +217,22 @@ include ('db/db_conn.php');
                 <div class="team-member1">
                     <img src="logo.png" alt="Team Member 1">
                     <p><b>Goh Shu Yi</b></p>
-                    <p>xxx</p>
+                    <p>President</p>
                 </div>
                 <div class="team-member2">
                     <img src="logo.png" alt="Team Member 2">
                     <p><b>Tiong Jia Yi</b></p>
-                    <p>xxx</p>
+                    <p>Vice President</p>
                 </div>
                 <div class="team-member3">
                     <img src="logo.png" alt="Team Member 3">
                     <p><b>Yim Sook Xin</b></p>
-                    <p>xxx</p>
+                    <p>Secretary</p>
                 </div>
                 <div class="team-member4">
                     <img src="logo.png" alt="Team Member 4">
                     <p><b>Phang Pei May</b></p>
-                    <p>xxx</p>
+                    <p>Treasurer</p>
                 </div>
             </section>
             <section class="approach">

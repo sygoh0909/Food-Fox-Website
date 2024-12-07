@@ -188,24 +188,24 @@ include ('db/db_conn.php');
 //            move_uploaded_file($_FILES["photoGallery"]["tmp_name"], $galleryPath);
 //        }
 
-        if (isset($_FILES['guestPic'])) {
-            $target_dir = "uploads/";
-            $uploadedFiles = [];
-
-            for ($i = 0; $i < count($_FILES["guestPic"]["name"]); $i++) {
-                $fileTmpName = $_FILES["guestPic"]["tmp_name"][$i];
-                $fileName = basename($_FILES["guestPic"]["name"][$i]);
-                $guestImagePath = $target_dir . $fileName;
-
-                // Check if a file is uploaded for this guest
-                if ($_FILES["guestPic"]["error"][$i] == 0 && move_uploaded_file($fileTmpName, $guestImagePath)) {
-                    $uploadedFiles[] = $guestImagePath; // New image uploaded
-                } else {
-                    // Use the existing image if no new file is uploaded
-                    $uploadedFiles[] = $guestList['guestProfilePic'] ?? '';
-                }
-            }
-        }
+//        if (isset($_FILES['guestPic'])) {
+//            $target_dir = "uploads/";
+//            $uploadedFiles = [];
+//
+//            for ($i = 0; $i < count($_FILES["guestPic"]["name"]); $i++) {
+//                $fileTmpName = $_FILES["guestPic"]["tmp_name"][$i];
+//                $fileName = basename($_FILES["guestPic"]["name"][$i]);
+//                $guestImagePath = $target_dir . $fileName;
+//
+//                // Check if a file is uploaded for this guest
+//                if ($_FILES["guestPic"]["error"][$i] == 0 && move_uploaded_file($fileTmpName, $guestImagePath)) {
+//                    $uploadedFiles[] = $guestImagePath; // New image uploaded
+//                } else {
+//                    // Use the existing image if no new file is uploaded
+//                    $uploadedFiles[] = $guestList['guestProfilePic'] ?? '';
+//                }
+//            }
+//        }
 
         if (isset($_FILES['photoGallery'])) {
             $target_dir = "uploads/";
@@ -267,27 +267,42 @@ include ('db/db_conn.php');
                         $conn->query($highlightUpdate);
                     }
 
-                    if (count($guestName) === count($guestBio) && count($guestName) === count($uploadedFiles)) {
-                        for ($i = 0; $i < count($guestName); $i++) {
-                            $name = $conn->real_escape_string($guestName[$i]);
-                            $bio = $conn->real_escape_string($guestBio[$i]);
-                            $imagePath = $conn->real_escape_string($uploadedFiles[$i]);
+                    $deleteGuestsQuery = "DELETE FROM eventguests WHERE eventID = '$eventID'";
+                    $conn->query($deleteGuestsQuery);
 
-                            $guestUpdate = "INSERT INTO eventguests (eventID, guestName, guestBio, guestProfilePic)
-            VALUES ('$eventID', '$name', '$bio', '$imagePath')
-            ON DUPLICATE KEY UPDATE 
-                guestBio = VALUES(guestBio), 
-                guestProfilePic = IF(VALUES(guestProfilePic) = '', guestProfilePic, VALUES(guestProfilePic))";
-
-                            if ($conn->query($guestUpdate) === TRUE) {
-                                echo "Guest $name added or updated successfully.<br>";
+// Handle file uploads
+                    $uploadedFiles = [];
+                    for ($i = 0; $i < count($_FILES["guestPic"]["name"]); $i++) {
+                        if ($_FILES["guestPic"]["error"][$i] === 0) {
+                            $fileTmpName = $_FILES["guestPic"]["tmp_name"][$i];
+                            $fileName = basename($_FILES["guestPic"]["name"][$i]);
+                            $guestImagePath = $target_dir . $fileName;
+                            if (move_uploaded_file($fileTmpName, $guestImagePath)) {
+                                $uploadedFiles[] = $guestImagePath;
                             } else {
-                                echo "Error adding/updating guest $name: " . $conn->error . "<br>";
+                                $uploadedFiles[] = '';
                             }
+                        } else {
+                            $uploadedFiles[] = $_POST['existingGuestPics'][$i] ?? '';
                         }
                     }
 
+// Add or update new guests
+                    for ($i = 0; $i < count($guestName); $i++) {
+                        $name = $conn->real_escape_string($guestName[$i]);
+                        $bio = $conn->real_escape_string($guestBio[$i]);
+                        $imagePath = $conn->real_escape_string($uploadedFiles[$i]);
 
+                        if (!empty($name)) {
+                            $guestInsert = "
+            INSERT INTO eventguests (eventID, guestName, guestBio, guestProfilePic) 
+            VALUES ('$eventID', '$name', '$bio', '$imagePath')
+        ";
+                            if (!$conn->query($guestInsert)) {
+                                echo "Error adding guest $name: " . $conn->error . "<br>";
+                            }
+                        }
+                    }
                     if ($eventStatus == "Past"){
                         $checkQuery = "SELECT * FROM pastevents WHERE eventID = $eventID";
                         $checkResult = $conn->query($checkQuery);
@@ -503,6 +518,7 @@ include ('db/db_conn.php');
 
                         echo "<div class='dynamic-inputs'>";
                         echo "<div class='guestPic'>";
+                        echo "<input type='hidden' name='existingGuestPics[]' value='{$guestList['guestProfilePic']}'>";
                         echo "<img src='{$guestList['guestProfilePic']}' alt='Guest Picture' id='$imgId' class='roundImage'>";
                         echo "</div>";
                         echo "<label>";
@@ -520,6 +536,7 @@ include ('db/db_conn.php');
 
                     echo "<div class='dynamic-inputs'>";
                     echo "<div class='guestPic'>";
+//                    echo "<input type='hidden' name='existingGuestPics[]' value=''>";
                     echo "<img src='' alt='Guest Picture' id='$imgId' class='roundImage'>";
                     echo "</div>";
                     echo "<label>";
