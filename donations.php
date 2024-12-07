@@ -306,8 +306,11 @@ include ('db/db_conn.php');
         .feedback-container {
             display: flex;
             justify-content: space-between;
-            gap: 20px;
-            margin-top: 20px;
+            gap: 60px;
+            margin: 20px auto;
+            max-width: 900px;
+            padding: 20px;
+
         }
 
         .feedback-column {
@@ -641,21 +644,19 @@ if (isset($_GET['action']) && $_GET['action'] == 'getProgress') {
         JOIN members m ON d.memberID = m.memberID 
         WHERE d.hidden = 0 AND d.feedback <> '' AND d.feedback IS NOT NULL 
         ORDER BY d.donationDate DESC 
-        LIMIT 10";
+        LIMIT 6";
 
     $result = $conn->query($sql);
 
     if ($result->num_rows > 0) {
         echo "<div class='feedback-container'>";
 
-        // Initialize counters for splitting columns
         $feedbacks = [];
         while ($row = $result->fetch_assoc()) {
             $feedbacks[] = $row;
         }
         $half = ceil(count($feedbacks) / 2);
 
-        // Left Column
         echo "<div class='feedback-column'>";
         for ($i = 0; $i < $half; $i++) {
             $row = $feedbacks[$i];
@@ -671,7 +672,6 @@ if (isset($_GET['action']) && $_GET['action'] == 'getProgress') {
         }
         echo "</div>";
 
-        // Right Column
         echo "<div class='feedback-column'>";
         for ($i = $half; $i < count($feedbacks); $i++) {
             $row = $feedbacks[$i];
