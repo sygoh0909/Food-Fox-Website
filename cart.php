@@ -7,14 +7,14 @@ $cartItems = isset($_SESSION['cart']) ? $_SESSION['cart'] : array();
 
 // Handle amount update
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    if (isset($_POST['update_amount'])) {
-        $rewardID = $_POST['reward_id'];
-        $newAmount = intval($_POST['amount']); //ensure is integer
-
-        if (isset($cartItems[$rewardID]) && $newAmount > 0) {
-            $cartItems[$rewardID] = $newAmount;
-            $_SESSION['cart'] = $cartItems;
+    if (isset($_POST['amounts'])) {
+        foreach ($_POST['amounts'] as $rewardID => $newAmount) {
+            $newAmount = intval($newAmount); //make sure its int
+            if ($newAmount > 0 && isset($cartItems[$rewardID])) {
+                $cartItems[$rewardID] = $newAmount;
+            }
         }
+        $_SESSION['cart'] = $cartItems;
     }
 
     if (isset($_POST['remove_item'])) {
@@ -96,6 +96,17 @@ if (!empty($cartItems)) {
             color: white;
         }
 
+        h1 {
+            font-size: 2rem;
+            color: #5C4033;
+            margin-bottom: 10px;
+            margin-top: 30px;
+            display: inline-block;
+            padding-bottom: 10px;
+            padding-top: 10px;
+            border-bottom: 2px solid #d3a029;
+        }
+
         .cart-container {
             max-width: 800px;
             margin: 20px auto;
@@ -165,6 +176,17 @@ if (!empty($cartItems)) {
             background-color: #8b5c4b;
         }
 
+        .cart-item button {
+            background-color: #d3a029;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 8px 15px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+
         .back-to-rewards {
             display: block;
             text-align: center;
@@ -215,31 +237,31 @@ if (!empty($cartItems)) {
     <h1>Shopping Cart</h1>
     <div class="cart-container">
         <?php if ($result && mysqli_num_rows($result) > 0) { ?>
-            <form method="post" enctype="multipart/form-data">
-            <?php while ($row = mysqli_fetch_assoc($result)) {
-                $rewardID = $row['rewardID'];
-                $quantity = $cartItems[$rewardID];
-                ?>
-                <div class="cart-item">
-                    <input type="checkbox" name="selected_items[]" value="<?php echo $rewardID; ?>" checked>
-                    <img src="<?php echo $row['rewardPic']; ?>" alt="Reward Picture">
-                    <div class="info">
-                        <p><strong>Reward Name:</strong> <?php echo $row['rewardName']; ?></p>
-                        <p><strong>Points Needed:</strong> <?php echo $row['pointsNeeded']; ?></p>
+            <form id="cart-form" method="post" enctype="multipart/form-data">
+                <?php while ($row = mysqli_fetch_assoc($result)) {
+                    $rewardID = $row['rewardID'];
+                    $quantity = $cartItems[$rewardID];
+                    ?>
+                    <div class="cart-item">
+                        <input type="checkbox" name="selected_items[]" value="<?php echo $rewardID; ?>" checked>
+                        <img src="<?php echo $row['rewardPic']; ?>" alt="Reward Picture">
+                        <div class="info">
+                            <p><strong>Reward Name:</strong> <?php echo $row['rewardName']; ?></p>
+                            <p><strong>Points Needed:</strong> <?php echo $row['pointsNeeded']; ?></p>
+                        </div>
+                        <div class="amount">
+                            <label for="amount">Amount:</label>
+                            <select name="amounts[<?php echo $rewardID; ?>]" onchange="updateCartOnChange()">
+                                <?php for ($i = 1; $i <= 10; $i++) { ?>
+                                    <option value="<?php echo $i; ?>" <?php echo $i == $quantity ? 'selected' : ''; ?>>
+                                        <?php echo $i; ?>
+                                    </option>
+                                <?php } ?>
+                            </select>
+                        </div>
+                        <button type="submit" name="remove_item" value="<?php echo $rewardID; ?>">Remove</button>
                     </div>
-                    <div class="amount">
-                        <label for="amount">Amount:</label>
-                        <select name="amounts[<?php echo $rewardID; ?>]">
-                            <?php for ($i = 1; $i <= 10; $i++) { ?>
-                                <option value="<?php echo $i; ?>" <?php echo $i == $quantity ? 'selected' : ''; ?>>
-                                    <?php echo $i; ?>
-                                </option>
-                            <?php } ?>
-                        </select>
-                    </div>
-                    <button type="submit" name="remove_item" value="<?php echo $rewardID; ?>">Remove</button>
-                </div>
-            <?php } ?>
+                <?php } ?>
                 <div class="cart-buttons">
                     <button type="submit" name="clear_cart">Clear Cart</button>
                     <button type="submit" name="checkout">Checkout</button>
@@ -287,5 +309,10 @@ if (!empty($cartItems)) {
         <p>&copy; 2024 Food Fox. All rights reserved. | Powered by <a href="https://foodfox.com" target="_blank">Food Fox</a></p>
     </div>
 </footer>
+<script>
+    function updateCartOnChange() {
+        document.getElementById('cart-form').submit();
+    }
+</script>
 </body>
 </html>
