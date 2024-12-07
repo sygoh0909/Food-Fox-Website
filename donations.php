@@ -166,30 +166,88 @@ include ('db/db_conn.php');
             background-color: #f4f4f4;
             padding: 20px;
             border: 1px solid #7F6C54;
-            border-radius: 8px;
+            border-radius: 10px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
             z-index: 1000;
             text-align: center;
+            width: 450px;
+            max-width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
         }
-
-        .donation-popup h2, .payment-popup h2, .feedback-popup h2 {
+        .donation-popup h3, .payment-popup h3, .feedback-popup h3 {
             color: #7F6C54;
             font-family: 'Arial', sans-serif;
-            font-size: 18px;
-            margin-bottom: 15px;
+            font-size: 20px;
+            margin-bottom: 20px;
+            font-weight: bold;
         }
 
         .donation-popup button, .payment-popup button, .feedback-popup button {
             background-color: #7F6C54;
             color: white;
             border: none;
-            border-radius: 4px;
-            padding: 8px 16px;
+            border-radius: 5px;
+            padding: 12px 20px;
             cursor: pointer;
-            font-size: 14px;
+            font-size: 16px;
             font-family: 'Arial', sans-serif;
             transition: background-color 0.3s ease;
-            margin: 0 5px;
+            margin: 10px 5px;
+            width: 120px;
+        }
+
+        .donation-popup button:hover, .payment-popup button:hover, .feedback-popup button:hover {
+            background-color: #5c4939;
+        }
+
+        input[type="text"], input[type="number"], input[type="email"], input[type="password"], input[type="tel"], input[type="month"], select {
+            width: 100%;
+            padding: 8px;
+            margin: 4px 0 12px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 14px;
+            font-family: 'Arial', sans-serif;
+            transition: border-color 0.3s ease;
+        }
+
+        input[type="text"]:focus, input[type="number"]:focus, input[type="email"]:focus, input[type="password"]:focus, input[type="tel"]:focus, input[type="month"]:focus, select:focus {
+            border-color: #7F6C54;
+        }
+
+        label {
+            font-size: 14px;
+            font-family: 'Arial', sans-serif;
+            color: #7F6C54;
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        ul {
+            list-style-type: none;
+            padding-left: 0;
+            margin-bottom: 20px;
+        }
+
+        ul li {
+            font-size: 14px;
+            color: #333;
+            margin-bottom: 8px;
+        }
+
+        .feedback-popup {
+            width: 350px;
+        }
+
+        .donation-popup button[type="button"], .payment-popup button[type="button"], .feedback-popup button[type="button"] {
+            background-color: #d1d1d1;
+            font-size: 14px;
+            width: 100px;
+        }
+
+        .donation-popup button[type="button"]:hover, .payment-popup button[type="button"]:hover, .feedback-popup button[type="button"]:hover {
+            background-color: #aaa;
         }
 
         .impact-container {
@@ -293,7 +351,6 @@ include ('db/db_conn.php');
         .feedback-row:last-child {
             border-bottom: none;
         }
-
 
     </style>
 </head>
@@ -532,7 +589,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'getProgress') {
             <h3>Donated successfully!</h3>
             <p>Do you want to leave a feedback?</p>
             <label><input type="text" name="feedback" placeholder="Leave your feedback here if you have any..."></label>
-            <button type="submit" name="submit-feedback">Submit feedback</button>
+            <button type="submit" name="submit-feedback">Submit</button>
             <button type="button" onclick="closeFeedback()">No</button>
         </div>
     </form>
@@ -615,42 +672,47 @@ if (isset($_GET['action']) && $_GET['action'] == 'getProgress') {
         });
 
     //chart
-    function updateChart(mealsPercentage, peoplePercentage){
+    function updateChart(mealsPercentage, peoplePercentage) {
         const ctx = document.getElementById('impactChart').getContext('2d');
 
-        if(impactChart){
+        if (impactChart) {
             impactChart.destroy();
         }
 
         impactChart = new Chart(ctx, {
-
             type: 'bar',
-            data:{
+            data: {
                 labels: ['Meals Provided', 'People Supported'],
-                datasets: [{
-                    label: 'Meals Provided',
-                    data: [mealsPercentage, 0],
-                    backgroundColor: '#d4a373',
-                    borderColor: '#b07b4e',
-                    borderWidth: 1
-                },
+                datasets: [
                     {
-                    label: 'People Supported',
-                    data: [0, peoplePercentage],
-                    backgroundColor: '#a3b18a',
-                    borderColor: '#6b8f59',
-                    borderWidth: 1
-                },
+                        label: 'Meals Provided',
+                        data: [mealsPercentage, null],
+                        backgroundColor: '#d4a373',
+                        borderColor: '#b07b4e',
+                        borderWidth: 1,
+                        barThickness: 200
+                    },
+                    {
+                        label: 'People Supported',
+                        data: [null, peoplePercentage],
+                        backgroundColor: '#a3b18a',
+                        borderColor: '#6b8f59',
+                        borderWidth: 1,
+                        barThickness: 200
+                    },
                 ],
             },
             options: {
                 responsive: true,
                 scales: {
+                    x: {
+                        stacked: true,
+                    },
                     y: {
                         beginAtZero: true,
-                        max: 100, //0-100%
+                        max: 100, // 0-100%
                         ticks: {
-                            callback: function (value){
+                            callback: function (value) {
                                 return value % 20 === 0 ? `${value}%` : '';
                             },
                         },
@@ -658,13 +720,9 @@ if (isset($_GET['action']) && $_GET['action'] == 'getProgress') {
                 },
                 plugins: {
                     tooltip: {
-                        callbacks:{
-                            label: function(tooltipItem){
-                                if (tooltipItem.datasetIndex === 0) {
-                                    return `${tooltipItem.dataset.label}: ${tooltipItem.raw}%`;
-                                } else if (tooltipItem.datasetIndex === 1) {
-                                    return `${tooltipItem.dataset.label}: ${tooltipItem.raw}%`;
-                                }
+                        callbacks: {
+                            label: function (tooltipItem) {
+                                return `${tooltipItem.dataset.label}: ${tooltipItem.raw}%`;
                             },
                         },
                     },
