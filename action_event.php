@@ -121,12 +121,12 @@ include ('db/db_conn.php');
         $location = $_POST['location'];
         $details = $_POST['details'];
         $participantsNeeded = $_POST['participantsNeeded'];
-        $volunteersNeeded  = $_POST['volunteersNeeded'];
+        $volunteersNeeded = $_POST['volunteersNeeded'];
         $eventStatus = $_POST['eventStatus'];
-        $highlights = $_POST['highlights'];
-        $schedules = $_POST['schedules'];
-        $guestName = $_POST['guestName'];
-        $guestBio = $_POST['guestBio'];
+        $highlights = $_POST['highlights'] ?? []; // Default to an empty array if not set
+        $schedules = $_POST['schedules'] ?? ['datetime' => [], 'description' => []];
+        $guestName = $_POST['guestName'] ?? [];
+        $guestBio = $_POST['guestBio'] ?? [];
 
         $eventImagePath = $eventData['eventPic'] ?? '';
         $guestImagePath = $eventData['guestProfilePic'] ?? '';
@@ -188,39 +188,42 @@ include ('db/db_conn.php');
 //            move_uploaded_file($_FILES["photoGallery"]["tmp_name"], $galleryPath);
 //        }
 
-//        if (isset($_FILES['guestPic'])) {
-//            $target_dir = "uploads/";
-//            $uploadedFiles = [];
-//
-//            for ($i = 0; $i < count($_FILES["guestPic"]["name"]); $i++) {
-//                $fileTmpName = $_FILES["guestPic"]["tmp_name"][$i];
-//                $fileName = basename($_FILES["guestPic"]["name"][$i]);
-//                $guestImagePath = $target_dir . $fileName;
-//
-//                // Check if a file is uploaded for this guest
-//                if ($_FILES["guestPic"]["error"][$i] == 0 && move_uploaded_file($fileTmpName, $guestImagePath)) {
-//                    $uploadedFiles[] = $guestImagePath; // New image uploaded
-//                } else {
-//                    // Use the existing image if no new file is uploaded
-//                    $uploadedFiles[] = $guestList['guestProfilePic'] ?? '';
-//                }
-//            }
-//        }
+        $uploadedImages = [];
+        if (isset($_FILES['guestPic']) && is_array($_FILES['guestPic']['name'])) {
+            for ($i = 0; $i < count($_FILES["guestPic"]["name"]); $i++) {
+                if (!empty($_FILES["guestPic"]["name"][$i]) && $_FILES["guestPic"]["error"][$i] === 0) {
+                    $fileTmpName = $_FILES["guestPic"]["tmp_name"][$i];
+                    $fileName = basename($_FILES["guestPic"]["name"][$i]);
+                    $guestImagePath = $target_dir . $fileName;
+
+                    if (move_uploaded_file($fileTmpName, $guestImagePath)) {
+                        $uploadedImages[] = $guestImagePath; // Save the file path on success
+                    } else {
+                        $uploadedImages[] = ''; // Save an empty string if the move fails
+                    }
+                } else {
+                    $uploadedImages[] = $_POST['existingGuestPics'][$i] ?? ''; // Use existing guest pics if available
+                }
+            }
+        } else {
+            // No files uploaded; default to existing guest pics or empty values
+            if (isset($_POST['existingGuestPics']) && is_array($_POST['existingGuestPics'])) {
+                $uploadedImages = $_POST['existingGuestPics'];
+            }
+        }
 
         if (isset($_FILES['photoGallery'])) {
             $target_dir = "uploads/";
             $uploadedFiles = [];
 
             for ($i = 0; $i < count($_FILES["photoGallery"]["name"]); $i++) {
-                $fileTmpName = $_FILES["photoGallery"]["tmp_name"][$i];
-                $fileName = basename($_FILES["photoGallery"]["name"][$i]);
-                $photoGalleryPath = $target_dir . $fileName;
-
                 if ($_FILES["photoGallery"]["error"][$i] == 0) {
+                    $fileTmpName = $_FILES["photoGallery"]["tmp_name"][$i];
+                    $fileName = basename($_FILES["photoGallery"]["name"][$i]);
+                    $photoGalleryPath = $target_dir . $fileName;
+
                     if (move_uploaded_file($fileTmpName, $photoGalleryPath)) {
                         $uploadedFiles[] = $photoGalleryPath;
-                    } else {
-                        echo "Error uploading file: " . $_FILES['photoGallery']['name'][$i];
                     }
                 }
             }
@@ -269,26 +272,10 @@ include ('db/db_conn.php');
                     $deleteGuestsQuery = "DELETE FROM eventguests WHERE eventID = '$eventID'";
                     $conn->query($deleteGuestsQuery);
 
-                    $uploadedFiles = [];
-                    for ($i = 0; $i < count($_FILES["guestPic"]["name"]); $i++) {
-                        if ($_FILES["guestPic"]["error"][$i] === 0) {
-                            $fileTmpName = $_FILES["guestPic"]["tmp_name"][$i];
-                            $fileName = basename($_FILES["guestPic"]["name"][$i]);
-                            $guestImagePath = $target_dir . $fileName;
-                            if (move_uploaded_file($fileTmpName, $guestImagePath)) {
-                                $uploadedFiles[] = $guestImagePath;
-                            } else {
-                                $uploadedFiles[] = '';
-                            }
-                        } else {
-                            $uploadedFiles[] = $_POST['existingGuestPics'][$i] ?? '';
-                        }
-                    }
-
                     for ($i = 0; $i < count($guestName); $i++) {
                         $name = $conn->real_escape_string($guestName[$i]);
                         $bio = $conn->real_escape_string($guestBio[$i]);
-                        $imagePath = $conn->real_escape_string($uploadedFiles[$i]);
+                        $imagePath = $conn->real_escape_string($uploadedImages[$i]);
 
                         if (!empty($name)) {
                             $guestInsert = "
@@ -703,7 +690,7 @@ include ('db/db_conn.php');
         newHighlight.className = "dynamic-inputs";
         newHighlight.innerHTML = `
         <label><input type="text" name="highlights[]" placeholder="Enter event highlights..."></label>
-        <button type="button" onclick="removeRow(this)">-</button>
+        <button type="button" class="add-remove-btn" onclick="removeRow(this)">-</button>
     `;
         const addButton = document.getElementById('add-highlight-button');
         container.insertBefore(newHighlight, addButton);
@@ -716,7 +703,7 @@ include ('db/db_conn.php');
         newSchedule.innerHTML = `
 <label><input type='datetime-local' name='schedules[datetime][]'>
 <input type='text' name='schedules[description][]' placeholder='Enter event schedule...'></label>
-<button type='button' onclick='removeRow(this)'>-</button>
+<button type='button' class="add-remove-btn" onclick='removeRow(this)'>-</button>
     `;
         const addButton = document.getElementById('add-schedule-button');
         container.insertBefore(newSchedule, addButton);
@@ -744,7 +731,7 @@ include ('db/db_conn.php');
             <input type="text" name="guestName[]" placeholder="Enter guest's name...">
             <input type="text" name="guestBio[]" placeholder="Enter guest's bio...">
         </label>
-        <button type="button" onclick="removeRow(this)">-</button>
+        <button type="button" class="add-remove-btn" onclick="removeRow(this)">-</button>
     `;
 
         const addButton = document.getElementById("add-guest-button");
