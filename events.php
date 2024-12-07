@@ -41,9 +41,13 @@ include ('db/db_conn.php');
             border-radius: 10px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             overflow: hidden;
-            max-width: 300px;
+            width: 270px;
+            height: 370px;
             text-align: center;
-            transition: transform 0.3s, box-shadow 0.3s;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
 
         .event-card:hover {

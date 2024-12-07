@@ -216,7 +216,6 @@ include ('db/db_conn.php');
                 $fileName = basename($_FILES["photoGallery"]["name"][$i]);
                 $photoGalleryPath = $target_dir . $fileName;
 
-                // Check for errors in individual files
                 if ($_FILES["photoGallery"]["error"][$i] == 0) {
                     if (move_uploaded_file($fileTmpName, $photoGalleryPath)) {
                         $uploadedFiles[] = $photoGalleryPath;
@@ -270,7 +269,6 @@ include ('db/db_conn.php');
                     $deleteGuestsQuery = "DELETE FROM eventguests WHERE eventID = '$eventID'";
                     $conn->query($deleteGuestsQuery);
 
-// Handle file uploads
                     $uploadedFiles = [];
                     for ($i = 0; $i < count($_FILES["guestPic"]["name"]); $i++) {
                         if ($_FILES["guestPic"]["error"][$i] === 0) {
@@ -287,7 +285,6 @@ include ('db/db_conn.php');
                         }
                     }
 
-// Add or update new guests
                     for ($i = 0; $i < count($guestName); $i++) {
                         $name = $conn->real_escape_string($guestName[$i]);
                         $bio = $conn->real_escape_string($guestBio[$i]);
@@ -303,6 +300,7 @@ include ('db/db_conn.php');
                             }
                         }
                     }
+
                     if ($eventStatus == "Past"){
                         $checkQuery = "SELECT * FROM pastevents WHERE eventID = $eventID";
                         $checkResult = $conn->query($checkQuery);
@@ -326,7 +324,6 @@ include ('db/db_conn.php');
                         $sql = "UPDATE pastevents SET impact = '$impact' WHERE eventID = '$eventID'";
                         if ($conn->query($sql) === TRUE) {
 
-                            //delete and re upload
                             $deleteQuery = "DELETE FROM photogallery WHERE eventID = '$eventID'";
                             $conn->query($deleteQuery);
 
@@ -379,25 +376,38 @@ include ('db/db_conn.php');
                             $conn->query($highlightQuery);
                         }
 
-                        if (count($guestName) === count($guestBio) && count($guestName) === count($uploadedFiles)) {
-                            for ($i = 0; $i < count($guestName); $i++) {
-                                $name = $conn->real_escape_string($guestName[$i]);
-                                $bio = $conn->real_escape_string($guestBio[$i]);
-                                $imagePath = $conn->real_escape_string($uploadedFiles[$i]);
-
-                                $guestUpdate = "INSERT INTO eventguests (eventID, guestName, guestBio, guestProfilePic)
-            VALUES ('$eventID', '$name', '$bio', '$imagePath')
-            ON DUPLICATE KEY UPDATE 
-                guestBio = VALUES(guestBio), 
-                guestProfilePic = IF(VALUES(guestProfilePic) = '', guestProfilePic, VALUES(guestProfilePic))";
-
-                                if ($conn->query($guestUpdate) === TRUE) {
-                                    echo "Guest $name added or updated successfully.<br>";
+                        $uploadedFiles = [];
+                        for ($i = 0; $i < count($_FILES["guestPic"]["name"]); $i++) {
+                            if ($_FILES["guestPic"]["error"][$i] === 0) {
+                                $fileTmpName = $_FILES["guestPic"]["tmp_name"][$i];
+                                $fileName = basename($_FILES["guestPic"]["name"][$i]);
+                                $guestImagePath = $target_dir . $fileName;
+                                if (move_uploaded_file($fileTmpName, $guestImagePath)) {
+                                    $uploadedFiles[] = $guestImagePath;
                                 } else {
-                                    echo "Error adding/updating guest $name: " . $conn->error . "<br>";
+                                    $uploadedFiles[] = '';
+                                }
+                            } else {
+                                $uploadedFiles[] = $_POST['existingGuestPics'][$i] ?? '';
+                            }
+                        }
+
+                        for ($i = 0; $i < count($guestName); $i++) {
+                            $name = $conn->real_escape_string($guestName[$i]);
+                            $bio = $conn->real_escape_string($guestBio[$i]);
+                            $imagePath = $conn->real_escape_string($uploadedFiles[$i]);
+
+                            if (!empty($name)) {
+                                $guestInsert = "
+            INSERT INTO eventguests (eventID, guestName, guestBio, guestProfilePic) 
+            VALUES ('$eventID', '$name', '$bio', '$imagePath')
+        ";
+                                if (!$conn->query($guestInsert)) {
+                                    echo "Error adding guest $name: " . $conn->error . "<br>";
                                 }
                             }
                         }
+
                         echo "<script>alert('New Event Added'); window.location.href='admin_events.php';</script>";
                     }
                 }
@@ -592,9 +602,10 @@ include ('db/db_conn.php');
 
             <div class="form-grp">
                 <p>Photo Gallery:</p>
-                <label><input type="file" name="photoGallery[]" accept="image/*" multiple onchange='previewPhotoGallery()'> <!--show the image saved in database-->
+                <label><input type="file" name="photoGallery[]" accept="image/*" multiple onchange='previewPhotoGallery()'>
                     <div id="gallery-preview"></div>
                 </label>
+                <!--note, reupload every pic if u wanna update photo gallery-->
             </div>
 
         <?php } ?>
