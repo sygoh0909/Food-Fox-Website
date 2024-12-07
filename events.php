@@ -46,6 +46,7 @@ include ('db/db_conn.php');
             text-align: center;
             display: flex;
             flex-direction: column;
+            padding: 10px;
             justify-content: space-between;
             transition: transform 0.3s ease, box-shadow 0.3s ease;
         }

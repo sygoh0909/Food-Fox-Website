@@ -698,7 +698,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'getProgress') {
 <script>
     let impactChart;
 
-    fetch('http://localhost/assignment/helpers/donation_chart.php?fetchData=true')
+    fetch('helpers/donation_chart.php?fetchData=true')
         .then(response => response.json())
         .then(data => {
             console.log('Fetched Data:', data);

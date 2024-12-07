@@ -59,7 +59,7 @@ function loginSection(){
         <p>Member Name: {$memberInfo['memberName']}</p>
         <p>Join Date: {$dateFormatted}</p>
         <a href='profile.php?memberID=". $memberInfo['memberID']."'><button>Profile</button></a>
-        <p>Points: {$memberInfo['points']}</p>
+        <p>Points: " . ($memberInfo['points'] ?? 0) . "</p>
         <a href='rewards.php'><button>Rewards</button></a>
         <!--log out and jump to main page with no member id-->
         <form action='' method='POST'>
