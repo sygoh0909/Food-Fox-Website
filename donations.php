@@ -303,53 +303,58 @@ include ('db/db_conn.php');
             transform: translateY(-5px);
         }
 
+        .feedback-container {
+            display: flex;
+            justify-content: space-between;
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .feedback-column {
+            flex: 1;
+            max-width: 48%;
+        }
+
         .feedback-row {
             display: flex;
             align-items: flex-start;
-            padding-left: 40px;
-            margin-bottom: 15px;
-            border-bottom: 1px solid #ddd;
-            max-width: 100%;
-            overflow: hidden;
+            margin-bottom: 20px;
+            background-color: #fff7e6;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
 
         .member-profile {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
             margin-right: 15px;
         }
 
         .profile-pic {
-            width: 50px;
-            height: 50px;
+            width: 60px;
+            height: 60px;
             border-radius: 50%;
             object-fit: cover;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
         }
 
         .feedback-content {
             flex-grow: 1;
+            padding-left: 20px;
         }
 
-        .feedback-content .member-name {
+        .member-name {
             font-weight: bold;
-            font-size: 14px;
-            color: #333;
+            font-size: 16px;
+            color: #6d4c41;
             margin-bottom: 5px;
-            text-align: left;
         }
 
         .feedback-content p {
             margin: 0;
             font-size: 14px;
-            color: #555;
-            line-height: 1.4;
-            word-wrap: break-word;
             text-align: left;
-        }
-
-        .feedback-row:last-child {
-            border-bottom: none;
+            color: #333;
+            line-height: 1.6;
         }
 
     </style>
@@ -631,29 +636,63 @@ if (isset($_GET['action']) && $_GET['action'] == 'getProgress') {
     <?php
     $conn = connection();
 
-    $sql = "SELECT d.feedback, m.memberName, m.memberProfile FROM donations d JOIN members m ON d.memberID = m.memberID WHERE d.hidden = 0 AND d.feedback <> '' AND d.feedback IS NOT NULL ORDER BY d.donationDate DESC LIMIT 5";
+    $sql = "SELECT d.feedback, m.memberName, m.memberProfile 
+        FROM donations d 
+        JOIN members m ON d.memberID = m.memberID 
+        WHERE d.hidden = 0 AND d.feedback <> '' AND d.feedback IS NOT NULL 
+        ORDER BY d.donationDate DESC 
+        LIMIT 10";
 
     $result = $conn->query($sql);
 
     if ($result->num_rows > 0) {
-        while($row = $result->fetch_assoc()) {
-            echo "<div class='feedback-row'>";
+        echo "<div class='feedback-container'>";
 
+        // Initialize counters for splitting columns
+        $feedbacks = [];
+        while ($row = $result->fetch_assoc()) {
+            $feedbacks[] = $row;
+        }
+        $half = ceil(count($feedbacks) / 2);
+
+        // Left Column
+        echo "<div class='feedback-column'>";
+        for ($i = 0; $i < $half; $i++) {
+            $row = $feedbacks[$i];
+            echo "<div class='feedback-row'>";
             echo "<div class='member-profile'>";
             echo "<img src='" . $row["memberProfile"] . "' alt='Member Profile' class='profile-pic' />";
             echo "</div>";
-
             echo "<div class='feedback-content'>";
             echo "<p class='member-name'>" . str_repeat('*', strlen($row['memberName'])) . "</p>";
             echo "<p>" . $row["feedback"] . "</p>";
             echo "</div>";
-
             echo "</div>";
         }
+        echo "</div>";
+
+        // Right Column
+        echo "<div class='feedback-column'>";
+        for ($i = $half; $i < count($feedbacks); $i++) {
+            $row = $feedbacks[$i];
+            echo "<div class='feedback-row'>";
+            echo "<div class='member-profile'>";
+            echo "<img src='" . $row["memberProfile"] . "' alt='Member Profile' class='profile-pic' />";
+            echo "</div>";
+            echo "<div class='feedback-content'>";
+            echo "<p class='member-name'>" . str_repeat('*', strlen($row['memberName'])) . "</p>";
+            echo "<p>" . $row["feedback"] . "</p>";
+            echo "</div>";
+            echo "</div>";
+        }
+        echo "</div>";
+
+        echo "</div>";
     } else {
         echo "<p>No feedback available.</p>";
     }
     ?>
+
 </main>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
