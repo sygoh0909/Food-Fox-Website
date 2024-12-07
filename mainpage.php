@@ -122,7 +122,15 @@ include ('db/db_conn.php');
         }
 
         .team-member {
+            position: relative;
             text-align: center;
+        }
+
+        .team-title {
+            position: absolute;
+            top: 160px;
+            left: 100px;
+            margin: 10px;
         }
 
         .team-member div {
@@ -213,7 +221,7 @@ include ('db/db_conn.php');
                 </div>
             </section>
             <section class="team-member">
-                <h2>Our Team</h2>
+                <h2 class="team-title">Our Team</h2>
                 <div class="team-member1">
                     <img src="logo.png" alt="Team Member 1">
                     <p><b>Goh Shu Yi</b></p>
