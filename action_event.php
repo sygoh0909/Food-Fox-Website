@@ -230,7 +230,11 @@ include ('db/db_conn.php');
         .action-popup button:nth-child(2):hover {
             background-color: #C9302C;
         }
-
+        .note {
+            font-size: 14px;
+            color: #5C4033;
+            margin-top: 10px;
+        }
     </style>
 </head>
 <body>
@@ -452,14 +456,17 @@ include ('db/db_conn.php');
                     if ($action=="editPast"){
                         $sql = "UPDATE pastevents SET impact = '$impact' WHERE eventID = '$eventID'";
                         if ($conn->query($sql) === TRUE) {
+                            if (!empty($uploadedFiles)) {
+                                $deleteQuery = "DELETE FROM photogallery WHERE eventID = '$eventID'";
+                                if (!$conn->query($deleteQuery)) {
+                                    echo "Error deleting old images: " . $conn->error;
+                                }
 
-                            $deleteQuery = "DELETE FROM photogallery WHERE eventID = '$eventID'";
-                            $conn->query($deleteQuery);
-
-                            foreach ($uploadedFiles as $filePath) {
-                                $sql = "INSERT INTO photogallery (eventID, imagePath) VALUES ('$eventID', '$photoGalleryPath')";
-                                if (!$conn->query($sql)) {
-                                    echo "Error inserting image: " . $conn->error;
+                                foreach ($uploadedFiles as $filePath) {
+                                    $sql = "INSERT INTO photogallery (eventID, imagePath) VALUES ('$eventID', '$filePath')";
+                                    if (!$conn->query($sql)) {
+                                        echo "Error inserting image: " . $conn->error;
+                                    }
                                 }
                             }
                         }
@@ -732,9 +739,9 @@ include ('db/db_conn.php');
             <div class="form-grp">
                 <p>Photo Gallery:</p>
                 <label><input type="file" name="photoGallery[]" accept="image/*" multiple onchange='previewPhotoGallery()'>
-                    <div id="gallery-preview"></div>
+                    <div id="gallery-preview" class="gallery-img"></div>
                 </label>
-                <!--note, reupload every pic if u wanna update photo gallery-->
+                <p class="note">You need to re-upload all pictures if you want to update the photo gallery.</p>
             </div>
 
         <?php } ?>
