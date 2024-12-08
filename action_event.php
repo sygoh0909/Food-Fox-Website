@@ -8,39 +8,91 @@ include ('db/db_conn.php');
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="form.css">
-    <link rel="stylesheet" href="main.css">
     <title>Add/Edit/Delete Event Page</title>
 
     <style>
-        input[type="datetime-local"]{
-            padding: 5px;
-            font-size: 14px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            outline: none;
-            width: 120px;
-            transition: border-color 0.3s ease;
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #F5EEDC;
+            margin: 0;
+            padding: 0;
         }
-        .image {
+
+        main {
+            width: 95%;
+            max-width: 1200px;
+            margin: 40px auto;
+            background-color: #FFFFFF;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.15);
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            border: 2px solid #C5B4A5;
+        }
+
+        form {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 20px;
+            align-items: start;
+            justify-items: center;
+        }
+
+        .form-grp {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            width: 100%;
+            max-width: 600px;
+        }
+
+        p {
+            margin: 0;
+            font-weight: bold;
+            color: #444444;
+        }
+
+        input[type="text"],
+        input[type="file"],
+        input[type="datetime-local"] {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #A89E92;
+            border-radius: 8px;
+            font-size: 16px;
+            background-color: #FFFFFF;
+            color: #444444;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        input[type="text"]:focus,
+        input[type="file"]:focus,
+        input[type="datetime-local"]:focus {
+            outline: none;
+            border-color: #7F6C54;
+            box-shadow: 0 0 5px #7F6C54;
+        }
+
+        .image, .event-image img {
             width: 120px;
             height: 100px;
             object-fit: cover;
+            border-radius: 10px;
             border: 3px solid #C5B4A5;
             margin-bottom: 10px;
-            border-radius: 10px;
         }
+
         .event-image {
-            width: 140px;
-            height: 120px;
-            border-radius: 10px;
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 2.5em;
             color: #666;
             margin-bottom: 20px;
-            object-fit: cover;
         }
+
         .dynamic-inputs {
             display: flex;
             flex-wrap: wrap;
@@ -57,10 +109,22 @@ include ('db/db_conn.php');
             margin-left: 5px;
         }
 
-        #guest-container {
+        .add-remove-btn {
+            width: 50px;
+            height: 35px;
+            font-size: 1.2em;
             display: flex;
-            flex-direction: column;
-            gap: 10px;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            background-color: #C5B4A5;
+            border: none;
+            border-radius: 8px;
+        }
+
+        .add-remove-btn:hover {
+            background-color: #7F6C54;
+            transform: translateY(-2px);
         }
 
         .guestPic img {
@@ -69,6 +133,7 @@ include ('db/db_conn.php');
             border-radius: 50%;
             object-fit: cover;
         }
+
         .datetime {
             display: inline-flex;
             gap: 20px;
@@ -80,13 +145,82 @@ include ('db/db_conn.php');
             white-space: nowrap;
         }
 
-        .add-remove-btn{
-            width: 50px;
-            height: 35px;
-            font-size: 1.2em;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+        button {
+            padding: 12px 25px;
+            margin-top: 10px;
+            border-radius: 8px;
+            border: none;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.2s ease;
+            color: white;
+        }
+
+        button[type="submit"],
+        button[type="button"] {
+            background-color: #7F6C54;
+        }
+
+        button[type="submit"]:hover,
+        button[type="button"]:hover {
+            background-color: #6B5A48;
+            transform: translateY(-2px);
+        }
+
+        a button {
+            background-color: #A89E92;
+            color: white;
+        }
+
+        a button:hover {
+            background-color: #7F6C54;
+            transform: translateY(-2px);
+        }
+
+        .error-message {
+            color: red;
+            font-size: 14px;
+        }
+
+        .action-popup {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #FFFFFF;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+            text-align: center;
+            z-index: 1000;
+            border: 2px solid #C5B4A5;
+        }
+
+        .action-popup h2 {
+            margin-bottom: 20px;
+            color: #444444;
+            font-size: 20px;
+        }
+
+        .action-popup button {
+            margin: 10px;
+            padding: 10px 25px;
+        }
+
+        .action-popup button:nth-child(1) {
+            background-color: #7F6C54;
+        }
+
+        .action-popup button:nth-child(1):hover {
+            background-color: #6B5A48;
+        }
+
+        .action-popup button:nth-child(2) {
+            background-color: #D9534F;
+        }
+
+        .action-popup button:nth-child(2):hover {
+            background-color: #C9302C;
         }
 
     </style>
