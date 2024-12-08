@@ -245,16 +245,19 @@ include ('db/db_conn.php');
             if (empty($memberName)) {
                 $errors['memberName'] = "Name is required";
             }
-            elseif (!preg_match('/^[a-zA-Z]+$/', $memberName)) {
-                $errors['memberName'] = "Name can contain only letters and spaces";
+            else {
+                $nameParts = explode(" ", $memberName);
+                if (count($nameParts) < 2) {
+                    $errors['memberName'] = "Please enter your full name (first and last name)";
+                }
             }
             if (empty($email)) {
                 $errors['email'] = "Email is required";
             }
-            elseif (!preg_match('/^[\w\-\.]+@[a-zA-Z]+\.[a-zA-Z]{2,}$/', $email)) {
-                $errors['email'] = "Enter a valid email address."; //can use verify email
+            elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+                $errors['email'] = "Enter a valid email address.";
             }
-            if (!preg_match('/^\+?[0-9]{1,4}?\s?(\(?[0-9]{3}\)?[\s.-]?)?[0-9]{3}[\s.-]?[0-9]{4}$/', $phoneNum)) {
+            if (!empty($phoneNum) && !preg_match('/^\+?[0-9]{1,4}?\s?(\(?[0-9]{3}\)?[\s.-]?)?[0-9]{3}[\s.-]?[0-9]{4}$/', $phoneNum)) {
                 $errors['phoneNum'] = "Enter a valid phone number.";
             }
 
