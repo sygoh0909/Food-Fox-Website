@@ -21,33 +21,29 @@ include ('db/db_conn.php');
             flex-direction: column;
             gap: 20px;
             padding: 30px;
-            background-color: #f2f2f2;
+            background-color: #F9F9F9;
             border-radius: 10px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            max-width: 100%;
-            width: 90%;
-            margin: auto;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
         }
 
         .activity-item {
             display: flex;
             flex-direction: column;
+            gap: 8px;
             padding: 20px;
-            background-color: #f8f9fa;
-            border: 1px solid #e0e0e0;
+            background-color: #FFFFFF;
+            border: 1px solid #E0E0E0;
             border-radius: 10px;
-            box-shadow: 0 3px 5px rgba(0, 0, 0, 0.15);
+            box-shadow: 0px 3px 5px rgba(0, 0, 0, 0.1);
             transition: transform 0.3s ease, background-color 0.3s ease;
-            font-size: 1.1em;
         }
 
         .activity-item:hover {
-            background-color: #f1f3f4;
-            transform: scale(1.02);
+            background-color: #F1F3F4;
+            transform: translateY(-2px);
         }
 
         .activity-item span {
-            margin: 8px 0;
             font-size: 1em;
             color: #333;
         }
@@ -55,19 +51,19 @@ include ('db/db_conn.php');
         .activity-item .event-name {
             font-size: 1.2em;
             font-weight: bold;
-            color: #2d3436;
+            color: #2D3436;
         }
 
         .activity-item .register-type {
             font-size: 0.9em;
-            color: #636e72;
+            color: #636E72;
         }
 
         p.no-data {
             text-align: center;
-            color: #666;
-            font-size: 1.4em;
-            margin-top: 40px;
+            color: #777;
+            font-size: 1.2em;
+            margin-top: 20px;
         }
 
     </style>
@@ -102,29 +98,34 @@ include ('db/db_conn.php');
     $conn = connection();
     $memberID = isset($_GET['memberID']) ? $_GET['memberID'] : '';
 
-    $sql = "SELECT e.eventName, r.registrationDate, r.registerType 
-        FROM events e, registrations r 
-        WHERE r.memberID = $memberID AND e.eventID = r.eventID 
-        ORDER BY r.registrationDate DESC";
+    $sql = "
+        (SELECT CONCAT('Event Registration - ', r.registerType) AS activityType, e.eventName AS activityName, r.registrationDate AS activityDate 
+         FROM events e 
+         INNER JOIN registrations r ON e.eventID = r.eventID 
+         WHERE r.memberID = $memberID)
+        UNION
+        (SELECT 'Donation' AS activityType, d.amount AS activityName, d.donationDate AS activityDate 
+         FROM donations d 
+         WHERE d.memberID = $memberID)
+        ORDER BY activityDate DESC ";
+
     $result = mysqli_query($conn, $sql);
 
     if (mysqli_num_rows($result) > 0) {
-        echo "<div class='activity-list'>"; // Container for activities
         while ($row = mysqli_fetch_assoc($result)) {
-
-            $dateFormatted = date('d-m-Y', strtotime($row['registrationDate']));
-            $eventName = $row['eventName'];
-            $registerType = $row['registerType'];
+            $activityType = $row['activityType'];
+            $activityName = $row['activityName'];
+            $activityDate = $row['activityDate'];
+            $dateFormatted = date('d-m-Y', strtotime($activityDate));
 
             echo "<div class='activity-item'>";
-            echo "<span class='event-name'>Registered Event: $eventName</span>";
-            echo "<span>Registered Date: $dateFormatted</span>";
-            echo "<span class='register-type'>Register Type: $registerType</span>";
+            echo "<span>Type: $activityType</span>";
+            echo "<span>Activity: $activityName</span>";
+            echo "<span>Date: $dateFormatted</span>";
             echo "</div>";
         }
-        echo "</div>";
     } else {
-        echo "<p class='no-data'>No recent registrations found.</p>";
+        echo "<p>No recent activities found.</p>";
     }
     ?>
 </main>

@@ -145,18 +145,78 @@ include ('db/db_conn.php');
             box-sizing: border-box;
         }
 
+        .recent-activity {
+            margin-top: 20px;
+            background-color: #FFFFFF;
+            border: 1px solid #E0E0E0;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
         .recent-activity h3 {
             color: #5C4033;
-            margin-bottom: 10px;
+            font-size: 1.2em;
+            font-weight: bold;
+            margin-bottom: 15px;
+            border-bottom: 2px solid #E0E0E0;
+            padding-bottom: 10px;
         }
 
         .recent-activity .activity-item {
             background-color: #F7F2E9;
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .recent-activity .activity-item:hover {
+            transform: translateY(-3px);
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .recent-activity .activity-item span {
+            font-size: 0.9em;
+            color: #5C4033;
+        }
+
+        .recent-activity .activity-item span:first-child {
+            font-weight: bold;
+            margin-right: 10px;
+        }
+
+        .recent-activity .activity-item span:last-child {
+            font-style: italic;
+            color: #8B7765;
+        }
+
+        .recent-activity .btn {
+            margin-top: 10px;
+            display: block;
+            width: 100%;
+            background-color: #7F6C54;
+            color: #FFFFFF;
+            text-align: center;
             padding: 10px;
             border-radius: 5px;
-            margin-bottom: 10px;
             font-size: 0.9em;
+            font-weight: bold;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            border: none;
         }
+
+        .recent-activity .btn:hover {
+            background-color: #6B5A48;
+            transform: translateY(-3px);
+        }
+
         .profile-sidebar .btn.back {
             position: absolute;
             top: 20px;
@@ -360,28 +420,38 @@ include ('db/db_conn.php');
 
                 <div class="recent-activity">
                     <h3>Recent Activity</h3>
-                    <!--show recent activity that member joined-->
                     <?php
-                    $sql = "SELECT e.eventName, r.registrationDate FROM events e, registrations r WHERE r.memberID = $memberID AND e.eventID = r.eventID ORDER BY r.registrationDate DESC LIMIT 3";
+                    $sql = "
+        (SELECT CONCAT('Event Registration - ', r.registerType) AS activityType, e.eventName AS activityName, r.registrationDate AS activityDate 
+         FROM events e 
+         INNER JOIN registrations r ON e.eventID = r.eventID 
+         WHERE r.memberID = $memberID)
+        UNION
+        (SELECT 'Donation' AS activityType, d.amount AS activityName, d.donationDate AS activityDate 
+         FROM donations d 
+         WHERE d.memberID = $memberID)
+        ORDER BY activityDate DESC 
+        LIMIT 3";
+
                     $result = mysqli_query($conn, $sql);
 
                     if (mysqli_num_rows($result) > 0) {
                         while ($row = mysqli_fetch_assoc($result)) {
-                            $eventName = $row['eventName'];
-                            $registrationDate = $row['registrationDate'];
-                            $dateFormatted = date('d-m-Y', strtotime($registrationDate));
+                            $activityType = $row['activityType'];
+                            $activityName = $row['activityName'];
+                            $activityDate = $row['activityDate'];
+                            $dateFormatted = date('d-m-Y', strtotime($activityDate));
 
                             echo "<div class='activity-item'>";
-                            echo "<span>Event: $eventName</span>";
-                            echo "<span>Register Date: $dateFormatted</span>";
+                            echo "<span>Type: $activityType</span>";
+                            echo "<span>Activity: $activityName</span>";
+                            echo "<span>Date: $dateFormatted</span>";
                             echo "</div>";
                         }
-                        echo "<a href='recentActivity.php?memberID=" . $memberData['memberID'] ."'><button type='button' class='btn'>Check out more!</button></a>";
+                        echo "<a href='recentActivity.php?memberID=" . $memberData['memberID'] . "'><button type='button' class='btn'>Check out more!</button></a>";
+                    } else {
+                        echo "<p>No recent activities found.</p>";
                     }
-                    else {
-                        echo "<p>No recent registrations found.</p>";
-                    }
-
                     ?>
                 </div>
             </div>
