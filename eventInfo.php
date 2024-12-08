@@ -200,22 +200,55 @@ include ('db/db_conn.php');
         .photo-gallery-container {
             display: flex;
             flex-wrap: wrap;
-            gap: 10px;
-            justify-content: center;
-        }
-
-        .gallery-item {
-            width: 100px;
-            height: 100px;
-            border-radius: 8px;
-            overflow: hidden;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            gap: 15px;
         }
 
         .gallery-item img {
+            width: 150px;
+            height: auto;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .gallery-item img:hover {
+            transform: scale(1.1);
+        }
+
+        .full-view {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
             width: 100%;
             height: 100%;
-            object-fit: cover;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.8);
+        }
+
+        .full-image {
+            display: block;
+            margin: auto;
+            max-width: 80%;
+            max-height: 80%;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+        }
+
+        .close {
+            position: absolute;
+            top: 20px;
+            right: 35px;
+            color: #fff;
+            font-size: 35px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: #bbb;
         }
     </style>
 </head>
@@ -395,7 +428,7 @@ include ('db/db_conn.php');
                     if ($resultGallery->num_rows > 0) {
                         while ($row = $resultGallery->fetch_assoc()) {
                             echo "<div class='gallery-item'>";
-                            echo "<img src='" . $row['imagePath'] . "' alt='Photo Gallery'>";
+                            echo "<img src='" . $row['imagePath'] . "' alt='Photo Gallery' onclick='openView(this.src)'>";
                             echo "</div>";
                         }
                     } else {
@@ -411,6 +444,10 @@ include ('db/db_conn.php');
         }
     }
     ?>
+    <div id="imageFullView" class="full-view">
+        <span class="close" onclick="closeView()">&times;</span>
+        <img class="full-image" id="fullImage">
+    </div>
 </main>
 <footer>
     <div class="footer-container">
@@ -459,6 +496,18 @@ include ('db/db_conn.php');
             scheduleList.style.display = 'none';
             btnText.innerHTML = "Show Schedules";
         }
+    }
+
+    function openView(src){
+        const fullView = document.getElementById('imageFullView');
+        const fullImage = document.getElementById('fullImage');
+        fullImage.src = src;
+        fullView.style.display = 'block';
+    }
+
+    function closeView(){
+        const fullView = document.getElementById('imageFullView');
+        fullView.style.display = 'none';
     }
 </script>
 </body>
