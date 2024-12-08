@@ -55,6 +55,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
         $errors['email'] = "Enter a valid email address.";
     }
+    else{
+        $sql = "SELECT * FROM members WHERE email = '$email'";
+        $result = $conn->query($sql);
+        if ($result->num_rows > 0) {
+            $errors['email'] = "This email is already registered.";
+        }
+    }
     if (empty($password)) {
         $errors['password'] = "Password is required";
     }
@@ -75,8 +82,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         if (mysqli_query($conn, $query)) {
             $memberId = mysqli_insert_id($conn); // Get the new member ID
             $_SESSION['memberID'] = $memberId;
-            echo "<p>Registration successful. Your Member ID is: $memberId</p>";
-            echo "<form method='POST' action='mainpage.php'><button type='submit'>OK</button></form>";
+            echo "<script>alert('Registration successful. Your Member ID is: $memberId'); window.location.href = 'mainpage.php'; </script>";
+//            echo "<p>Registration successful. Your Member ID is: $memberId</p>";
+//            echo "<form method='POST' action='mainpage.php'><button type='submit'>OK</button></form>";
         }
         else{
             echo "<p>Error: " . mysqli_error($conn) . "</p>";
@@ -162,22 +170,44 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
     }
 
-    function validateEmail(){
+    function validateEmail() {
         const emailInput = document.getElementById('email').value.trim();
         const emailError = document.getElementById('email-error');
-        const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
-        if (emailInput === ''){
+        if (emailInput === '') {
             emailError.textContent = "Email is required";
             emailError.style.visibility = 'visible';
+            return;
         }
-        else if (!emailPattern.test(emailInput)){
-            emailError.textContent = "Invalid email format";
+
+        const atSymbolIndex = emailInput.indexOf('@');
+        if (atSymbolIndex === -1) {
+            emailError.textContent = "Email must contain '@'";
             emailError.style.visibility = 'visible';
+            return;
         }
-        else{
-            emailError.style.display = 'hidden';
+
+        if (atSymbolIndex === 0 || atSymbolIndex === emailInput.length - 1) {
+            emailError.textContent = "Invalid '@' position in email";
+            emailError.style.visibility = 'visible';
+            return;
         }
+
+        const domain = emailInput.slice(atSymbolIndex + 1);
+        if (domain.indexOf('.') === -1) {
+            emailError.textContent = "Email must contain a domain (e.g., gmail.com)";
+            emailError.style.visibility = 'visible';
+            return;
+        }
+
+        const domainParts = domain.split('.');
+        if (domainParts[0].length === 0) {
+            emailError.textContent = "Invalid domain name in email";
+            emailError.style.visibility = 'visible';
+            return;
+        }
+
+        emailError.style.visibility = 'hidden';
     }
 
     function validatePassword(){
