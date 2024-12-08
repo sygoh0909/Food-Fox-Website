@@ -95,8 +95,10 @@ include ('db/db_conn.php');
             <label><input type="text" name="feedback" value="<?php echo $donationDetails['feedback'];?>"></label>
         </div>
 
-        <button type="button" onclick="displayActionPopup()"><?php echo $donationID && $action=="edit"?'Update donation details':'Delete donation details'?></button>
-        <a href="admin_donations.php"><button type="button">Cancel</button></a>
+        <div class="btn">
+            <button type="button" onclick="displayActionPopup()"><?php echo $donationID && $action=="edit"?'Update donation details':'Delete donation details'?></button>
+            <a href="admin_donations.php"><button type="button">Cancel</button></a>
+        </div>
 
 
         <div id="action-popup" class="action-popup" style="display:none;">
