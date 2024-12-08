@@ -7,7 +7,6 @@ include ('db/db_conn.php');
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="form.css">
     <title>Add/Edit/Delete Event Page</title>
 
     <style>
@@ -45,7 +44,7 @@ include ('db/db_conn.php');
             flex-direction: column;
             gap: 8px;
             width: 100%;
-            max-width: 600px;
+            max-width: 800px;
         }
 
         p {
@@ -55,8 +54,7 @@ include ('db/db_conn.php');
         }
 
         input[type="text"],
-        input[type="file"],
-        input[type="datetime-local"] {
+        input[type="file"] {
             width: 100%;
             padding: 12px;
             border: 1px solid #A89E92;
@@ -73,6 +71,16 @@ include ('db/db_conn.php');
             outline: none;
             border-color: #7F6C54;
             box-shadow: 0 0 5px #7F6C54;
+        }
+
+        input[type="datetime-local"]{
+            padding: 12px;
+            border: 1px solid #A89E92;
+            border-radius: 8px;
+            font-size: 16px;
+            background-color: #FFFFFF;
+            color: #444444;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
         }
 
         .image, .event-image img {
