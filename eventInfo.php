@@ -254,7 +254,7 @@ include ('db/db_conn.php');
     $eventData = null;
 
     if ($eventID) {
-        $sql = "SELECT e.*, g.*, h.*, s.* FROM events e, eventguests g, eventhighlights h, eventschedules s WHERE e.eventID = $eventID AND  e.eventID = g.eventID AND e.eventID = h.eventID AND e.eventID = s.eventID";
+        $sql = "SELECT e.* FROM events e WHERE e.eventID = $eventID";
         $result = $conn->query($sql);
 
         if ($result->num_rows > 0) {
@@ -281,23 +281,25 @@ include ('db/db_conn.php');
 
             $sqlHighlights = "SELECT highlights FROM eventhighlights WHERE eventID = $eventID";
             $resultHighlights = $conn->query($sqlHighlights);
+            echo "<div class='events-right'>";
+            echo "<div class='event-section'>";
+            echo "<h3>Highlights</h3>";
             if ($resultHighlights->num_rows > 0) {
-                echo "<div class='events-right'>";
-                echo "<div class='event-section'>";
-                echo "<h3>Highlights</h3>";
                 echo "<ul>";
                 while ($highlight = $resultHighlights->fetch_assoc()) {
                     echo "<li>" . $highlight['highlights'] . "</li>";
                 }
                 echo "</ul>";
-                echo "</div>";
+            } else {
+                echo "<p>No highlights available for this event.</p>";
             }
+            echo "</div>";
 
             $sqlSchedules = "SELECT scheduleDateTime, activityDescription FROM eventschedules WHERE eventID = $eventID";
             $resultSchedules = $conn->query($sqlSchedules);
+            echo "<div class='event-section'>";
+            echo "<h3>Schedules</h3>";
             if ($resultSchedules->num_rows > 0) {
-                echo "<div class='event-section'>";
-                echo "<h3>Schedules</h3>";
                 echo "<button class='dropdown-btn' id='schedule-btn' onclick='toggleSchedule()'>Show Schedules</button>";
                 echo "<ul class='schedule-list' id='schedule-list'>";
                 while ($schedule = $resultSchedules->fetch_assoc()) {
@@ -309,19 +311,20 @@ include ('db/db_conn.php');
                     echo "</li>";
                 }
                 echo "</ul>";
-                echo "</div>";
+            } else {
+                echo "<p>No schedules available for this event.</p>";
             }
+            echo "</div>";
 
             $sqlGuests = "SELECT guestName, guestProfilePic, guestBio FROM eventguests WHERE eventID = $eventID";
             $resultGuests = $conn->query($sqlGuests);
+            echo "<div class='event-section'>";
+            echo "<h3>Guests</h3>";
             if ($resultGuests->num_rows > 0) {
-                echo "<div class='event-section'>";
-                echo "<h3>Guests</h3>";
-
                 while ($guest = $resultGuests->fetch_assoc()) {
                     echo "<div class='guest-container'>";
                     echo "<div class='guest-image'>";
-                    echo "<img src='" . $guest['guestProfilePic'] . "' alt='Guest Profile'/>";
+                    echo "<img src='" . $guest['guestProfilePic'] . "' alt='Guest Profile' />";
                     echo "</div>";
                     echo "<div class='guest-details'>";
                     echo "<p class='guest-name'>" . $guest['guestName'] . "</p>";
@@ -329,8 +332,10 @@ include ('db/db_conn.php');
                     echo "</div>";
                     echo "</div>";
                 }
-                echo "</div>";
+            } else {
+                echo "<p>No guests available for this event.</p>";
             }
+            echo "</div>";
 
             if ($action == "upcoming") {
                 echo "<div class='event-highlight'>";
@@ -343,20 +348,20 @@ include ('db/db_conn.php');
                 $participantsNeeded = $eventData['participantsNeeded'];
                 $volunteersNeeded = $eventData['volunteersNeeded'];
 
-                if ($result->num_rows > 0) {
-                    $limit = $result->fetch_assoc();
-                    $participantsNeeded = $limit['participantsNeeded'];
-                    $volunteersNeeded = $limit['volunteersNeeded'];
-                }
-
                 if (!empty($participantsNeeded) || !empty($volunteersNeeded)) {
                     $sqlParticipant = "SELECT COUNT(*) AS total_participants FROM participants p, registrations r, events e WHERE p.registrationID = r.registrationID AND r.eventID = e.eventID AND e.eventID = $eventID";
                     $resultParticipant = $conn->query($sqlParticipant);
-                    $registeredParticipant = $resultParticipant->fetch_assoc()['total_participants'];
+                    $registeredParticipant = 0;
+                    if ($resultParticipant && $resultParticipant->num_rows > 0) {
+                        $registeredParticipant = $resultParticipant->fetch_assoc()['total_participants'];
+                    }
 
                     $sqlVolunteer = "SELECT COUNT(*) AS total_volunteers FROM volunteers v, registrations r, events e WHERE v.registrationID = r.registrationID AND r.eventID = e.eventID AND e.eventID = $eventID";
                     $resultVolunteer = $conn->query($sqlVolunteer);
-                    $registeredVolunteer = $resultVolunteer->fetch_assoc()['total_volunteers'];
+                    $registeredVolunteer = 0;
+                    if ($resultVolunteer && $resultVolunteer->num_rows > 0) {
+                        $registeredVolunteer = $resultVolunteer->fetch_assoc()['total_volunteers'];
+                    }
 
                     if (($registeredParticipant >= $participantsNeeded) && ($registeredVolunteer >= $volunteersNeeded)) {
                         echo "<button class='register-btn'>Full</button>";
@@ -385,17 +390,18 @@ include ('db/db_conn.php');
 
                     $sqlGallery = "SELECT * FROM photogallery WHERE eventID = $eventID";
                     $resultGallery = $conn->query($sqlGallery);
-                    if ($resultGallery->num_rows > 0){
-                        echo "<div class='photo-gallery-container'>";
-                        echo "<h3>Photo Gallery</h3>";
-                        while ($row = $resultGallery->fetch_assoc()){
-                            echo "<div class='gallery-item'</div>";
-                            echo "<img src='" . $row['imagePath'] ."'alt='Photo Gallery'>";
+                    echo "<div class='photo-gallery-container'>";
+                    echo "<h3>Photo Gallery</h3>";
+                    if ($resultGallery->num_rows > 0) {
+                        while ($row = $resultGallery->fetch_assoc()) {
+                            echo "<div class='gallery-item'>";
+                            echo "<img src='" . $row['imagePath'] . "' alt='Photo Gallery'>";
                             echo "</div>";
                         }
-                        echo "</div>";
+                    } else {
+                        echo "<p>No photos available for this event.</p>";
                     }
-                    //no photos
+                    echo "</div>";
                 }
             }else{
                 echo "No upcoming or past events.";

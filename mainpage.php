@@ -17,13 +17,13 @@ include ('db/db_conn.php');
         .banner{
             position: relative;
             width: 100%;
-            height: 100%;
+            height: 150%;
             overflow: hidden;
         }
         .banner img{
             width: 100%;
             height: 100%;
-            display: block; /*remove extra spaces around the image*/
+            display: block;
             object-fit: cover;
         }
         .overlay-content{
