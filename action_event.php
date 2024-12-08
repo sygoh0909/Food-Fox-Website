@@ -603,7 +603,7 @@ include ('db/db_conn.php');
 
             <div class="form-grp">
                 <p>Impact and Outcomes:</p>
-                <label><input type="text" name="impact" value="<?php echo $eventData['impact'] ?? '';?>"</label>
+                <label><input type="text" name="impact" value="<?php echo $eventData['impact'] ?? '';?>"></label>
             </div>
 
             <div class="form-grp">
