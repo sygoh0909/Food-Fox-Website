@@ -10,6 +10,13 @@ include ('db/db_conn.php');
     <title>Edit/Delete Member Page</title>
     <link rel="stylesheet" href="form.css">
     <style>
+        form {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            align-items: start;
+        }
+
         #profile-container {
             display: flex;
             flex-direction: column;

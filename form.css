@@ -21,15 +21,17 @@ main {
 
 form {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr;
     gap: 20px;
     align-items: start;
+    justify-items: center;
 }
 
 .form-grp {
     display: flex;
     flex-direction: column;
     gap: 8px;
+    width: 100%;
 }
 
 h2 {
