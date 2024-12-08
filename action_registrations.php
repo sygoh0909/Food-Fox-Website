@@ -7,7 +7,6 @@ include ('db/db_conn.php');
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="form.css">
     <title>Edit/Delete Registration Page</title>
 
     <style>
