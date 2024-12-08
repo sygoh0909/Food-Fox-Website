@@ -119,6 +119,32 @@ if (mysqli_num_rows($result) > 0) {
             background-color: #0056b3;
         }
 
+        select {
+            width: 100%;
+            padding: 12px;
+            font-size: 16px;
+            border: 1px solid #A89E92;
+            border-radius: 8px;
+            color: #444444;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+            cursor: pointer;
+        }
+
+        select:focus {
+            outline: none;
+            border-color: #7F6C54;
+            box-shadow: 0 0 5px #7F6C54;
+        }
+
+        select:hover {
+            border-color: #7F6C54;
+        }
+
+        option {
+            background-color: #FFFFFF;
+            color: #444444;
+            font-size: 16px;
+        }
     </style>
 </head>
 <body>
@@ -148,6 +174,7 @@ if (mysqli_num_rows($result) > 0) {
 </header>
 <main>
     <form method="POST" enctype="multipart/form-data">
+        <h2>Registration form</h2>
         <div class="form-grp">
             <label for="events">Choose an event: </label>
             <select name="events" id="events">
