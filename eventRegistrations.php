@@ -145,6 +145,11 @@ if (mysqli_num_rows($result) > 0) {
             color: #444444;
             font-size: 16px;
         }
+        label{
+            margin: 0;
+            font-weight: bold;
+            color: #444444;
+        }
     </style>
 </head>
 <body>
@@ -311,8 +316,10 @@ if (mysqli_num_rows($result) > 0) {
         </div>
     </div>
 
-        <button type="button" onclick="displayActionPopup()">Register</button>
-        <a href="events.php"><button type="button">Cancel</button></a>
+        <div class="btn">
+            <button type="button" onclick="displayActionPopup()">Register</button>
+            <a href="events.php"><button type="button">Cancel</button></a>
+        </div>
 
         <div id="action-popup" class="action-popup" style="display:none;">
             <h2>Confirm to register?</h2>
