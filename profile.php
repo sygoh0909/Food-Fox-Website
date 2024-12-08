@@ -117,6 +117,15 @@ include ('db/db_conn.php');
             background-color: #D32F2F;
         }
 
+        .change-password-field input{
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #A89E92;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+
         .profile-details {
             flex: 1;
             padding: 20px;
@@ -317,6 +326,8 @@ include ('db/db_conn.php');
                 }
                 ?>
 
+                <button type="button" name="deleteAcc" class="btn delete" onclick="displayActionPopup()">Delete Account</button>
+
             </div>
 
             <!-- Right Profile Details -->
@@ -373,7 +384,6 @@ include ('db/db_conn.php');
 
                     ?>
                 </div>
-               <button type="button" name="deleteAcc" class="btn delete" onclick="displayActionPopup()">Delete Account</button>
             </div>
         </div>
     </form>
