@@ -439,7 +439,7 @@ include ('db/db_conn.php');
                         $checkResult = $conn->query($checkQuery);
 
                         if ($checkResult->num_rows==0){
-                            $sql = "INSERT INTO pastevents(eventID) VALUES($eventID)";;
+                            $sql = "INSERT INTO pastevents(eventID) VALUES($eventID)";
                             if ($conn->query($sql) === TRUE) {
 //                                echo "Event successfully moved to past events. Please proceed to past events tables for detailed update.";
                             }
@@ -586,7 +586,7 @@ include ('db/db_conn.php');
             <div class="datetime">
                 <label>Start DateTime: <input type="datetime-local" name="startDateTime" value="<?php echo ($eventData['start_dateTime'])?>"></label>
                 <p class="error-message"><?= $errors['startDateTime'] ?? '' ?></p>
-                <label>End DateTime: <input type="datetime-local" name="endDateTime" value="<?php echo ($eventData['end_dateTime'])?>"</label>
+                <label>End DateTime: <input type="datetime-local" name="endDateTime" value="<?php echo ($eventData['end_dateTime'])?>"></label>
                 <p class="error-message"><?= $errors['endDateTime'] ?? '' ?></p>
             </div>
         </div>
