@@ -15,194 +15,149 @@ include ('db/db_conn.php');
         .container {
             display: flex;
             gap: 20px;
-            min-height: 100vh;
-            background-color: #f9f3e9;
-            padding: 20px;
-            box-sizing: border-box;
+            max-width: 1200px;
+            margin: 20px auto;
+            background-color: #FFFFFF;
+            border-radius: 10px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
         }
 
         .profile-sidebar {
-            flex: 0 0 30%;
-            text-align: center;
+            flex: 0 0 25%;
+            background-color: #F7F7F7;
+            padding: 20px;
             display: flex;
             flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            background-color: #fff;
-            border-radius: 8px;
-            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
-            padding: 20px;
-            box-sizing: border-box;
-            position: sticky;
-            top: 20px;
+            gap: 20px;
+            text-align: center;
         }
 
-        .btn{
-            background-color: #BDB7AA;
-            color: #333333;
-            border-radius: 5px;
-            padding: 5px 10px;
+        .profile-sidebar .profile-pic {
+            position: relative;
+            width: 120px;
+            height: 120px;
+            margin: 0 auto;
+            border-radius: 50%;
+            background-color: #E0E0E0;
+            overflow: hidden;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .profile-sidebar .profile-pic img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .profile-sidebar .profile-pic:hover {
+            transform: scale(1.05);
+        }
+
+        .profile-sidebar .hover-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #FFF;
             font-size: 0.8em;
-            text-align: center;
+            text-transform: uppercase;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .profile-sidebar .profile-pic:hover .hover-overlay {
+            opacity: 1;
+        }
+
+        .profile-info {
+            text-align: left;
+            font-size: 0.9em;
+        }
+
+        .profile-info p {
+            margin: 5px 0;
+        }
+
+        .profile-sidebar button {
+            margin-top: 10px;
+        }
+
+        .btn {
+            padding: 8px 12px;
+            border-radius: 5px;
+            font-size: 0.9em;
             cursor: pointer;
             border: none;
             transition: background-color 0.3s ease;
         }
 
         .btn:hover {
-            background-color: #A89E92;
+            opacity: 0.9;
         }
 
-        .btn.save, .cancel, .delete{
-            display: inline-block;
+        .btn.save, .btn.logout {
             background-color: #7F6C54;
-            color: #fff;
-            padding: 10px 15px;
-            font-size: 1em;
-            position: relative;
+            color: #FFFFFF;
         }
 
-        .btn.save, .cancel, .delete:hover{
-            background-color: #6B5A48;
+        .btn.delete {
+            background-color: #E57373;
+            color: #FFFFFF;
+            font-size: 0.8em;
         }
 
-        .btn.logout {
-            position: absolute;
-            bottom: 10px;
-            right: 10px;
-            background-color: #7F6C54;
-            color: #fff;
-            border-radius: 5px;
-            padding: 10px 15px;
-            font-size: 1em;
-        }
-
-        .btn.back {
-            position: absolute;
-            bottom: 10px;
-            left: 10px;
-            background-color: #7F6C54;
-            color: #fff;
-            border-radius: 5px;
-            padding: 10px 15px;
-            font-size: 1em;
-        }
-
-        .btn.logout, .back:hover {
-            background-color: #6B5A48;
-        }
-
-        .profile-pic {
-            position: relative;
-            width: 120px;
-            height: 120px;
-            border-radius: 50%;
-            background-color: #f0f0f0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 2.5em;
-            color: #666;
-            margin-bottom: 20px;
-            overflow: hidden;
-            cursor: pointer;
-        }
-
-        .profile-pic img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            transition: opacity 0.3s ease;
-        }
-
-        .profile-pic .hover-overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.5);
-            color: #fff;
-            font-size: 0.5em;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-            border-radius: 50%;
-            text-transform: uppercase;
-            font-weight: bold;
-        }
-
-        .profile-pic:hover img {
-            opacity: 0.7;
-        }
-
-        .profile-pic:hover .hover-overlay {
-            opacity: 1;
-        }
-
-        .profile-info h2 {
-            font-size: 1.5em;
-            margin-bottom: 5px;
-        }
-
-        .profile-info p {
-            margin: 5px 0;
-            color: #666;
+        .btn.delete:hover {
+            background-color: #D32F2F;
         }
 
         .profile-details {
             flex: 1;
-            background-color: #fff;
-            border-radius: 8px;
-            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
             padding: 20px;
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-            box-sizing: border-box;
         }
 
-        .form-section h3 {
+        .profile-details .form-section h3 {
             margin-bottom: 10px;
+            color: #5C4033;
         }
 
-        .form-section label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: bold;
-            color: #555;
-        }
-
-        .form-section input {
+        .profile-details .form-section input {
             width: 100%;
             padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
             margin-bottom: 10px;
+            border: 1px solid #A89E92;
+            border-radius: 5px;
             box-sizing: border-box;
-        }
-
-        .recent-activity {
-            margin-top: 20px;
         }
 
         .recent-activity h3 {
+            color: #5C4033;
             margin-bottom: 10px;
         }
 
-        .activity-item {
-            display: flex;
-            justify-content: space-between;
+        .recent-activity .activity-item {
+            background-color: #F7F2E9;
             padding: 10px;
-            background-color: #e7e0d9;
             border-radius: 5px;
             margin-bottom: 10px;
+            font-size: 0.9em;
+        }
+        .profile-sidebar .btn.back {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background-color: #A89E92;
+            color: #FFFFFF;
         }
 
-        .error-message{
-            color: red;
+        .btn.back:hover {
+            background-color: #7F6C54;
         }
     </style>
 </head>
@@ -328,6 +283,28 @@ include ('db/db_conn.php');
                     <p>Member since: <?php echo date("d F Y", strtotime($memberData['joinDate']));?></p>
                 </div>
                 <button type='button' class="btn" id='editProfileBtn'>Edit Profile</button> <!--if press this user only can edit their info-->
+
+                <p>Password:</p>
+                <?php
+                //                $changePassword = false;
+                echo str_repeat('*', 8);?>
+
+                <input type="hidden" id="changePasswordFlag" name="changePasswordFlag" value="false">
+                <button type="button" id="changePasswordBtn" class="btn" style="display: <?= $passwordChangeAttempt ? 'inline-block' : 'none'; ?>;">Change Password</button>
+                <!--if change password button is pressed, show some fields for user to enter their password now and a new password?-->
+
+                <div class="change-password-field" id="change-password-field" style="display: <?= $passwordChangeAttempt ? 'block' : 'none'; ?>;">
+                    <label><input type="text" name="currentPassword" placeholder="Enter your current password..."></label>
+                    <a href='forgotpassword.php'><p>Forgot password?</p></a>
+                    <p class="error-message"><?= isset($passwordError['currentPassword']) ? $passwordError['currentPassword'] : '';?></p>
+
+                    <label><input type="text" name="newPassword" placeholder="Enter your new password..."></label>
+                    <p class="error-message"><?= isset($passwordError['newPassword']) ? $passwordError['newPassword'] : '';?></p>
+
+                    <label><input type="text" name="confirmPassword" placeholder="Confirm your new password..."></label>
+                    <p class="error-message"><?= isset($passwordError['confirmPassword']) ? $passwordError['confirmPassword'] : '';?></p>
+                </div>
+
                 <?php
                 echo "<a href='mainpage.php?'><button type='button' class='btn back'>Back to Main Page</button></a>";
                 echo "<form action='' method='POST'><button type='submit' class='btn logout' name='logout'>Log Out</button></form>";
@@ -339,6 +316,7 @@ include ('db/db_conn.php');
                     exit();
                 }
                 ?>
+
             </div>
 
             <!-- Right Profile Details -->
@@ -361,27 +339,6 @@ include ('db/db_conn.php');
 
                     <p>Bio:</p>
                     <label><input type="text" name="bio" value="<?php echo isset($memberData['bio'])?$memberData['bio']:'';?>" disabled></label>
-
-                    <p>Password:</p>
-                    <?php
-                    //                $changePassword = false;
-                    echo str_repeat('*', 8);?>
-
-                    <input type="hidden" id="changePasswordFlag" name="changePasswordFlag" value="false">
-                    <button type="button" id="changePasswordBtn" class="btn" style="display: <?= $passwordChangeAttempt ? 'inline-block' : 'none'; ?>;">Change Password</button>
-                    <!--if change password button is pressed, show some fields for user to enter their password now and a new password?-->
-
-                    <div class="change-password-field" id="change-password-field" style="display: <?= $passwordChangeAttempt ? 'block' : 'none'; ?>;">
-                        <label><input type="text" name="currentPassword" placeholder="Enter your current password..."></label>
-                        <a href='../forgotpassword.php'><p>Forgot password?</p></a>
-                        <p class="error-message"><?= isset($passwordError['currentPassword']) ? $passwordError['currentPassword'] : '';?></p>
-
-                        <label><input type="text" name="newPassword" placeholder="Enter your new password..."></label>
-                        <p class="error-message"><?= isset($passwordError['newPassword']) ? $passwordError['newPassword'] : '';?></p>
-
-                        <label><input type="text" name="confirmPassword" placeholder="Confirm your new password..."></label>
-                        <p class="error-message"><?= isset($passwordError['confirmPassword']) ? $passwordError['confirmPassword'] : '';?></p>
-                    </div>
 
                     <div class="save">
                         <br>
