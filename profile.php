@@ -85,6 +85,13 @@ include ('db/db_conn.php');
             margin: 5px 0;
         }
 
+        .profile-sidebar .btn-container {
+            margin-top: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
         .profile-sidebar button {
             margin-top: 10px;
         }
@@ -196,19 +203,17 @@ include ('db/db_conn.php');
         }
 
         .recent-activity .btn {
-            margin-top: 10px;
-            display: block;
-            width: 100%;
+            display: inline-block;
             background-color: #7F6C54;
             color: #FFFFFF;
-            text-align: center;
-            padding: 10px;
-            border-radius: 5px;
-            font-size: 0.9em;
+            padding: 10px 20px;
+            border-radius: 6px;
+            font-size: 0.8em;
             font-weight: bold;
             text-transform: uppercase;
-            cursor: pointer;
+            text-align: center;
             transition: background-color 0.3s ease, transform 0.2s ease;
+            cursor: pointer;
             border: none;
         }
 
@@ -374,19 +379,21 @@ include ('db/db_conn.php');
                     <p class="error-message"><?= isset($passwordError['confirmPassword']) ? $passwordError['confirmPassword'] : '';?></p>
                 </div>
 
-                <?php
-                echo "<a href='mainpage.php?'><button type='button' class='btn back'>Back to Main Page</button></a>";
-                echo "<form action='' method='POST'><button type='submit' class='btn logout' name='logout'>Log Out</button></form>";
+                <div class="btn-container">
+                    <?php
+                    echo "<a href='mainpage.php?'><button type='button' class='btn back'>Back to Main Page</button></a>";
+                    echo "<form action='' method='POST'><button type='submit' class='btn logout' name='logout'>Log Out</button></form>";
 
-                if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['logout'])){
-                    session_unset();
-                    session_destroy();
-                    echo "<script>alert('Logged out Successfully'); window.location.href='mainpage.php';</script>";
-                    exit();
-                }
-                ?>
+                    if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['logout'])){
+                        session_unset();
+                        session_destroy();
+                        echo "<script>alert('Logged out Successfully'); window.location.href='mainpage.php';</script>";
+                        exit();
+                    }
+                    ?>
 
-                <button type="button" name="deleteAcc" class="btn delete" onclick="displayActionPopup()">Delete Account</button>
+                    <button type="button" name="deleteAcc" class="btn delete" onclick="displayActionPopup()">Delete Account</button>
+                </div>
 
             </div>
 
