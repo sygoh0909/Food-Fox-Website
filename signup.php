@@ -113,7 +113,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <input type="text" id="name" name="name" oninput="validateName()">
         </label>
         <p class="error" id="name-error"></p>
-        <p class="error-message"><?= isset ($errors['name']) ? $errors['name'] :''?></p>
+        <p class="error-message" id="php-name-error"><?= isset ($errors['name']) ? $errors['name'] :''?></p>
 
         <!--email-->
         <p><span class="required">* </span>Email Address:</p>
@@ -121,7 +121,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <input type="text" id="email" name="email" oninput="validateEmail()">
         </label>
         <p class="error" id="email-error"></p>
-        <p class="error-message"><?= isset ($errors['email']) ? $errors['email'] : ''?></p>
+        <p class="error-message" id="php-email-error"><?= isset ($errors['email']) ? $errors['email'] : ''?></p>
 
         <!--password-->
         <p><span class="required">* </span>Password:</p>
@@ -129,7 +129,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <input type="password" id="password" name="password" oninput="validatePassword()">
         </label>
         <p class="error" id="password-error"></p>
-        <p class="error-message"><?= isset ($errors['password']) ? $errors['password'] : ''?></p>
+        <p class="error-message" id="php-password-error"><?= isset ($errors['password']) ? $errors['password'] : ''?></p>
 
         <!--confirm pass-->
         <p><span class="required">* </span>Confirm your password:</p>
@@ -137,7 +137,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <input type="password" id="confirmPassword" name="confirmPassword" oninput="validatePassword()">
         </label>
         <p class="error" id="confirm-password-error"></p> <!--hide php error when javascript error occurs-->
-        <p class="error-message"><?= isset ($errors['confirmPassword']) ? $errors['confirmPassword'] : ''?></p>
+        <p class="error-message" id="php-confirm-error"><?= isset ($errors['confirmPassword']) ? $errors['confirmPassword'] : ''?></p>
 
         <button type="submit">Sign Up</button>
     </form>
@@ -154,9 +154,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     function validateName() {
         const nameInput = document.getElementById('name');
         const nameError = document.getElementById('name-error');
+        const phpNameError = document.getElementById('php-name-error');
 
         const nameValue = nameInput.value.trim();
         const nameParts = nameValue.split(/\s+/); //split by whitespaces
+
+        if (phpNameError) phpNameError.style.display = 'none';
 
         if (nameValue === ''){
             nameError.textContent = "Name is required";
@@ -173,6 +176,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     function validateEmail() {
         const emailInput = document.getElementById('email').value.trim();
         const emailError = document.getElementById('email-error');
+        const phpEmailError = document.getElementById('php-email-error');
+
+        if (phpEmailError) phpEmailError.style.display = 'none';
 
         if (emailInput === '') {
             emailError.textContent = "Email is required";
@@ -214,9 +220,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         const passwordInput = document.getElementById('password').value.trim();
         const passwordError = document.getElementById('password-error');
         const passwordPattern = /^(?=.*[a-zA-z])(?=.*\d)[A-Za-z\d]{8,}$/;
+        const phpPasswordError = document.getElementById('php-password-error');
+        const phpConfirmError = document.getElementById('php-confirm-error');
 
         const confirmPasswordInput = document.getElementById('confirmPassword').value.trim();
         const confirmPasswordError = document.getElementById('confirm-password-error');
+
+        if (phpPasswordError) phpPasswordError.style.visibility = 'none';
+        if (phpConfirmError) phpConfirmError.style.visibility = 'none';
 
         if (passwordInput === ''){
             passwordError.textContent = "Password is required";
