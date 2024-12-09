@@ -16,56 +16,103 @@ include ('db/db_conn.php');
             color: white;
         }
 
+        .header{
+            text-align: center;
+        }
+
+        h2{
+            font-size: 2rem;
+            color: #5C4033;
+            margin-bottom: 10px;
+            margin-top: 30px;
+            border-bottom: 2px solid #d3a029;
+            display: inline-block;
+            padding-bottom: 10px;
+        }
         .activity-list {
-            display: flex;
-            flex-direction: column;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
             gap: 20px;
             padding: 30px;
-            background-color: #F9F9F9;
-            border-radius: 10px;
-            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+            max-width: 1200px;
+            margin: auto;
+        }
+
+        .activity-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 20px;
+            padding: 30px;
+            max-width: 1200px;
+            margin: auto;
         }
 
         .activity-item {
+            background: #FFFFFF;
+            border-radius: 15px;
+            overflow: hidden;
+            border: 2px solid #6B5A48;
+            box-shadow: 0px 6px 12px rgba(92, 64, 51, 0.2);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
             display: flex;
             flex-direction: column;
-            gap: 8px;
-            padding: 20px;
-            background-color: #FFFFFF;
-            border: 1px solid #E0E0E0;
-            border-radius: 10px;
-            box-shadow: 0px 3px 5px rgba(0, 0, 0, 0.1);
-            transition: transform 0.3s ease, background-color 0.3s ease;
+            justify-content: space-between;
         }
 
         .activity-item:hover {
-            background-color: #F1F3F4;
-            transform: translateY(-2px);
+            transform: translateY(-5px);
+            box-shadow: 0px 8px 16px rgba(92, 64, 51, 0.3);
         }
 
-        .activity-item span {
-            font-size: 1em;
-            color: #333;
-        }
-
-        .activity-item .event-name {
-            font-size: 1.2em;
+        .activity-header {
+            background-color: #D3A029;
+            color: #FFFFFF;
+            text-align: center;
+            font-size: 1.4em;
             font-weight: bold;
-            color: #2D3436;
+            padding: 15px;
+            border-bottom: 1px solid #6B5A48;
         }
 
-        .activity-item .register-type {
+        .activity-body {
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            align-items: center;
+            text-align: center;
+        }
+
+        .activity-body span {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1em;
+            color: #6B5A48;
+        }
+
+        .activity-body span i {
+            font-size: 1.2em;
+            color: #D3A029;
+        }
+
+        .activity-footer {
+            padding: 15px;
+            text-align: center;
+            background-color: #5C4033;
+            color: #FFFFFF;
             font-size: 0.9em;
-            color: #636E72;
+            font-style: italic;
+            border-top: 1px solid #6B5A48;
         }
 
         p.no-data {
             text-align: center;
-            color: #777;
+            color: #6B5A48;
             font-size: 1.2em;
+            font-style: italic;
             margin-top: 20px;
         }
-
     </style>
 </head>
 <body>
@@ -112,6 +159,8 @@ include ('db/db_conn.php');
     $result = mysqli_query($conn, $sql);
 
     if (mysqli_num_rows($result) > 0) {
+        echo "<div class='header'><h2>Recent Activities</h2></div>";
+        echo "<div class='activity-list'>";
         while ($row = mysqli_fetch_assoc($result)) {
             $activityType = $row['activityType'];
             $activityName = $row['activityName'];
@@ -119,13 +168,17 @@ include ('db/db_conn.php');
             $dateFormatted = date('d-m-Y', strtotime($activityDate));
 
             echo "<div class='activity-item'>";
-            echo "<span>Type: $activityType</span>";
-            echo "<span>Activity: $activityName</span>";
-            echo "<span>Date: $dateFormatted</span>";
+            echo "<div class='activity-header'>$activityType</div>";
+            echo "<div class='activity-body'>";
+            echo "<span><i class='fa fa-calendar'></i>Date: $dateFormatted</span>";
+            echo "<span><i class='fa fa-book'></i>Activity: $activityName</span>";
+            echo "</div>";
+            echo "<div class='activity-footer'>Stay involved and make an impact!</div>";
             echo "</div>";
         }
+        echo "</div>";
     } else {
-        echo "<p>No recent activities found.</p>";
+        echo "<p class='no-data'>No recent activities found.</p>";
     }
     ?>
 </main>
