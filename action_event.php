@@ -205,6 +205,7 @@ include ('db/db_conn.php');
 //        }
 
         $uploadedImages = [];
+        $target_dir = "uploads/";
         if (isset($_FILES['guestPic']) && is_array($_FILES['guestPic']['name'])) {
             for ($i = 0; $i < count($_FILES["guestPic"]["name"]); $i++) {
                 if (!empty($_FILES["guestPic"]["name"][$i]) && $_FILES["guestPic"]["error"][$i] === 0) {
@@ -382,26 +383,10 @@ include ('db/db_conn.php');
                             $conn->query($highlightQuery);
                         }
 
-                        $uploadedFiles = [];
-                        for ($i = 0; $i < count($_FILES["guestPic"]["name"]); $i++) {
-                            if ($_FILES["guestPic"]["error"][$i] === 0) {
-                                $fileTmpName = $_FILES["guestPic"]["tmp_name"][$i];
-                                $fileName = basename($_FILES["guestPic"]["name"][$i]);
-                                $guestImagePath = $target_dir . $fileName;
-                                if (move_uploaded_file($fileTmpName, $guestImagePath)) {
-                                    $uploadedFiles[] = $guestImagePath;
-                                } else {
-                                    $uploadedFiles[] = '';
-                                }
-                            } else {
-                                $uploadedFiles[] = $_POST['existingGuestPics'][$i] ?? '';
-                            }
-                        }
-
                         for ($i = 0; $i < count($guestName); $i++) {
                             $name = $conn->real_escape_string($guestName[$i]);
                             $bio = $conn->real_escape_string($guestBio[$i]);
-                            $imagePath = $conn->real_escape_string($uploadedFiles[$i]);
+                            $imagePath = $conn->real_escape_string($uploadedImages[$i]);
 
                             if (!empty($name)) {
                                 $guestInsert = "
