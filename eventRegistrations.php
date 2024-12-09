@@ -242,7 +242,7 @@ if (mysqli_num_rows($result) > 0) {
 
         <div class="form-grp">
             <p>Dietary Restrictions:</p>
-            <label><input type="text" name="dietaryRestrictions" placeholder="Enter any dietary restrictions if got..."></label>
+            <label><input type="text" name="dietaryRestrictions" placeholder="Enter any dietary restrictions if any..."></label>
         </div>
 
         <?php
@@ -289,7 +289,7 @@ if (mysqli_num_rows($result) > 0) {
     <div class="participant-field">
         <div class="form-grp">
             <p>Special Accommodation:</p>
-            <label><input type="text" name="specialAccommodation" placeholder="Enter any special accommodation if got..."></label>
+            <label><input type="text" name="specialAccommodation" placeholder="Enter any special accommodation if any..."></label>
         </div>
 
         <div class="form-grp">
