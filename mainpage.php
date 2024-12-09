@@ -127,10 +127,7 @@ include ('db/db_conn.php');
         }
 
         .team-title {
-            position: absolute;
-            top: 160px;
-            left: 100px;
-            margin: 10px;
+
         }
 
         .team-member div {
@@ -144,11 +141,6 @@ include ('db/db_conn.php');
             height: 200px;
             border-radius: 50%;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
-        }
-
-        .team-member img:hover {
-            transform: scale(1.05);
-            box-shadow: 0 8px 12px rgba(0, 0, 0, 0.3);
         }
 
         .team-member p {

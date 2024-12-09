@@ -77,7 +77,7 @@ include ('db/db_conn.php');
         }
 
         .profile-info {
-            text-align: left;
+            text-align: center;
             font-size: 0.9em;
         }
 

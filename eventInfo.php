@@ -336,9 +336,11 @@ include ('db/db_conn.php');
                 echo "<button class='dropdown-btn' id='schedule-btn' onclick='toggleSchedule()'>Show Schedules</button>";
                 echo "<ul class='schedule-list' id='schedule-list'>";
                 while ($schedule = $resultSchedules->fetch_assoc()) {
+                    $dateTime = new DateTime($schedule['scheduleDateTime']);
+                    $dateFormatted = $dateTime->format('d-m-Y, H:i');
                     echo "<li>";
                     echo "<div class='schedule-row'>";
-                    echo "<span class='schedule-time'>" . $schedule['scheduleDateTime'] . "</span>";
+                    echo "<span class='schedule-time'>" . $dateFormatted . "</span>";
                     echo "<span class='schedule-description'>" . $schedule['activityDescription'] . "</span>";
                     echo "</div>";
                     echo "</li>";
