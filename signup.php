@@ -15,9 +15,11 @@ include ('db/db_conn.php');
             color: red;
             visibility: hidden;
         }
+
         p.error-message{
             color: red;
         }
+
     </style>
 </head>
 <body>
@@ -83,8 +85,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $memberId = mysqli_insert_id($conn); // Get the new member ID
             $_SESSION['memberID'] = $memberId;
             echo "<script>alert('Registration successful. Your Member ID is: $memberId'); window.location.href = 'mainpage.php'; </script>";
-//            echo "<p>Registration successful. Your Member ID is: $memberId</p>";
-//            echo "<form method='POST' action='mainpage.php'><button type='submit'>OK</button></form>";
         }
         else{
             echo "<p>Error: " . mysqli_error($conn) . "</p>";

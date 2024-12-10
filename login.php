@@ -14,9 +14,11 @@ include ('db/db_conn.php');
         p.error-message {
             color: red;
         }
+
         p.forgot-pass{
             color: #2196f3;
         }
+
         a{
             color: #2196f3;
         }
@@ -49,7 +51,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         if (password_verify($password, $user['password'])){
             session_start();
             $_SESSION['memberID'] = $user['memberID'];
-//            echo "<script> alert('Login Successfully!'); window.location.href='mainpage.php'; </script>";
             echo "<script>window.location.href='mainpage.php'; </script>";
         }
         $errors['incorrectField'] = "Member ID/Email or password is incorrect";
