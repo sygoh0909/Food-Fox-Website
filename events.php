@@ -2,6 +2,7 @@
 include('cookie/cookie.php');
 include ('db/db_conn.php');
 ?>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -13,11 +14,13 @@ include ('db/db_conn.php');
         .main{
             color: white;
         }
+
         .events {
             padding: 20px;
             background-color: #F5EEDC;
             text-align: center;
         }
+
         .events h2 {
             font-size: 2rem;
             color: #5C4033;
@@ -123,7 +126,7 @@ include ('db/db_conn.php');
                 while ($row = $result->fetch_assoc()) {
                     echo "<div class='event-card'>";
                     echo "<img src='" . $row['eventPic'] . "' alt='" . $row['eventPic'] . "'>";
-                    echo "<h3>" . $row['eventName'] . "</h3>"; //show last updated when also?
+                    echo "<h3>" . $row['eventName'] . "</h3>";
                     echo "<a href='eventInfo.php?eventID=" .$row['eventID']." &action=upcoming'><button type='button'>View more info</button></a>";
                     echo "</div>";
                 }

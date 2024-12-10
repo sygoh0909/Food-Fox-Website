@@ -64,11 +64,12 @@ if (mysqli_num_rows($result) > 0) {
     }
 }
 ?>
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Events Registrations Page</title>
+    <title>Events Registration Page</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="form.css">
     <link rel="stylesheet" href="main.css">
@@ -76,15 +77,18 @@ if (mysqli_num_rows($result) > 0) {
         .main{
             color: white;
         }
+
         .participant-field, .volunteer-field{
             display: none;
         }
+
         .note {
             font-size: 14px;
             color: #5C4033;
             margin-top: 10px;
             text-align: center;
         }
+
         img {
             margin-top: 10px;
             max-width: 100%;
@@ -92,6 +96,7 @@ if (mysqli_num_rows($result) > 0) {
             border-radius: 5px;
             border: 1px solid #ddd;
         }
+
         .missing-info-alert {
             background-color: #ffe6e6;
             border: 1px solid #ffcccc;
@@ -145,6 +150,7 @@ if (mysqli_num_rows($result) > 0) {
             color: #444444;
             font-size: 16px;
         }
+
         label{
             margin: 0;
             font-weight: bold;
@@ -200,7 +206,7 @@ if (mysqli_num_rows($result) > 0) {
         $memberData = mysqli_fetch_assoc($result);
     }?>
 
-        <!--sync info from profile (show a note also if wanna change info, change from profile), if user havent fill, pop up a alert message and direct them to profile-->
+        <!--sync info from profile (show a note also if want to change info, change from profile), if user haven't filled, pop up an alert message and direct them to profile-->
         <p class="note">Please note that name, email, and phone number will be automatically synced from your profile. Please proceed to profile page to change any information. </p>
 
         <div class="form-grp">
@@ -273,7 +279,7 @@ if (mysqli_num_rows($result) > 0) {
         ?>
 
         <div class="form-grp">
-            <label for="registrations">Registration type: </label> <!--show participant or volunteer full-->
+            <label for="registrations">Registration type: </label>
             <select name="registrations" id="registrations" onchange="showFields()">
                 <option value="" disabled selected>Select registration type</option>
                 <?php if (!$participantFull): ?>
@@ -303,7 +309,7 @@ if (mysqli_num_rows($result) > 0) {
                 <option>L</option>
                 <option>XL</option>
             </select>
-            <!--provide t-shirt size chart also-->
+            <!--provide t-shirt size chart-->
             <img src="https://www.tshirtprint2u.com.my/images/sizechart_tshirtprint2u.jpg">
         </div>
     </div>

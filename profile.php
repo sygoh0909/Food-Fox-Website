@@ -286,7 +286,7 @@ include ('db/db_conn.php');
             elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
                 $errors['email'] = "Enter a valid email address.";
             }
-            if (!empty($phoneNum) && !preg_match('/^\+?[0-9]{1,4}?\s?(\(?[0-9]{3}\)?[\s.-]?)?[0-9]{3}[\s.-]?[0-9]{4}$/', $phoneNum)) {
+            if (!empty($phoneNum) && !preg_match('/^\+?[0-9]{1,4}?\s?(\(?[0-9]{3}\)?[\s.-]?)?[0-9]{3}[\s.-]?[0-9]{2,4}$/', $phoneNum)) {
                 $errors['phoneNum'] = "Enter a valid phone number.";
             }
 

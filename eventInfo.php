@@ -2,7 +2,8 @@
 include('cookie/cookie.php');
 include ('db/db_conn.php');
 ?>
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,7 +11,6 @@ include ('db/db_conn.php');
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="main.css">
     <style>
-
         .main {
             color: white;
         }
@@ -307,7 +307,6 @@ include ('db/db_conn.php');
             echo "<div class='event-highlight'>";
             echo "<p><strong>Details:</strong><br> " . $eventData['details'] . "</p>";
             echo "<p><strong>Date & Time:</strong><br> $startFormatted - $endFormatted </p>";
-//            echo "<p><strong>End Date & Time:</strong> " . $eventData['end_dateTime'] . "</p>";
             echo "<p><strong>Location:</strong><br> " . $eventData['location'] . "</p>";
             echo "</div>";
             echo "</div>";
@@ -378,7 +377,6 @@ include ('db/db_conn.php');
                 echo "<p><strong>Volunteers Needed:</strong> " . $eventData['volunteersNeeded'] . "</p>";
                 echo "</div>";
                 echo "<p class='note'><strong>Note:</strong> Participants are those who will attend the event, while volunteers are individuals who help with event operations.</p>";
-//                echo "</div>";
 
                 $participantsNeeded = $eventData['participantsNeeded'];
                 $volunteersNeeded = $eventData['volunteersNeeded'];
@@ -421,7 +419,6 @@ include ('db/db_conn.php');
                     echo "<p><strong>Attendees:</strong> " . $pastEventData['attendees'] . "</p>";
                     echo "<p><strong>Impact and Outcomes:</strong> " . $pastEventData['impact'] . "</p>";
                     echo "</div>";
-//                    echo "<p><strong>Photo Gallery:</strong></p><img src='" . $pastEventData['photoGallery'] . "' alt='" . $pastEventData['photoGallery'] . "' width='300' height='200'>";
 
                     $sqlGallery = "SELECT * FROM photogallery WHERE eventID = $eventID";
                     $resultGallery = $conn->query($sqlGallery);
