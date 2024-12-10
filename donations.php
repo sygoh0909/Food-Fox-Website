@@ -14,12 +14,15 @@ include ('db/db_conn.php');
         .main{
             color: white;
         }
+
         .navbar{
             z-index: 100;
         }
+
         .donation{
             text-align: center;
         }
+
         h2 {
             font-size: 2rem;
             color: #5C4033;
@@ -132,6 +135,7 @@ include ('db/db_conn.php');
             margin-top: 30px;
             margin-bottom: 20px;
         }
+
         .donation-card {
             background-color: white;
             border-radius: 10px;
@@ -141,6 +145,7 @@ include ('db/db_conn.php');
             text-align: center;
             transition: transform 0.3s, box-shadow 0.3s;
         }
+
         .donation-card:hover {
             transform: translateY(-5px);
             box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
@@ -175,6 +180,7 @@ include ('db/db_conn.php');
             max-height: 90vh;
             overflow-y: auto;
         }
+
         .donation-popup h3, .payment-popup h3, .feedback-popup h3 {
             color: #7F6C54;
             font-family: 'Arial', sans-serif;
@@ -375,7 +381,7 @@ $result = $conn->query($sql);
 $totalDonations = ($result->num_rows > 0) ? $result->fetch_assoc()['total_donations'] : 0;
 
 $mealsProvided = floor($totalDonations / 10);
-$mealsProvidedPercentage = floor(min(100, ($mealsProvided / $maxMealsProvided) * 100)); //cap at 100%
+$mealsProvidedPercentage = floor(min(100, ($mealsProvided / $maxMealsProvided) * 100));
 
 $count = "SELECT COUNT(*) AS total_people FROM donations";
 $result = $conn->query($count);
@@ -387,7 +393,7 @@ $peopleSupported = $row['total_people'];
 $peopleSupportedPercentage = floor(min(100, ($peopleSupported / $maxPeopleSupported) * 100));
 
 if (isset($_GET['action']) && $_GET['action'] == 'getProgress') {
-    $progressPercentage = floor(min(100,($totalDonations / $fundraisingGoal) * 100));
+    $progressPercentage = floor(min(100,($totalDonations / $fundraisingGoal) * 100)); //cap at 100%
 
 }
 ?>
@@ -431,10 +437,6 @@ if (isset($_GET['action']) && $_GET['action'] == 'getProgress') {
     $memberID = isset($_SESSION['memberID']) ? $_SESSION['memberID'] : 0;
     //if member only can donate
 
-//    if (isset($_SESSION['donationID'])) {
-//        unset($_SESSION['donationID']);
-//    }
-
     if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['confirmDonate'])) {
         $amount = $_POST['confirm-amount'];
         $paymentMethod = $_POST['payment-method'];
@@ -459,7 +461,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'getProgress') {
                 $updateSql = "UPDATE members SET points = points + $pointsEarned WHERE memberID = '$memberID'";
                 $conn->query($updateSql);
 
-                echo "<script>alert('Thank you for your donation!'); window.location.href = window.location.href + '?showFeedback=true'</script>"; //refresh page so that member points refreshed also
+                echo "<script>alert('Thank you for your donation!'); window.location.href = window.location.href + '?showFeedback=true'</script>";
                 $_SESSION['donationID'] = $donationID;
             }
             else{
@@ -810,11 +812,6 @@ if (isset($_GET['action']) && $_GET['action'] == 'getProgress') {
 
     function displayDonationPopup() {
         const amount = donationInput.value.trim();
-
-        /*if (amount === "" || isNaN(amount) || parseInt(amount) <= 0) {
-            alert('Please enter a valid donation amount.');
-            return;
-        }*/
 
         confirmAmount.textContent = amount;
         confirmAmountInput.value = amount;
