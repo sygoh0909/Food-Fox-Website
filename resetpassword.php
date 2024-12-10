@@ -39,7 +39,8 @@ if ($token){
         }
     }
     else{
-        echo "Invalid or expired page.";
+        echo "<script>alert('Invalid or expired page')</script>";
+        exit();
     }
 }
 ?>

@@ -117,8 +117,12 @@ function sendMail($recipientEmail, $resetLink){
         .btn {
             background-color: #007bff;
             color: white;
+            padding: 10px 15px;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
             cursor: pointer;
-            transition: background-color 0.3s ease;
+            transition: background-color 0.3s;
         }
 
         .btn:hover {
