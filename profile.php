@@ -11,7 +11,6 @@ include ('db/db_conn.php');
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="main.css">
     <style>
-
         .container {
             display: flex;
             gap: 20px;
@@ -257,7 +256,6 @@ include ('db/db_conn.php');
             $email = isset($_POST['email']) ? $_POST['email'] : $memberData['email'];
             $phoneNum = isset($_POST['phoneNum']) ? $_POST['phoneNum'] : $memberData['phoneNum'];
             $bio = isset($_POST['bio']) ? $_POST['bio'] : $memberData['bio'];
-//            $password = $_POST['password'];
 
             $memberProfilePath = $memberData['memberProfile'] ?? '';
 
@@ -265,7 +263,6 @@ include ('db/db_conn.php');
                 $target_dir = "uploads/";
                 $memberProfilePath = $target_dir . basename($_FILES["memberProfile"]["name"]);
                 move_uploaded_file($_FILES["memberProfile"]["tmp_name"], $memberProfilePath);
-                //validation for images 
             }
 
             $errors = array();
@@ -342,7 +339,6 @@ include ('db/db_conn.php');
 
     <form method="post" enctype="multipart/form-data" id="profileForm">
         <div class="container">
-            <!-- Left Sidebar -->
             <div class="profile-sidebar">
                 <div class="profile-pic">
                     <label for="uploadPic">
@@ -360,7 +356,6 @@ include ('db/db_conn.php');
 
                 <p>Password:</p>
                 <?php
-                //                $changePassword = false;
                 echo str_repeat('*', 8);?>
 
                 <input type="hidden" id="changePasswordFlag" name="changePasswordFlag" value="false">
@@ -397,12 +392,10 @@ include ('db/db_conn.php');
 
             </div>
 
-            <!-- Right Profile Details -->
             <div class="profile-details">
                 <div class="form-section">
                     <h3>Profile Information</h3>
 
-                    <!--right side-->
                     <p>Member Name:</p>
                     <label><input type="text" name="memberName" value="<?php echo isset($memberData['memberName']) ? $memberData['memberName']:'';?>" disabled></label>
                     <p class="error-message"><?= isset($errors['memberName']) ? $errors['memberName'] : '' ?></p>
@@ -467,7 +460,7 @@ include ('db/db_conn.php');
 
     <div id="action-popup" class="action-popup" style="display:none;">
         <form id="action-form" method="post" action="">
-            <h2>Are you sure you want to delete your account?</h2> <!--delete or log out-->
+            <h2>Are you sure you want to delete your account?</h2>
             <button type="submit" name="confirmAction">Yes</button>
             <button type="button" onclick="closeActionPopup()">No</button>
         </form>
