@@ -201,16 +201,24 @@ include ('db/db_conn.php');
             color: #8B7765;
         }
 
-        .recent-activity a {
-            color: #6B5A48;
+        .recent-activity .btn {
+            display: inline-block;
+            background-color: #7F6C54;
+            color: #FFFFFF;
+            padding: 10px 20px;
+            border-radius: 6px;
+            font-size: 0.8em;
             font-weight: bold;
-            font-size: 1rem;
-            transition: color 0.3s ease, transform 0.3s ease;
+            text-transform: uppercase;
+            text-align: center;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            cursor: pointer;
+            border: none;
         }
 
-        .recent-activity a:hover {
-            color: #8B7765;
-            transform: translateY(-2px);
+        .recent-activity .btn:hover {
+            background-color: #6B5A48;
+            transform: translateY(-3px);
         }
 
         .profile-sidebar .btn.back {
@@ -440,7 +448,7 @@ include ('db/db_conn.php');
                             echo "<span>Date: $dateFormatted</span>";
                             echo "</div>";
                         }
-                        echo "<a href='recentActivity.php?memberID=" . $memberData['memberID'] . "'>Check out more!</a>";
+                        echo "<a href='recentActivity.php?memberID=" . $memberData['memberID'] . "'><button type='button' class='btn'>Check out more!</button></a>";
                     } else {
                         echo "<p>No recent activities found.</p>";
                     }
