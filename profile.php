@@ -116,7 +116,7 @@ include ('db/db_conn.php');
         .btn.delete {
             background-color: #E57373;
             color: #FFFFFF;
-            font-size: 0.8em;
+            font-size: 0.9em;
         }
 
         .btn.delete:hover {
@@ -157,7 +157,7 @@ include ('db/db_conn.php');
             border: 1px solid #E0E0E0;
             border-radius: 8px;
             padding: 20px;
-            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
 
         .recent-activity h3 {
@@ -201,24 +201,16 @@ include ('db/db_conn.php');
             color: #8B7765;
         }
 
-        .recent-activity .btn {
-            display: inline-block;
-            background-color: #7F6C54;
-            color: #FFFFFF;
-            padding: 10px 20px;
-            border-radius: 6px;
-            font-size: 0.8em;
+        .recent-activity a {
+            color: #6B5A48;
             font-weight: bold;
-            text-transform: uppercase;
-            text-align: center;
-            transition: background-color 0.3s ease, transform 0.2s ease;
-            cursor: pointer;
-            border: none;
+            font-size: 1rem;
+            transition: color 0.3s ease, transform 0.3s ease;
         }
 
-        .recent-activity .btn:hover {
-            background-color: #6B5A48;
-            transform: translateY(-3px);
+        .recent-activity a:hover {
+            color: #8B7765;
+            transform: translateY(-2px);
         }
 
         .profile-sidebar .btn.back {
@@ -448,7 +440,7 @@ include ('db/db_conn.php');
                             echo "<span>Date: $dateFormatted</span>";
                             echo "</div>";
                         }
-                        echo "<a href='recentActivity.php?memberID=" . $memberData['memberID'] . "'><button type='button' class='btn'>Check out more!</button></a>";
+                        echo "<a href='recentActivity.php?memberID=" . $memberData['memberID'] . "'>Check out more!</a>";
                     } else {
                         echo "<p>No recent activities found.</p>";
                     }
