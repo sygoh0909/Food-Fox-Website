@@ -264,7 +264,10 @@ if (mysqli_num_rows($result) > 0) {
             $volunteersNeeded = $limit['volunteersNeeded'];
         }
 
-        if (!empty($participantsNeeded) || !empty($volunteersNeeded)) {
+        $participantFull = false;
+        $volunteersFull = false;
+
+        if (isset($participantsNeeded) || isset($volunteersNeeded)) {
         $sqlParticipant = "SELECT COUNT(*) AS total_participants FROM participants p, registrations r, events e WHERE p.registrationID = r.registrationID AND r.eventID = e.eventID AND e.eventID = $selectedEventID";
         $resultParticipant = $conn->query($sqlParticipant);
         $registeredParticipant = $resultParticipant->fetch_assoc()['total_participants'];
@@ -273,8 +276,8 @@ if (mysqli_num_rows($result) > 0) {
         $resultVolunteer = $conn->query($sqlVolunteer);
         $registeredVolunteer = $resultVolunteer->fetch_assoc()['total_volunteers'];
 
-        $participantFull = !empty($participantsNeeded) && $registeredParticipant >= $participantsNeeded;
-        $volunteerFull = !empty($volunteersNeeded) && $registeredVolunteer >= $volunteersNeeded;
+        $participantFull = isset($participantsNeeded) && ($registeredParticipant >= $participantsNeeded || $participantsNeeded <= 0);
+        $volunteerFull = isset($volunteersNeeded) && ($registeredVolunteer >= $volunteersNeeded || $volunteersNeeded <= 0);
         }
         ?>
 

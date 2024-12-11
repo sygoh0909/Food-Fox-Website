@@ -3,12 +3,14 @@ body{
     margin: 0;
     font-family: Arial, sans-serif;
 }
+
 header {
     position: sticky;
     top: 0;
     z-index: 1000;
     width: 100%;
 }
+
 .navbar {
     display: flex;
     justify-content: space-between;
@@ -17,38 +19,46 @@ header {
     background-color: #5C4033;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
 }
+
 .social-media{
     display: flex;
     gap: 10px;
 }
+
 .social-media a{
     color: white;
     font-size: 20px;
     text-decoration: none;
 }
+
 .nav-links{
     display: flex;
     gap: 30px;
 }
+
 .roundButton{
     padding: 8px 20px;
     border-radius: 25px;
     text-decoration: none;
     font-weight: bold;
 }
+
 .login{
     background-color: white;
     color: #d3a029;
     font-size: smaller;
 }
+
 .signup{
     background-color: #d3a029;
     color: white;
     font-size: smaller;
 }
+
 .login:hover, .signup:hover{
     transform: translateY(-2px);
 }
+
 .member{
     background-color: #C5B4A5;
     color: #6B5A48;
