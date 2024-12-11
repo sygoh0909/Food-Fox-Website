@@ -58,6 +58,7 @@ function loginSection(){
         <p>Member ID: {$memberInfo['memberID']}</p>
         <p>Member Name: {$memberInfo['memberName']}</p>
         <p>Join Date: {$dateFormatted}</p>
+        <div class='btn-container'>
         <a href='profile.php?memberID=". $memberInfo['memberID']."'><button>Profile</button></a>
         <p>Points: " . ($memberInfo['points'] ?? 0) . "</p>
         <a href='rewards.php'><button>Rewards</button></a>
@@ -65,7 +66,8 @@ function loginSection(){
         <form action='' method='POST'>
             <button type='submit' name='logout'>Log Out</button>
         </form>
-</div>
+        </div>
+        </div>
         </div>
         
         ";if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['logout'])) {

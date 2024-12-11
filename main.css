@@ -84,43 +84,7 @@ header {
     border-radius: 10px;
     z-index: 1000;
     font-size: 14px;
-}
-
-.popup a {
-    color: #5C4033;
-    text-decoration: none;
-    margin: 0 5px;
-    font-weight: bold;
-}
-
-.popup a:hover {
-    text-decoration: underline;
-}
-
-.roundImage {
-    width: 100px;
-    height: 100px;
-    border-radius: 50%;
-    object-fit: cover;
-    border: 3px solid #C5B4A5;
-    margin-bottom: 10px;
-}
-
-.popup button {
-    background-color: #6B5A48;
-    color: white;
-    border: none;
-    padding: 8px 12px;
-    margin: 10px 0;
-    cursor: pointer;
-    border-radius: 5px;
-    font-size: 12px;
-    transition: background-color 0.3s ease;
-    width: 100%;
-}
-
-.popup button:hover {
-    background-color: #5C4033;
+    text-align: center;
 }
 
 .popup p {
@@ -130,10 +94,54 @@ header {
     text-align: center;
 }
 
+.btn-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+.popup button,
 .popup a button {
-    width: auto;
-    padding: 6px 10px;
+    background-color: #6B5A48;
+    color: white;
+    border: none;
+    padding: 7px 15px;
+    margin: 0;
+    cursor: pointer;
+    border-radius: 5px;
     font-size: 12px;
+    width: auto;
+    transition: background-color 0.3s ease;
+}
+
+.popup button:hover,
+.popup a button:hover {
+    background-color: #5C4033;
+}
+
+.popup form button {
+    background-color: #D9534F;
+    font-weight: bold;
+    padding: 8px 30px;
+    margin-top: 15px;
+    border: 2px solid #B52C2A;
+    font-size: 12px;
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.popup form button:hover {
+    background-color: #B52C2A;
+    border-color: #7A1F1D;
+}
+
+.roundImage {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid #C5B4A5;
+    margin-bottom: 10px;
 }
 
 .action-popup {
