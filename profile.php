@@ -18,7 +18,7 @@ include ('db/db_conn.php');
             margin: 20px auto;
             background-color: #FFFFFF;
             border-radius: 10px;
-            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
             overflow: hidden;
         }
 
@@ -177,13 +177,13 @@ include ('db/db_conn.php');
             display: flex;
             justify-content: space-between;
             align-items: center;
-            box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
             transition: transform 0.2s ease, box-shadow 0.2s ease;
         }
 
         .recent-activity .activity-item:hover {
             transform: translateY(-3px);
-            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
         }
 
         .recent-activity .activity-item span {
