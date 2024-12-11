@@ -57,8 +57,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         $updateSql = "UPDATE members SET points = $newPoints WHERE memberID = $memberID";
                         mysqli_query($conn, $updateSql);
 
-                        //wanna do choose payment method and ask user to fill order details?
-
                         foreach ($selectedItems as $rewardID) {
                             unset($cartItems[$rewardID]);
                         }

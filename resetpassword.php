@@ -135,15 +135,13 @@ if ($token){
     <label>
         <span class="required">*</span>New Password:
         <input type="password" name="newPassword" placeholder="Enter your new password" required>
-        <p class="error-message""><?= isset($errors['newPassword']) ? $errors['newPassword'] : '' ?></p>
     </label>
-    <br>
+    <p class="error-message"><?= isset($errors['newPassword']) ? $errors['newPassword'] : '' ?></p>
     <label>
         <span class="required">*</span>Confirm Password:
         <input type="password" name="confirmPassword" placeholder="Confirm your new password" required>
-        <p class="error-message"><?= isset($errors['confirmPassword']) ? $errors['confirmPassword'] : '' ?></p>
     </label>
-    <br>
+    <p class="error-message"><?= isset($errors['confirmPassword']) ? $errors['confirmPassword'] : '' ?></p>
     <button type="submit">Reset Password</button>
 </form>
 </body>

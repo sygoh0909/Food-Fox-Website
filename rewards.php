@@ -14,9 +14,11 @@ include ('db/db_conn.php');
         .main {
             color: white;
         }
+
         .reward{
             text-align: center;
         }
+
         h1{
             font-size: 2rem;
             color: #5C4033;
@@ -27,16 +29,19 @@ include ('db/db_conn.php');
             padding-top: 10px;
             border-bottom: 2px solid #d3a029;
         }
+
         h2 a {
             text-decoration: none;
             color: inherit;
         }
+
         h2 i.fa-shopping-cart {
             color: #5a3e36;
             margin-left: 10px;
             font-size: 24px;
             vertical-align: middle;
         }
+
         .points-dashboard {
             background-color: #d7c4b7;
             border-radius: 15px;
@@ -46,11 +51,13 @@ include ('db/db_conn.php');
             text-align: center;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
         }
+
         .points-dashboard h2 {
             font-size: 28px;
             color: #5a3e36;
             margin-bottom: 10px;
         }
+
         .points-dashboard span {
             display: block;
             font-size: 72px;
@@ -58,11 +65,13 @@ include ('db/db_conn.php');
             color: #000;
             margin: 10px 0;
         }
+
         .points-dashboard p {
             font-size: 18px;
             color: #333;
             margin-top: 0;
         }
+
         .available-rewards {
             display: flex;
             justify-content: center;
@@ -71,6 +80,7 @@ include ('db/db_conn.php');
             margin: 20px;
             padding: 10px 20px;
         }
+
         .reward-card {
             background-color: #fff;
             border-radius: 10px;
@@ -80,17 +90,20 @@ include ('db/db_conn.php');
             width: 180px;
             transition: transform 0.2s ease, box-shadow 0.2s ease;
         }
+
         .reward-card img {
             width: 100px;
             height: 100px;
             margin-bottom: 10px;
             border-radius: 10px;
         }
+
         .reward-card p {
             font-size: 14px;
             color: #333;
             margin: 5px 0;
         }
+
         .reward-card button {
             background-color: #5a3e36;
             color: #fff;
@@ -101,9 +114,11 @@ include ('db/db_conn.php');
             cursor: pointer;
             transition: background-color 0.3s ease;
         }
+
         .reward-card button:hover {
             background-color: #8b5c4b;
         }
+
         .reward-card:hover {
             transform: translateY(-5px);
             box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.15);
@@ -149,7 +164,7 @@ include ('db/db_conn.php');
             }
         }
         ?>
-        <span><?php echo $memberPoints; ?></span>
+        <span><?php echo $memberPoints ?? 0; ?></span>
         <p>points</p>
     </div>
 
