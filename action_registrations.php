@@ -7,19 +7,47 @@ include ('db/db_conn.php');
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Edit/Delete Registration Page</title>
+    <title>Action for Registration Page</title>
     <link rel="stylesheet" href="form.css">
 
     <style>
+        .participant-field,
+        .volunteer-field {
+            display: block;
+            width: 100%;
+            text-align: left;
+            margin-bottom: 20px;
+        }
 
+        .participant-field input[type="text"],
+        .participant-field select,
+        .volunteer-field input[type="text"],
+        .volunteer-field select {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #A89E92;
+            border-radius: 8px;
+            font-size: 16px;
+            background-color: #FFFFFF;
+            color: #444444;
+            box-sizing: border-box;
+        }
+
+        .participant-field .form-grp,
+        .volunteer-field .form-grp {
+            width: 100%;
+            margin-bottom: 15px;
+            text-align: left;
+        }
     </style>
 </head>
 <body>
 <main>
     <?php
     $conn = connection();
-    $registrationID = isset($_GET['registrationID']) ? $_GET['registrationID'] : null;
-    $action = isset($_GET['action']) ? $_GET['action'] : null;
+    $registrationID = $_GET['registrationID'] ?? null;
+    $action = $_GET['action'] ?? null;
     $registrationInfo = null;
 
     if ($registrationID){
@@ -30,26 +58,19 @@ include ('db/db_conn.php');
         }
 
         if ($_SERVER["REQUEST_METHOD"] == "POST"){
-            //details like member email edit through another page not here
-//            $eventName = $_POST['events'];
             $dietaryRestrictions = $_POST['dietaryRestrictions'];
             $registerType = $_POST['registerType'];
 
-        $errors = [];
+        $errors = array();
 
-        if (empty($errors)){
-            if ($action == "edit"){
-                //what if user wan change from participant to volunteer/change other event? ask them resubmit form instead?
-                $sql = "UPDATE registrations SET dietaryRestrictions = '$dietaryRestrictions' WHERE registrationID = $registrationID";
+            if (empty($errors)){
+                if ($action == "edit"){
+                    $sql = "UPDATE registrations SET dietaryRestrictions = '$dietaryRestrictions' WHERE registrationID = $registrationID";
 
-                if ($conn->query($sql) === TRUE){
+                    if ($conn->query($sql) === TRUE){
                         if ($registrationInfo['registerType'] == "Participant"){
                             $sizes = $_POST['sizes'];
                             $specialAccommodation = $_POST['specialAccommodation'];
-
-//                            if (!in_array($sizes, ['XS', 'S', 'M', 'L', 'XL'])) {
-//                                $errors['sizes'] = "Invalid T-Shirt size selected";
-//                            }
 
                             $sql = "UPDATE participants SET specialAccommodation = '$specialAccommodation', shirtSize = '$sizes' WHERE registrationID = $registrationID";
                         }
@@ -58,23 +79,20 @@ include ('db/db_conn.php');
                             $sql = "UPDATE volunteers SET relevantSkills = '$skills' WHERE registrationID = $registrationID";
                         }
                         else{
-                            //error
+                            echo "Invalid registration type";
                         }
                         if ($conn->query($sql) === TRUE){
-                            echo "<script>alert('Registration updated successfully!'); window.location.href='admin_registrations.php?eventID=".$registrationInfo['eventID']."';</script>"; //jump back but with blank?
+                            echo "<script>alert('Registration updated successfully!'); window.location.href='admin_registrations.php?eventID=".$registrationInfo['eventID']."';</script>";
                         }
                     }
-            }
-            elseif ($action == "delete"){
-                $sql = "DELETE FROM registrations WHERE registrationID = $registrationID";
-                if ($conn->query($sql) === TRUE) {
-                    echo "<script>alert('Registration Deleted!'); window.location.href='admin_registrations.php?eventID=".$registrationInfo['eventID']."';</script>";
+                }
+                elseif ($action == "delete"){
+                    $sql = "DELETE FROM registrations WHERE registrationID = $registrationID";
+                    if ($conn->query($sql) === TRUE) {
+                        echo "<script>alert('Registration Deleted!'); window.location.href='admin_registrations.php?eventID=".$registrationInfo['eventID']."';</script>";
+                    }
                 }
             }
-        }
-//        foreach ($errors as $error) {
-//            echo "<p style='color:red;'>$error</p>";
-//        }
         }
     }
     if ($registrationID && $action == "edit"){
@@ -84,9 +102,10 @@ include ('db/db_conn.php');
         echo "<h2>Delete registration</h2>";
     }
     ?>
+
     <form method="POST" enctype="multipart/form-data">
         <div class="form-grp">
-            <label for="events">Event Name: </label>
+            <p>Event Name: </p>
             <?php echo $registrationInfo['eventName']?>
         </div>
 
@@ -107,11 +126,11 @@ include ('db/db_conn.php');
 
         <div class="form-grp">
             <p>Dietary Restrictions:</p>
-            <label><input type="text" name="dietaryRestrictions" value="<?php echo isset ($registrationInfo['dietaryRestrictions']) ? $registrationInfo['dietaryRestrictions'] : ''; ?>"></label>
+            <label><input type="text" name="dietaryRestrictions" value="<?php echo $registrationInfo['dietaryRestrictions'] ?? ''; ?>"></label>
         </div>
 
         <div class="form-grp">
-            <label for="registrations">Register type: </label>
+            <p>Register type: </p>
             <?php echo $registrationInfo['registerType']; ?>
             <input type="hidden" name="registrations" value="<?php echo $registrationInfo['registerType']; ?>">
         </div>
@@ -140,17 +159,16 @@ include ('db/db_conn.php');
         </div>
 
         <div class="volunteer-field" style="display: <?php echo $registrationInfo['registerType'] == "Volunteer" ? "block" : "none"; ?>;">
-            <!--<p>Please note that you should be free the whole day as volunteer. </p>-->
-
             <div class="form-grp">
                 <p>Relevant skills:</p>
                 <label><input type="text" name="skills" value="<?php echo $registrationInfo['relevantSkills'] ?? '';?>"></label>
             </div>
-
         </div>
 
-        <button type="button" onclick="displayActionPopup()"><?php echo $registrationID && $action=='edit'?'Update Registration info': 'Delete Registration Info';?></button>
-        <?php echo "<a href='admin_registrations.php?eventID=" .$registrationInfo['eventID']."'><button type='button'>Cancel</button></a>"?>
+        <div>
+            <button type="button" onclick="displayActionPopup()"><?php echo $registrationID && $action=='edit'?'Update Registration info': 'Delete Registration Info';?></button>
+            <?php echo "<a href='admin_registrations.php?eventID=" .$registrationInfo['eventID']."'><button type='button'>Cancel</button></a>"?>
+        </div>
 
         <div id="action-popup" class="action-popup" style="display:none;">
             <h2><?php echo $registrationID && $action=='edit'?'Confirm to update registration info?': 'Confirm to delete registration info?';?></h2>
