@@ -14,10 +14,12 @@ include ('db/db_conn.php');
         .registrations {
             padding: 20px 30px;
         }
+
         .registration-table {
             margin-top: 20px;
-            overflow-x: auto; /* To allow scrolling on smaller screens */
+            overflow-x: auto;
         }
+
         input[type="text"] {
             padding: 10px;
             border: 1px solid #ccc;
@@ -63,7 +65,8 @@ include ('db/db_conn.php');
                     <th>Event Name</th>
                     <th>Member Name</th>
                     <th>Register Type</th>
-                    <th>Registration Date</th> <!--include attendance???-->
+                    <th>Registration Date</th>
+                    <th>Attendance</th>
                     <th>Actions</th>
                 </tr>
                 <?php
@@ -75,7 +78,7 @@ include ('db/db_conn.php');
                     $sql = "SELECT r.*, e.eventName, m.memberName FROM registrations r JOIN events e ON r.eventID = e.eventID JOIN members m ON r.memberID = m.memberID WHERE r.eventID = '$eventID'";
 
                     if (!empty($searchQuery)){
-                        $sql .= " AND (m.memberName LIKE '%$searchQuery%' OR r.registrationDate LIKE '%$searchQuery%' OR r.registerType LIKE '%$searchQuery%')";
+                        $sql .= " AND (m.memberName LIKE '%$searchQuery%' OR r.registrationDate LIKE '%$searchQuery%' OR r.registerType LIKE '%$searchQuery%' OR r.attendance LIKE '%$searchQuery%')";
                     }
 
                     $result = mysqli_query($conn, $sql);
@@ -89,7 +92,7 @@ include ('db/db_conn.php');
                             echo "<td>" . $row["memberName"] . "</td>";
                             echo "<td>" . $row["registerType"] . "</td>";
                             echo "<td>" . $dateFormatted . "</td>";
-                            //idk the attendance
+                            echo "<td>" . $row["attendance"] . "</td>";
                             echo "<td><a href='action_registrations.php?registrationID=" .$row['registrationID']." &action=edit'><button>Edit</button></a><a href='action_registrations.php?registrationID=" .$row['registrationID']." &action=delete'><button>Delete</button></a></td>";
                             echo "</tr>";
                         }

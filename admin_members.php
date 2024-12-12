@@ -14,10 +14,12 @@ include ('db/db_conn.php');
         .members {
             padding: 20px 30px;
         }
+
         .member-table {
             margin-top: 20px;
             overflow-x: auto; /* To allow scrolling on smaller screens */
         }
+
         input[type="text"] {
             padding: 10px;
             border: 1px solid #ccc;

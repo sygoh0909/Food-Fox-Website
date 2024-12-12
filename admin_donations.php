@@ -14,14 +14,17 @@ include ('db/db_conn.php');
         .donations {
             padding: 20px 30px;
         }
+
         h2 {
             margin-bottom: 20px;
             text-align: center;
         }
+
         .donations-table {
             margin-top: 20px;
             overflow-x: auto;
         }
+
         input[type="text"] {
             padding: 10px;
             border: 1px solid #ccc;

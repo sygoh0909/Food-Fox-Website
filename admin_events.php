@@ -14,18 +14,22 @@ include ('db/db_conn.php');
         .events {
             padding: 20px 30px;
         }
+
         h2 {
             margin-bottom: 20px;
             text-align: center;
         }
+
         h3{
             margin-top: 30px;
             text-align: center;
         }
+
         .upcoming-events-table, .past-events-table {
             margin-top: 20px;
-            overflow-x: auto; /* To allow scrolling on smaller screens */
+            overflow-x: auto;
         }
+
         input[type="text"] {
             padding: 10px;
             border: 1px solid #ccc;
@@ -108,7 +112,7 @@ include ('db/db_conn.php');
                 <tr>
                     <th>Event ID</th>
                     <th>Event Name</th>
-                    <th>Attendees</th> <!--count for checkin ppl later on-->
+                    <th>Attendees</th> <!--count for ppl attended-->
                     <th>Actions</th>
                 </tr>
                 <?php
