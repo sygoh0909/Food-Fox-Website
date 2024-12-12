@@ -72,7 +72,7 @@ include ('db/db_conn.php');
 
             //regular expressions
             $passwordPattern = '/^(?=.*[a-zA-z])(?=.*\d)[A-Za-z\d]{8,}$/';
-            $phonePattern = '/^\+?[0-9]{1,4}?\s?(\(?[0-9]{3}\)?[\s.-]?)?[0-9]{3}[\s.-]?[0-9]{2,4}$/';
+            $phonePattern = '/^\+?[0-9]{1,4}?[\s.-]?\(?[0-9]{2,5}\)?[\s.-]?[0-9]{1,5}[\s.-]?[0-9]{3,4}$/';
 
             //validations
             $errors = array();

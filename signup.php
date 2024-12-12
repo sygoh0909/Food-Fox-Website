@@ -19,7 +19,6 @@ include ('db/db_conn.php');
         p.error-message{
             color: red;
         }
-
     </style>
 </head>
 <body>
@@ -113,7 +112,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <input type="text" id="name" name="name" oninput="validateName()">
         </label>
         <p class="error" id="name-error"></p>
-        <p class="error-message" id="php-name-error"><?= isset ($errors['name']) ? $errors['name'] :''?></p>
+        <p class="error-message" id="php-name-error"><?= $errors['name'] ?? '' ?></p>
 
         <!--email-->
         <p><span class="required">* </span>Email Address:</p>
@@ -121,7 +120,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <input type="text" id="email" name="email" oninput="validateEmail()">
         </label>
         <p class="error" id="email-error"></p>
-        <p class="error-message" id="php-email-error"><?= isset ($errors['email']) ? $errors['email'] : ''?></p>
+        <p class="error-message" id="php-email-error"><?= $errors['email'] ?? '' ?></p>
 
         <!--password-->
         <p><span class="required">* </span>Password:</p>
@@ -129,7 +128,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <input type="password" id="password" name="password" oninput="validatePassword()">
         </label>
         <p class="error" id="password-error"></p>
-        <p class="error-message" id="php-password-error"><?= isset ($errors['password']) ? $errors['password'] : ''?></p>
+        <p class="error-message" id="php-password-error"><?= $errors['password'] ?? '' ?></p>
 
         <!--confirm pass-->
         <p><span class="required">* </span>Confirm your password:</p>
@@ -137,7 +136,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <input type="password" id="confirmPassword" name="confirmPassword" oninput="validatePassword()">
         </label>
         <p class="error" id="confirm-password-error"></p> <!--hide php error when javascript error occurs-->
-        <p class="error-message" id="php-confirm-error"><?= isset ($errors['confirmPassword']) ? $errors['confirmPassword'] : ''?></p>
+        <p class="error-message" id="php-confirm-error"><?= $errors['confirmPassword'] ?? '' ?></p>
 
         <button type="submit">Sign Up</button>
     </form>

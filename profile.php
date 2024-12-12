@@ -232,16 +232,21 @@ include ('db/db_conn.php');
         .btn.back:hover {
             background-color: #7F6C54;
         }
+
+        p.error-message {
+            color: red;
+            font-size: 14px;
+        }
     </style>
 </head>
 <body>
 <main>
     <?php
     $conn = connection();
-    $memberID = isset($_GET['memberID']) ? $_GET['memberID'] : '';
+    $memberID = $_GET['memberID'] ?? '';
     $memberData = null;
 
-    $passwordFlag = isset($_POST['changePasswordFlag']) ? $_POST['changePasswordFlag'] : false;
+    $passwordFlag = $_POST['changePasswordFlag'] ?? false;
 
     $sql = "SELECT * FROM members WHERE memberID = $memberID";
     $result = mysqli_query($conn, $sql);
@@ -252,10 +257,10 @@ include ('db/db_conn.php');
 
     if ($memberID){
         if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['saveChanges'])){
-            $memberName = isset($_POST['memberName']) ? $_POST['memberName'] : $memberData['memberName']; // Default to existing data
-            $email = isset($_POST['email']) ? $_POST['email'] : $memberData['email'];
-            $phoneNum = isset($_POST['phoneNum']) ? $_POST['phoneNum'] : $memberData['phoneNum'];
-            $bio = isset($_POST['bio']) ? $_POST['bio'] : $memberData['bio'];
+            $memberName = $_POST['memberName'] ?? $memberData['memberName']; // Default to existing data
+            $email = $_POST['email'] ?? $memberData['email'];
+            $phoneNum = $_POST['phoneNum'] ?? $memberData['phoneNum'];
+            $bio = $_POST['bio'] ?? $memberData['bio'];
 
             $memberProfilePath = $memberData['memberProfile'] ?? '';
 
@@ -283,7 +288,7 @@ include ('db/db_conn.php');
             elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
                 $errors['email'] = "Enter a valid email address.";
             }
-            if (!empty($phoneNum) && !preg_match('/^\+?[0-9]{1,4}?\s?(\(?[0-9]{3}\)?[\s.-]?)?[0-9]{3}[\s.-]?[0-9]{2,4}$/', $phoneNum)) {
+            if (!empty($phoneNum) && !preg_match('/^\+?[0-9]{1,4}?[\s.-]?\(?[0-9]{2,5}\)?[\s.-]?[0-9]{1,5}[\s.-]?[0-9]{3,4}$/', $phoneNum)) {
                 $errors['phoneNum'] = "Enter a valid phone number.";
             }
 
@@ -342,7 +347,7 @@ include ('db/db_conn.php');
             <div class="profile-sidebar">
                 <div class="profile-pic">
                     <label for="uploadPic">
-                        <img src="<?php echo ($memberData['memberProfile'])?>" id="profileImg">
+                        <img src="<?php echo ($memberData['memberProfile'])?>" id="profileImg" alt="Profile Picture">
                         <div class="hover-overlay">Edit Picture</div>
                     </label>
                     <input type="file" name='memberProfile' id="uploadPic" disabled style="display: none;" accept="image/*" onchange="previewProfilePic()">
@@ -365,13 +370,13 @@ include ('db/db_conn.php');
                 <div class="change-password-field" id="change-password-field" style="display: <?= $passwordChangeAttempt ? 'block' : 'none'; ?>;">
                     <label><input type="text" name="currentPassword" placeholder="Enter your current password..."></label>
                     <a href='forgotpassword.php'><p>Forgot password?</p></a>
-                    <p class="error-message"><?= isset($passwordError['currentPassword']) ? $passwordError['currentPassword'] : '';?></p>
+                    <p class="error-message"><?= $passwordError['currentPassword'] ?? '';?></p>
 
                     <label><input type="text" name="newPassword" placeholder="Enter your new password..."></label>
-                    <p class="error-message"><?= isset($passwordError['newPassword']) ? $passwordError['newPassword'] : '';?></p>
+                    <p class="error-message"><?= $passwordError['newPassword'] ?? '';?></p>
 
                     <label><input type="text" name="confirmPassword" placeholder="Confirm your new password..."></label>
-                    <p class="error-message"><?= isset($passwordError['confirmPassword']) ? $passwordError['confirmPassword'] : '';?></p>
+                    <p class="error-message"><?= $passwordError['confirmPassword'] ?? '';?></p>
                 </div>
 
                 <div class="btn-container">
@@ -397,19 +402,19 @@ include ('db/db_conn.php');
                     <h3>Profile Information</h3>
 
                     <p>Member Name:</p>
-                    <label><input type="text" name="memberName" value="<?php echo isset($memberData['memberName']) ? $memberData['memberName']:'';?>" disabled></label>
-                    <p class="error-message"><?= isset($errors['memberName']) ? $errors['memberName'] : '' ?></p>
+                    <label><input type="text" name="memberName" value="<?php echo $memberData['memberName'] ?? '';?>" disabled></label>
+                    <p class="error-message"><?= $errors['memberName'] ?? '' ?></p>
 
                     <p>Email:</p>
-                    <label><input type="text" name="email" value="<?php echo isset($memberData['email']) ? $memberData['email']:'';?>" disabled></label>
-                    <p class="error-message"><?= isset($errors['email']) ? $errors['email'] : '' ?></p>
+                    <label><input type="text" name="email" value="<?php echo $memberData['email'] ?? '';?>" disabled></label>
+                    <p class="error-message"><?= $errors['email'] ?? '' ?></p>
 
                     <p>Phone Number:</p>
-                    <label><input type="text" name="phoneNum" value="<?php echo isset($memberData['phoneNum']) ? $memberData['phoneNum']:'';?>" disabled></label>
-                    <p class="error-message"><?= isset ($errors['phoneNum']) ? $errors['phoneNum'] :'';?></p>
+                    <label><input type="text" name="phoneNum" value="<?php echo $memberData['phoneNum'] ?? '';?>" disabled></label>
+                    <p class="error-message"><?= $errors['phoneNum'] ?? '';?></p>
 
                     <p>Bio:</p>
-                    <label><input type="text" name="bio" value="<?php echo isset($memberData['bio'])?$memberData['bio']:'';?>" disabled></label>
+                    <label><input type="text" name="bio" value="<?php echo $memberData['bio'] ?? '';?>" disabled></label>
 
                     <div class="save">
                         <br>
