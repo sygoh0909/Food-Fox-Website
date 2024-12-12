@@ -7,7 +7,7 @@ include ('db/db_conn.php');
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Edit/Delete/Add Rewards Page</title>
+    <title>Actions for Rewards Page</title>
     <link rel="stylesheet" href="form.css">
 
     <style>
@@ -32,13 +32,14 @@ include ('db/db_conn.php');
             border-radius: 10px;
         }
     </style>
+
 </head>
 <body>
 <main>
     <?php
     $conn = connection();
-    $rewardID = isset($_GET['rewardID']) ? $_GET['rewardID'] : '';
-    $action = isset($_GET['action']) ? $_GET['action'] : '';
+    $rewardID = $_GET['rewardID'] ?? '';
+    $action = $_GET['action'] ?? '';
     $rewardData = null;
 
     if ($rewardID && ($action == "edit" || $action == "delete")) {
@@ -48,7 +49,6 @@ include ('db/db_conn.php');
     }
 
     if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-//            $rewardID = $_POST['rewardID'];
         $rewardName = $_POST['rewardName'];
         $pointsNeeded = $_POST['pointsNeeded'];
         $rewardPicPath = $rewardData['rewardPic'];
@@ -62,12 +62,14 @@ include ('db/db_conn.php');
         $errors = array();
 
         if (empty($rewardName)) {
-            $errors[] = "Reward Name is required";
+            $errors['rewardName'] = "Reward Name is required";
         }
         if (empty($pointsNeeded)) {
-            $errors[] = "Points needed is required";
+            $errors['points'] = "Points needed is required";
         }
-        //elseif points needed is not int num
+        elseif (!filter_var($pointsNeeded, FILTER_VALIDATE_INT) || $pointsNeeded < 0) {
+            $errors['points'] = "Points needed must be a positive integer";
+        }
 
         if (empty($errors)){
             if ($action == "edit"){
@@ -88,13 +90,11 @@ include ('db/db_conn.php');
                     echo "<script>alert('Reward added successfully'); window.location.href = 'admin_rewards.php';</script>";
                 }
             }
-            else{
-                echo "Error: " . $sql . "<br>" . $conn->error;
-            }
         }
     }
     ?>
-    <h2><?php
+    <h2>
+        <?php
         if ($action == "edit"){
             echo "<h2>Edit Reward</h2>";
         }
@@ -103,10 +103,10 @@ include ('db/db_conn.php');
         }
         elseif ($action == "add"){
             echo "<h2>Add Reward</h2>";
-        }?></h2>
+        }
+        ?>
+    </h2>
     <form method="post" enctype="multipart/form-data">
-        <!--<p>Reward ID:</p>-->
-
         <div class="form-grp">
             <p>Reward Picture:</p>
             <div class="reward-picture">
@@ -117,12 +117,14 @@ include ('db/db_conn.php');
 
         <div class="form-grp">
             <p>Reward Name:</p>
-            <label><input type="text" name="rewardName" value="<?php echo isset ($rewardData['rewardName']) ? $rewardData['rewardName'] : '';?>"></label>
+            <label><input type="text" name="rewardName" value="<?php echo $rewardData['rewardName'] ?? '';?>"></label>
+            <p class="error-message"><?= $errors['rewardName'] ?? '' ?></p>
         </div>
 
         <div class="form-grp">
             <p>Points Needed:</p>
-            <label><input type="text" name="pointsNeeded" value="<?php echo isset ($rewardData['pointsNeeded']) ? $rewardData['pointsNeeded'] : '';?>"></label>
+            <label><input type="text" name="pointsNeeded" value="<?php echo $rewardData['pointsNeeded'] ?? '';?>"></label>
+            <p class="error-message"><?= $errors['points'] ?? '' ?></p>
         </div>
 
         <div class="button">

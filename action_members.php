@@ -47,8 +47,8 @@ include ('db/db_conn.php');
 <main>
     <?php
     $conn = connection();
-    $memberID = isset($_GET['memberID']) ? $_GET['memberID'] : null;
-    $action = isset($_GET['action']) ? $_GET['action'] : null;
+    $memberID = $_GET['memberID'] ?? null;
+    $action = $_GET['action'] ?? null;
     $memberData = null;
 
     if ($memberID){
@@ -152,32 +152,32 @@ include ('db/db_conn.php');
 
         <div class="form-grp">
             <p>Member Name:</p>
-            <label><input type="text" name="memberName" value="<?php echo isset($memberData['memberName']) ? $memberData['memberName']:'';?>"></label>
-            <p class="error-message"><?= isset($errors['memberName']) ? $errors['memberName'] : '' ?></p>
+            <label><input type="text" name="memberName" value="<?php echo $memberData['memberName'] ?? '';?>"></label>
+            <p class="error-message"><?= $errors['memberName'] ?? '' ?></p>
         </div>
 
         <div class="form-grp">
             <p>Email:</p>
-            <label><input type="text" name="email" value="<?php echo isset($memberData['email']) ? $memberData['email']:'';?>"></label>
-            <p class="error-message"><?= isset($errors['email']) ? $errors['email'] : '' ?></p>
+            <label><input type="text" name="email" value="<?php echo $memberData['email'] ?? '';?>"></label>
+            <p class="error-message"><?= $errors['email'] ?? '' ?></p>
         </div>
 
         <div class="form-grp">
             <p>Password:</p>
             <label><input type="text" name="password" placeholder="Enter a new password if you want to change it..."></label>
             <p class="note">Leave blank to keep the existing password.</p>
-            <p class="error-message"><?= isset($passwordError['password']) ? $passwordError['password'] : '';?></p>
+            <p class="error-message"><?= $passwordError['password'] ?? '';?></p>
         </div>
 
         <div class="form-grp">
             <p>Phone Number:</p>
-            <label><input type="text" name="phoneNum" value="<?php echo isset($memberData['phoneNum']) ? $memberData['phoneNum']:'';?>"></label>
-            <p class="error-message"><?= isset ($errors['phoneNum']) ? $errors['phoneNum'] :'';?></p>
+            <label><input type="text" name="phoneNum" value="<?php echo $memberData['phoneNum'] ?? '';?>"></label>
+            <p class="error-message"><?= $errors['phoneNum'] ?? '';?></p>
         </div>
 
         <div class="form-grp">
             <p>Bio:</p>
-            <label><input type="text" name="bio" value="<?php echo isset($memberData['bio'])?$memberData['bio']:'';?>"></label>
+            <label><input type="text" name="bio" value="<?php echo $memberData['bio'] ?? '';?>"></label>
         </div>
 
         <div class="form-grp">

@@ -7,20 +7,15 @@ include ('db/db_conn.php');
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Edit/Delete Donation Page</title>
+    <title>Actions for Donation Page</title>
     <link rel="stylesheet" href="form.css">
-
-    <style>
-
-    </style>
 </head>
 <body>
 <main>
     <?php
     $conn = connection();
-    $donationID = isset($_GET["donationID"])?$_GET["donationID"]:null;
-    $action = isset($_GET["action"])?$_GET["action"]:null;
-//    $memberName = isset($_GET["memberName"])?$_GET["memberName"]:null;
+    $donationID = $_GET["donationID"] ?? null;
+    $action = $_GET["action"] ?? null;
     $donationDetails = null;
 
     if ($donationID){
@@ -39,7 +34,7 @@ include ('db/db_conn.php');
             }
 
             if (empty($errors)){
-                if ($action == "edit"){ //confirm edit and delete b4 sending to database
+                if ($action == "edit"){
                     $sql = "UPDATE donations SET amount = '$amount', feedback = '$feedback' WHERE donationID = $donationID";
                     if ($conn->query($sql) === TRUE){
                         echo "<script>
@@ -60,9 +55,6 @@ include ('db/db_conn.php');
                     }
                 }
             }
-//            foreach ($errors as $error) {
-//                echo "<p style='color:red;'>$error</p>";
-//            }
         }
         if ($action == "edit"){
             echo "<h2>Update Donation</h2>";
@@ -80,9 +72,9 @@ include ('db/db_conn.php');
         </div>
 
         <div class="form-grp">
-            <p>Donation Amount:</p> <!--can edit amount a bit weird-->
-            <label><input type="text" name="amount" value="<?php echo isset($donationDetails['amount'])?$donationDetails['amount']:'';?>"></label>
-            <p class="error-message"><?= isset($errors['amount']) ? $errors['amount'] :''?></p>
+            <p>Donation Amount:</p>
+            <label><input type="text" name="amount" value="<?php echo $donationDetails['amount'] ?? '';?>"></label>
+            <p class="error-message"><?= $errors['amount'] ?? '' ?></p>
         </div>
 
         <div class="form-grp">
