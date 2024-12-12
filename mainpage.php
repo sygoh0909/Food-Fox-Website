@@ -146,13 +146,6 @@ include ('db/db_conn.php');
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
 
-        .team-member h2 {
-            margin-bottom: 20px;
-            font-size: 2rem;
-            color: #5C4033;
-            font-weight: bold;
-        }
-
         .team-member div {
             display: inline-block;
             margin: 20px;
@@ -161,16 +154,11 @@ include ('db/db_conn.php');
         }
 
         .team-member img {
-            width: 180px;
-            height: 180px;
+            width: 220px;
+            height: 220px;
             border-radius: 50%;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
             transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-
-        .team-member img:hover {
-            transform: scale(1.1);
-            box-shadow: 0 6px 10px rgba(0, 0, 0, 0.3);
         }
 
         .team-member p {
@@ -207,6 +195,119 @@ include ('db/db_conn.php');
             height: auto;
             border-radius: 10px;
             margin: 10px 0;
+        }
+
+        @media screen and (max-width: 1024px) {
+            .banner {
+                height: 120%;
+            }
+
+            .overlay-nav {
+                top: 30px;
+                left: 20px;
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .overlay-nav a {
+                font-size: 18px;
+            }
+
+            .companyDescription {
+                padding-left: 50px;
+            }
+
+            .companyDescription h1 {
+                font-size: 60px;
+            }
+
+            .companyDescription p {
+                font-size: 18px;
+            }
+
+            .main-info {
+                padding: 20px;
+            }
+
+            .main-info section {
+                width: 95%;
+            }
+
+            .about-us-images {
+                flex-direction: column;
+                gap: 20px;
+            }
+
+            .about-us-images img {
+                width: 100%;
+                height: 100%;
+            }
+
+            .team-member p {
+                font-size: 0.9rem;
+            }
+
+            .join {
+                padding: 15px 20px;
+                font-size: 14px;
+            }
+        }
+
+        @media screen and (max-width: 768px) {
+            .banner {
+                height: 100%;
+            }
+
+            .overlay-nav {
+                top: 20px;
+                left: 10px;
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .overlay-nav a {
+                font-size: 16px;
+            }
+
+            .companyDescription {
+                padding-left: 20px;
+            }
+
+            .companyDescription h1 {
+                font-size: 50px;
+            }
+
+            .companyDescription p {
+                font-size: 16px;
+            }
+
+            .main-info {
+                padding: 10px;
+            }
+
+            .main-info section {
+                width: 100%;
+                padding: 20px 10px;
+            }
+
+            .about-us-images {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .about-us-images img {
+                width: 100%;
+                height: 100%;
+            }
+
+            .team-member p {
+                font-size: 0.8rem;
+            }
+
+            .join {
+                padding: 10px 15px;
+                font-size: 12px;
+            }
         }
     </style>
 </head>
@@ -271,7 +372,7 @@ include ('db/db_conn.php');
                 </div>
             </section>
             <section class="team-member">
-                <h2>Our Team</h2>
+                <h2>Our Team</h2><br>
                 <div class="team-member1">
                     <img src="logo.png" alt="Team Member 1">
                     <p><b>Goh Shu Yi</b></p>

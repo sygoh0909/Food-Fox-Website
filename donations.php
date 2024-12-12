@@ -366,6 +366,109 @@ include ('db/db_conn.php');
             line-height: 1.6;
         }
 
+        @media (max-width: 1024px) {
+            .impact-container {
+                flex-direction: column;
+                align-items: center;
+                padding: 20px;
+            }
+
+            .chart-container {
+                width: 90%;
+                margin-bottom: 20px;
+                padding: 0;
+            }
+
+            .info-row {
+                flex-direction: row;
+                flex-wrap: wrap;
+                gap: 15px;
+                margin-right: 0;
+                padding-left: 0;
+                margin-top: 50px;
+            }
+
+            .info-container {
+                width: 160px;
+                height: 160px;
+            }
+
+            .info-container .number {
+                font-size: 3rem;
+            }
+
+            .info-container h1 {
+                font-size: 1rem;
+            }
+
+            .feedback-container {
+                flex-direction: column;
+                padding: 10px;
+                gap: 20px;
+            }
+
+            .feedback-column {
+                max-width: 100%;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .impact-container {
+                flex-direction: column;
+                align-items: center;
+                padding: 15px;
+            }
+
+            .chart-container {
+                width: 100%;
+                margin-bottom: 15px;
+            }
+
+            .info-row {
+                gap: 10px;
+            }
+
+            .info-container {
+                width: 140px;
+                height: 140px;
+            }
+
+            .info-container .number {
+                font-size: 2.5rem;
+            }
+
+            .info-container h1 {
+                font-size: 0.9rem;
+            }
+
+            .feedback-container {
+                padding: 10px;
+                gap: 15px;
+            }
+
+            .feedback-row {
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+            }
+
+            .member-profile {
+                margin: 0 0 10px 0;
+            }
+
+            .profile-pic {
+                width: 50px;
+                height: 50px;
+            }
+
+            .feedback-content {
+                padding-left: 0;
+            }
+
+            .feedback-content p {
+                font-size: 13px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -733,7 +836,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'getProgress') {
                         backgroundColor: '#d4a373',
                         borderColor: '#b07b4e',
                         borderWidth: 1,
-                        barThickness: 200
+                        barThickness: 150
                     },
                     {
                         label: 'People Supported',
@@ -741,7 +844,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'getProgress') {
                         backgroundColor: '#a3b18a',
                         borderColor: '#6b8f59',
                         borderWidth: 1,
-                        barThickness: 200
+                        barThickness: 150
                     },
                 ],
             },
