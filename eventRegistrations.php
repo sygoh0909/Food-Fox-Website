@@ -58,9 +58,6 @@ if (mysqli_num_rows($result) > 0) {
                 echo "<script>alert('Registered successfully!'); window.location.href = 'registrationInfo.php?registrationID=$registrationID';</script>";
             }
         }
-        else{
-            //error
-        }
     }
 }
 ?>
@@ -206,12 +203,12 @@ if (mysqli_num_rows($result) > 0) {
         $memberData = mysqli_fetch_assoc($result);
     }?>
 
-        <!--sync info from profile (show a note also if want to change info, change from profile), if user haven't filled, pop up an alert message and direct them to profile-->
+        <!--sync info from profile (show a note if user want to change info, change from profile), if user haven't filled, pop up an alert message and direct them to profile-->
         <p class="note">Please note that name, email, and phone number will be automatically synced from your profile. Please proceed to profile page to change any information. </p>
 
         <div class="form-grp">
             <p>Name:</p>
-            <?php echo isset($memberData['memberName']) ? $memberData['memberName']: '';
+            <?php echo $memberData['memberName'] ?? '';
             if (empty($memberData['memberName'])){
                 if ($_SERVER["REQUEST_METHOD"] == "POST"){
                     echo "<p class='error-message'>Please enter your name.</p>";
@@ -221,7 +218,7 @@ if (mysqli_num_rows($result) > 0) {
 
         <div class="form-grp">
             <p>Email:</p>
-            <?php echo isset($memberData['email']) ? $memberData['email']: '';
+            <?php echo $memberData['email'] ?? '';
             if (empty($memberData['email'])){
                 if ($_SERVER["REQUEST_METHOD"] == "POST"){
                     echo "<p class='error-message'>Please enter an email address.</p>";
@@ -231,17 +228,17 @@ if (mysqli_num_rows($result) > 0) {
 
         <div class="form-grp">
             <p>Phone Number:</p>
-            <?php echo isset($memberData['phoneNum']) ? $memberData['phoneNum']:'';?>
+            <?php echo $memberData['phoneNum'] ?? '';?>
 
             <?php if (empty($memberData['phoneNum'])):
                 if ($_SERVER["REQUEST_METHOD"] == "POST"){
-                    echo "<p class='error-message''>Please enter a phone number.</p>";
+                    echo "<p class='error-message'>Please enter a phone number.</p>";
                 }
                 ?>
                 <div class="missing-info-alert">
                     <p>You haven't provided a phone number in your profile.</p>
                     <p>Please fill in your phone number in your profile</p>
-                    <?php echo "<a href='profile.php?memberID=". $memberData['memberID']."&action=registration'><button type='button'>Proceed to Profile Page</button></a>"?>
+                    <?php echo "<a href='profile.php?memberID=". $memberID ."&action=registration'><button type='button'>Proceed to Profile Page</button></a>"?>
                 </div>
             <?php endif; ?>
         </div>
@@ -292,7 +289,7 @@ if (mysqli_num_rows($result) > 0) {
                     <option value="Volunteer">Volunteer</option>
                 <?php endif; ?>
             </select>
-            <p class="error-message""><?= isset($errors['registrations']) ? $errors['registrations'] : '' ?></p>
+            <p class="error-message"><?= $errors['registrations'] ?? '' ?></p>
         </div>
 
     <div class="participant-field">
@@ -313,7 +310,7 @@ if (mysqli_num_rows($result) > 0) {
                 <option>XL</option>
             </select>
             <!--provide t-shirt size chart-->
-            <img src="https://www.tshirtprint2u.com.my/images/sizechart_tshirtprint2u.jpg">
+            <img src="https://www.tshirtprint2u.com.my/images/sizechart_tshirtprint2u.jpg" alt="Size Chart">
         </div>
     </div>
 
@@ -345,11 +342,11 @@ if (mysqli_num_rows($result) > 0) {
         const participantField = document.querySelector(".participant-field");
         const volunteerField = document.querySelector(".volunteer-field");
 
-        if (registrationType == "Participant"){
+        if (registrationType === "Participant"){
             participantField.style.display = "block";
             volunteerField.style.display = "none";
         }
-        else if (registrationType == "Volunteer"){
+        else if (registrationType === "Volunteer"){
             participantField.style.display = "none";
             volunteerField.style.display = "block";
         }
