@@ -7,7 +7,7 @@ include ('db/db_conn.php');
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Add/Edit/Delete Event Page</title>
+    <title>Actions for Event Page</title>
     <link rel="stylesheet" href="form.css">
 
     <style>
@@ -32,12 +32,12 @@ include ('db/db_conn.php');
         }
 
         .image, .event-image img {
-            width: 120px;
-            height: 100px;
+            width: 160px;
+            height: 130px;
             object-fit: cover;
             border-radius: 10px;
             border: 3px solid #C5B4A5;
-            margin-bottom: 10px;
+            margin-bottom: 5px;
         }
 
         .event-image {
@@ -63,6 +63,17 @@ include ('db/db_conn.php');
 
         .dynamic-inputs button {
             margin-left: 5px;
+        }
+
+        .dynamic-inputs input[name^="schedules[datetime]"] {
+            flex: none;
+            width: 200px;
+            margin-right: 5px;
+        }
+
+        .dynamic-inputs input[name^="schedules[description]"] {
+            flex: none;
+            width: 705px;
         }
 
         .add-remove-btn {
@@ -100,6 +111,7 @@ include ('db/db_conn.php');
             font-size: 0.9em;
             white-space: nowrap;
         }
+
         .note {
             font-size: 14px;
             color: #5C4033;
@@ -154,9 +166,6 @@ include ('db/db_conn.php');
         if (empty($eventName)) {
             $errors['eventName'] = "Event Name is required";
         }
-//        elseif (!preg_match("/^[a-zA-Z\s]+$/", $eventName)){
-//            $errors['eventName'] = "Event name should only contain alphabets and spaces.";
-//        }
         if (empty($startDateTime)) {
             $errors['startDateTime'] = "Start Date and Time is required";
         }
@@ -192,18 +201,6 @@ include ('db/db_conn.php');
             move_uploaded_file($_FILES["eventImage"]["tmp_name"], $eventImagePath);
         }
 
-//        if (isset($_FILES['guestImage']) && $_FILES['guestImage']['error'] == 0) {
-//            $target_dir = "uploads/";
-//            $guestImagePath = $target_dir . basename($_FILES["guestImage"]["name"]);
-//            move_uploaded_file($_FILES["guestImage"]["tmp_name"], $guestImagePath);
-//        }
-
-//        if (isset($_FILES['photoGallery']) && $_FILES['photoGallery']['error'] == 0) {
-//            $target_dir = "uploads/";
-//            $galleryPath = $target_dir . basename($_FILES["photoGallery"]["name"]);
-//            move_uploaded_file($_FILES["photoGallery"]["tmp_name"], $galleryPath);
-//        }
-
         $uploadedImages = [];
         $target_dir = "uploads/";
         if (isset($_FILES['guestPic']) && is_array($_FILES['guestPic']['name'])) {
@@ -214,16 +211,15 @@ include ('db/db_conn.php');
                     $guestImagePath = $target_dir . $fileName;
 
                     if (move_uploaded_file($fileTmpName, $guestImagePath)) {
-                        $uploadedImages[] = $guestImagePath; // Save the file path on success
+                        $uploadedImages[] = $guestImagePath;
                     } else {
-                        $uploadedImages[] = ''; // Save an empty string if the move fails
+                        $uploadedImages[] = '';
                     }
                 } else {
-                    $uploadedImages[] = $_POST['existingGuestPics'][$i] ?? ''; // Use existing guest pics if available
+                    $uploadedImages[] = $_POST['existingGuestPics'][$i] ?? '';
                 }
             }
         } else {
-            // No files uploaded; default to existing guest pics or empty values
             if (isset($_POST['existingGuestPics']) && is_array($_POST['existingGuestPics'])) {
                 $uploadedImages = $_POST['existingGuestPics'];
             }
@@ -244,16 +240,6 @@ include ('db/db_conn.php');
                     }
                 }
             }
-        }
-
-        //action
-        if ($action=="editPast"){
-//            $attendees = $_POST['attendees'];
-            $impact = $_POST['impact'];
-
-//            if (!preg_match("/^\d+$/", $attendees)) {
-//                $errors[] = "Attendees must be a positive number.";
-//            }
         }
 
         //update event
@@ -311,12 +297,8 @@ include ('db/db_conn.php');
 
                         if ($checkResult->num_rows==0){
                             $sql = "INSERT INTO pastevents(eventID) VALUES($eventID)";
-                            if ($conn->query($sql) === TRUE) {
-//                                echo "Event successfully moved to past events. Please proceed to past events tables for detailed update.";
-                            }
-                            echo "Error: " . $sql . "<br>" . $conn->error;
+                            $conn->query($sql);
                         }
-//                        echo "Event is already marked as past.";
                     }
 
                     if ($eventStatus == "Upcoming"){
@@ -325,6 +307,8 @@ include ('db/db_conn.php');
                     }
 
                     if ($action=="editPast"){
+                        $impact = $_POST['impact'];
+
                         $sql = "UPDATE pastevents SET impact = '$impact' WHERE eventID = '$eventID'";
                         if ($conn->query($sql) === TRUE) {
                             if (!empty($uploadedFiles)) {
@@ -345,6 +329,7 @@ include ('db/db_conn.php');
                     echo "<script>alert('Event Updated'); window.location.href='admin_events.php';</script>";
                 }
             }
+            //delete
             elseif ($action=="delete" || $action=="deletePast"){
                 $sql = "DELETE FROM events WHERE eventID = '$eventID'";
                 if ($action=="deletePast"){
@@ -360,73 +345,68 @@ include ('db/db_conn.php');
             }
             //add new event
             elseif ($action == "add"){
-                if (empty($errors)){
-                    $query = "INSERT INTO events (eventName, start_dateTime, end_dateTime, location, details, participantsNeeded, volunteersNeeded, eventStatus, eventPic) VALUES ('$eventName', '$startDateTime', '$endDateTime', '$location', '$details', '$participantsNeeded', '$volunteersNeeded', '$eventStatus', '$eventImagePath')";
+                $query = "INSERT INTO events (eventName, start_dateTime, end_dateTime, location, details, participantsNeeded, volunteersNeeded, eventStatus, eventPic) VALUES ('$eventName', '$startDateTime', '$endDateTime', '$location', '$details', '$participantsNeeded', '$volunteersNeeded', '$eventStatus', '$eventImagePath')";
 
-                    if ($conn->query($query) === TRUE) {
-                        $eventID = $conn->insert_id;
+                if ($conn->query($query) === TRUE) {
+                    $eventID = $conn->insert_id;
 
-                        foreach ($schedules['datetime'] as $index => $datetime){
-                            $description = $schedules['description'][$index];
+                    foreach ($schedules['datetime'] as $index => $datetime){
+                        $description = $schedules['description'][$index];
 
-                            $datetime = $conn->real_escape_string($datetime);
-                            $description = $conn->real_escape_string($description);
+                        $datetime = $conn->real_escape_string($datetime);
+                        $description = $conn->real_escape_string($description);
 
-                            $scheduleUpdate = "INSERT INTO eventschedules(eventID, scheduleDateTime, activityDescription)".
-                                " VALUES ('$eventID', '$datetime', '$description')";
-                            $conn->query($scheduleUpdate);
-                        }
+                        $scheduleUpdate = "INSERT INTO eventschedules(eventID, scheduleDateTime, activityDescription)".
+                            " VALUES ('$eventID', '$datetime', '$description')";
+                        $conn->query($scheduleUpdate);
+                    }
 
-                        foreach ($highlights as $highlight) {
-                            $highlightQuery = "INSERT INTO eventhighlights (eventID, highlights)"
-                                . "VALUES ('$eventID', '$highlight')";
-                            $conn->query($highlightQuery);
-                        }
+                    foreach ($highlights as $highlight) {
+                        $highlightQuery = "INSERT INTO eventhighlights (eventID, highlights)"
+                            . "VALUES ('$eventID', '$highlight')";
+                        $conn->query($highlightQuery);
+                    }
 
-                        for ($i = 0; $i < count($guestName); $i++) {
-                            $name = $conn->real_escape_string($guestName[$i]);
-                            $bio = $conn->real_escape_string($guestBio[$i]);
-                            $imagePath = $conn->real_escape_string($uploadedImages[$i]);
+                    for ($i = 0; $i < count($guestName); $i++) {
+                        $name = $conn->real_escape_string($guestName[$i]);
+                        $bio = $conn->real_escape_string($guestBio[$i]);
+                        $imagePath = $conn->real_escape_string($uploadedImages[$i]);
 
-                            if (!empty($name)) {
-                                $guestInsert = "
+                        if (!empty($name)) {
+                            $guestInsert = "
             INSERT INTO eventguests (eventID, guestName, guestBio, guestProfilePic) 
             VALUES ('$eventID', '$name', '$bio', '$imagePath')
         ";
-                                if (!$conn->query($guestInsert)) {
-                                    echo "Error adding guest $name: " . $conn->error . "<br>";
-                                }
+                            if (!$conn->query($guestInsert)) {
+                                echo "Error adding guest $name: " . $conn->error . "<br>";
                             }
                         }
-
-                        echo "<script>alert('New Event Added'); window.location.href='admin_events.php';</script>";
                     }
+
+                    echo "<script>alert('New Event Added'); window.location.href='admin_events.php';</script>";
                 }
             }
         }
-//        foreach ($errors as $error) {
-//            echo "<p style='color:red;'>$error</p>";
-//        }
-            }
+    }
 
-        if ($action == "edit" || $action == "editPast"){
-            echo "<h2>Update Event</h2>";
-        }
-        elseif ($action == "delete" || $action == "deletePast"){
-            echo "<h2>Delete Event</h2>";
-        }
-        elseif ($action == "add"){
-            //add event
-            echo "<h2>Add New Event</h2>";
-        }
+    if ($action == "edit" || $action == "editPast"){
+        echo "<h2>Update Event</h2>";
+    }
+    elseif ($action == "delete" || $action == "deletePast"){
+        echo "<h2>Delete Event</h2>";
+    }
+    elseif ($action == "add"){
+        echo "<h2>Add New Event</h2>";
+    }
+
     ?>
 
     <form method="POST" enctype="multipart/form-data">
         <div class="form-grp">
-            <p>Event Image:</p>
             <div class="event-image">
                 <img src="<?php echo ($eventData['eventPic'])?>" alt="Event Image" id="eventImg" class="image">
             </div>
+            <p>Event Image: </p>
             <input type="file" name="eventImage" id="uploadPic" accept="image/*" onchange="previewEventImage()">
         </div>
 
@@ -537,7 +517,6 @@ include ('db/db_conn.php');
 
                     echo "<div class='dynamic-inputs'>";
                     echo "<div class='guestPic'>";
-//                    echo "<input type='hidden' name='existingGuestPics[]' value=''>";
                     echo "<img src='' alt='Guest Picture' id='$imgId' class='roundImage'>";
                     echo "</div>";
                     echo "<label>";
@@ -611,7 +590,7 @@ include ('db/db_conn.php');
             elseif ($eventID && ($action == "delete" || $action == "deletePast")){
                 $buttonText = "Delete Event";
             }
-            else{ //actually should set action for add
+            elseif ($action == "add") {
                 $buttonText = "Add Event";
             }
             echo "<button type='button' onclick='displayActionPopup()'>{$buttonText}</button>";
@@ -630,8 +609,8 @@ include ('db/db_conn.php');
                 elseif ($eventID && ($action == "delete" || $action == "deletePast")){
                     $buttonText = "Confirm to delete event info?";
                 }
-                else{ //actually should set action for add
-                    $buttonText = "Confirm to add event?";
+                elseif ($action == "add") {
+                    $buttonText = "Add Event";
                 }
                 echo "{$buttonText}";
                 ?>

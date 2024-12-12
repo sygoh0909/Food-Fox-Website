@@ -7,7 +7,7 @@ include ('db/db_conn.php');
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Edit/Delete Member Page</title>
+    <title>Actions for Member Page</title>
     <link rel="stylesheet" href="form.css">
     <style>
         form {
@@ -57,7 +57,6 @@ include ('db/db_conn.php');
         $memberData = $result->fetch_assoc();
 
         if ($_SERVER["REQUEST_METHOD"] == "POST") {
-            //include address?
             $memberName = $_POST["memberName"];
             $email = $_POST["email"];
             $password = $_POST["password"];
@@ -72,16 +71,13 @@ include ('db/db_conn.php');
             }
 
             //regular expressions
-//            $namePattern = '/^[a-zA-Z]+$/';
-//            $emailPattern = '/^[\w\-\.]+@[a-zA-Z]+\.[a-zA-Z]{2,}$/';
             $passwordPattern = '/^(?=.*[a-zA-z])(?=.*\d)[A-Za-z\d]{8,}$/';
-            $phonePattern = '/^\+?[0-9]{1,4}?\s?(\(?[0-9]{3}\)?[\s.-]?)?[0-9]{3}[\s.-]?[0-9]{4}$/';
+            $phonePattern = '/^\+?[0-9]{1,4}?\s?(\(?[0-9]{3}\)?[\s.-]?)?[0-9]{3}[\s.-]?[0-9]{2,4}$/';
 
-            //validation
+            //validations
             $errors = array();
             $passwordError = array();
 
-            //need to include if edit only need check these errors???
             if (empty($memberName)) {
                 $errors['memberName'] = "Member Name is required";
             }
