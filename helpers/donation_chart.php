@@ -2,9 +2,9 @@
 
 include ('../db/db_conn.php');
 
-$fundraisingGoal = 5000;
+$fundraisingGoal = 10000;
 $maxMealsProvided = 1000;
-$maxPeopleSupported = 500;
+$maxPeopleSupported = 200;
 
 $conn = connection();
 
