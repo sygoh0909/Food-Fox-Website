@@ -3,7 +3,7 @@ include('cookie/cookie.php');
 include ('db/db_conn.php');
 
 $conn = connection();
-$selectedEventID = isset($_GET['eventID']) ? $_GET['eventID'] : null;
+$selectedEventID = $_GET['eventID'] ?? null;
 $selectedEventData = null;
 $memberID = $_SESSION['memberID'];
 
