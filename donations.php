@@ -434,7 +434,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'getProgress') {
     <h2>Make a Donation</h2>
     <?php
     $conn = connection();
-    $memberID = isset($_SESSION['memberID']) ? $_SESSION['memberID'] : 0;
+    $memberID = $_SESSION['memberID'] ?? 0;
     //if member only can donate
 
     if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['confirmDonate'])) {
@@ -473,6 +473,8 @@ if (isset($_GET['action']) && $_GET['action'] == 'getProgress') {
     if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['submit-feedback'])) {
         $feedback = $_POST['feedback'];
         $donationID = $_SESSION['donationID'];
+
+        $feedback = $conn->real_escape_string($feedback);
 
         $sql = "UPDATE donations SET feedback = '$feedback' WHERE donationID = '$donationID'";
         if ($conn->query($sql) === TRUE) {

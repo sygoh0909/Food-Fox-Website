@@ -80,10 +80,10 @@ if (mysqli_num_rows($result) > 0) {
         }
 
         .note {
-            font-size: 14px;
+            font-size: 15px;
             color: #5C4033;
-            margin-top: 10px;
             text-align: center;
+            margin-bottom: 30px;
         }
 
         img {
@@ -152,6 +152,10 @@ if (mysqli_num_rows($result) > 0) {
             margin: 0;
             font-weight: bold;
             color: #444444;
+        }
+
+        .participant-field input[type="text"]{
+            margin-bottom:  20px;
         }
     </style>
 </head>
@@ -262,7 +266,7 @@ if (mysqli_num_rows($result) > 0) {
         }
 
         $participantFull = false;
-        $volunteersFull = false;
+        $volunteerFull = false;
 
         if (isset($participantsNeeded) || isset($volunteersNeeded)) {
         $sqlParticipant = "SELECT COUNT(*) AS total_participants FROM participants p, registrations r, events e WHERE p.registrationID = r.registrationID AND r.eventID = e.eventID AND e.eventID = $selectedEventID";
@@ -299,7 +303,7 @@ if (mysqli_num_rows($result) > 0) {
         </div>
 
         <div class="form-grp">
-            <p>T-Shirt Size</p>
+            <p>T-Shirt Size:</p>
             <label for="sizes"></label>
             <select name="sizes" id="sizes">
                 <option value="" disabled selected>Choose a T-Shirt Size</option>
