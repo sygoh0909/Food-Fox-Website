@@ -28,7 +28,6 @@ function checkSessionTimeout($timeout_duration) {
 }
 
 function loginSection(){
-//    $visitCount = cookie();
     cookie();
     checkSessionTimeout(3600);
 
@@ -40,7 +39,6 @@ function loginSection(){
 
     if (isset($_SESSION['memberID'])) {
         $memberID = $_SESSION['memberID'];
-        $memberInfo = null;
 
         if ($memberID){
             $conn = connection();
@@ -77,12 +75,10 @@ function loginSection(){
                     exit();
                 }
             }
-//            echo "<p>Welcome back! This is your visit number $visitCount.</p>"; //testing
         }
-        }else {
-        echo "<a href='login.php' class='roundButton login'>Login</a>";
-        echo "<a href='signup.php' class='roundButton signup'>Sign Up</a>";
-//        echo "<p>This is your visit number $visitCount.</p>";
+    }else {
+        echo "<a href='../../assignment/login.php' class='roundButton login'>Login</a>";
+        echo "<a href='../../assignment/signup.php' class='roundButton signup'>Sign Up</a>";
     }
 }
 
@@ -93,7 +89,7 @@ function adminLoginSection(){
     echo '<script type="text/javascript">
             setTimeout(function(){
                 location.reload();
-            }, 28800000);
+            }, 28800000); //in milliseconds
           </script>';
 
     if (isset($_SESSION['adminID'])) {
