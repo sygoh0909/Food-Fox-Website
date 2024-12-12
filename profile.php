@@ -237,6 +237,49 @@ include ('db/db_conn.php');
             color: red;
             font-size: 14px;
         }
+
+        @media screen and (max-width: 768px) {
+            .container {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .profile-sidebar {
+                flex: none;
+                width: 100%;
+                text-align: center;
+            }
+
+            .profile-details {
+                flex: none;
+                width: 100%;
+            }
+
+            .recent-activity .activity-item {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .recent-activity .btn {
+                margin-top: 10px;
+                width: 100%;
+            }
+        }
+
+        @media screen and (max-width: 1024px) {
+            .container {
+                max-width: 90%;
+                gap: 15px;
+            }
+
+            .profile-sidebar {
+                flex: 0 0 30%;
+            }
+
+            .profile-details {
+                flex: 1;
+            }
+        }
     </style>
 </head>
 <body>
@@ -381,7 +424,7 @@ include ('db/db_conn.php');
 
                 <div class="btn-container">
                     <?php
-                    echo "<a href='mainpage.php?'><button type='button' class='btn back'>Back to Main Page</button></a>";
+                    echo "<a href='mainpage.php?'><button type='button' class='btn back'>Home</button></a>";
                     echo "<form action='' method='POST'><button type='submit' class='btn logout' name='logout'>Log Out</button></form>";
 
                     if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['logout'])){
