@@ -191,12 +191,33 @@ if (mysqli_num_rows($result) > 0) {
             <label for="events">Choose an event: </label>
             <select name="events" id="events">
                 <?php
-                foreach ($events as $event): ?>
-                    <option value="<?php echo $event['eventID']; ?>"
-                        <?php echo $selectedEventID == $event['eventID'] ? 'selected' : ''; ?>>
-                        <?php echo $event['eventName']; ?>
-                    </option>
-                <?php endforeach; ?>
+                foreach ($events as $event):
+                    $eventID = $event['eventID'];
+
+                    $sqlParticipant = "SELECT COUNT(*) AS total_participants 
+                                FROM participants p
+                                JOIN registrations r ON p.registrationID = r.registrationID
+                                JOIN events e ON r.eventID = e.eventID
+                                WHERE e.eventID = $eventID";
+                    $resultParticipant = $conn->query($sqlParticipant);
+                    $registeredParticipant = $resultParticipant->fetch_assoc()['total_participants'] ?? 0;
+
+                    $sqlVolunteer = "SELECT COUNT(*) AS total_volunteers 
+                              FROM volunteers v
+                              JOIN registrations r ON v.registrationID = r.registrationID
+                              JOIN events e ON r.eventID = e.eventID
+                              WHERE e.eventID = $eventID";
+                    $resultVolunteer = $conn->query($sqlVolunteer);
+                    $registeredVolunteer = $resultVolunteer->fetch_assoc()['total_volunteers'] ?? 0;
+
+                    if ($registeredParticipant < $event['participantsNeeded'] ||
+                        $registeredVolunteer < $event['volunteersNeeded']): ?>
+                        <option value="<?php echo $event['eventID']; ?>"
+                            <?php echo $selectedEventID == $event['eventID'] ? 'selected' : ''; ?>>
+                            <?php echo $event['eventName']; ?>
+                        </option>
+                    <?php endif;
+                endforeach; ?>
             </select>
         </div>
 

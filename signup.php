@@ -225,8 +225,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         const confirmPasswordInput = document.getElementById('confirmPassword').value.trim();
         const confirmPasswordError = document.getElementById('confirm-password-error');
 
-        if (phpPasswordError) phpPasswordError.style.visibility = 'none';
-        if (phpConfirmError) phpConfirmError.style.visibility = 'none';
+        if (phpPasswordError) phpPasswordError.style.display = 'none';
+        if (phpConfirmError) phpConfirmError.style.display = 'none';
 
         if (passwordInput === ''){
             passwordError.textContent = "Password is required";
