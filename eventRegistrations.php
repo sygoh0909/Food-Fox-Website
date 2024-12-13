@@ -215,7 +215,8 @@ if (mysqli_num_rows($result) > 0) {
             <?php echo $memberData['memberName'] ?? '';
             if (empty($memberData['memberName'])){
                 if ($_SERVER["REQUEST_METHOD"] == "POST"){
-                    echo "<p class='error-message'>Please enter your name.</p>";
+                    $errors['memberName'] = "Please enter your name.";
+                    echo "<p class='error-message'>" . $errors['memberName'] ?? "</p>";
                 }
             }?>
         </div>
@@ -225,7 +226,8 @@ if (mysqli_num_rows($result) > 0) {
             <?php echo $memberData['email'] ?? '';
             if (empty($memberData['email'])){
                 if ($_SERVER["REQUEST_METHOD"] == "POST"){
-                    echo "<p class='error-message'>Please enter an email address.</p>";
+                    $errors['email'] = "Please enter an email address.";
+                    echo "<p class='error-message'>" . $errors['email'] ?? "</p>";
                 }
             }?>
         </div>
@@ -236,7 +238,8 @@ if (mysqli_num_rows($result) > 0) {
 
             <?php if (empty($memberData['phoneNum'])):
                 if ($_SERVER["REQUEST_METHOD"] == "POST"){
-                    echo "<p class='error-message'>Please enter a phone number.</p>";
+                    $errors['phoneNum'] = "Please enter a phone number.";
+                    echo "<p class='error-message'>" . $errors['phoneNum'] ?? "</p>";
                 }
                 ?>
                 <div class="missing-info-alert">
