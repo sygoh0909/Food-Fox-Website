@@ -80,14 +80,10 @@ function sendMail($recipientEmail, $registrationData, $startFormatted, $endForma
 
             $email->Body .= "<p><strong>Relevant Skills: </strong>{$volunteerData['relevantSkills']}</p>";
         }
-        else{
-
-        }
         $email->send();
-//        echo "Email sent successfully!";
 
     }catch (Exception $e){
-//        echo "Email could not be sent. Error: {$email->ErrorInfo}";
+        echo "Email could not be sent. Error: {$email->ErrorInfo}";
     }
 }
 
