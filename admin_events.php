@@ -80,7 +80,7 @@ include ('db/db_conn.php');
                 <?php
                 $conn = connection();
 
-                $searchQuery = isset ($_GET['search']) ? $_GET['search'] : '';
+                $searchQuery = $_GET['search'] ?? '';
                 $upcomingSql = "SELECT e.eventID, e.eventName, COUNT(r.registrationID) AS totalRegistrations FROM events e LEFT JOIN registrations r ON e.eventID = r.eventID WHERE e.eventStatus = 'Upcoming'";
 
                 if (!empty ($searchQuery)) {
@@ -118,7 +118,7 @@ include ('db/db_conn.php');
                 <?php
                 $conn = connection();
 
-                $searchQuery = isset ($_GET['search']) ? $_GET['search'] : '';
+                $searchQuery = $_GET['search'] ?? '';
                 $pastSql = "SELECT e.eventID, e.eventName, COUNT(r.attendance) AS attendees FROM events e LEFT JOIN registrations r ON e.eventID = r.eventID AND r.attendance = 1 WHERE e.eventStatus = 'Past'";
 
                 if (!empty ($searchQuery)){

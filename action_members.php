@@ -97,9 +97,9 @@ include ('db/db_conn.php');
                 $errors['phoneNum'] = "Enter a valid phone number.";
             }
 
-            if (empty($errors)){
+            if ($action == "edit"){
                 //update
-                if ($action == "edit"){
+                if (empty($errors)){
                     if ($password == ''){
                         $sql = "UPDATE members SET memberProfile = '$memberProfilePath', memberName = '$memberName', email = '$email', phoneNum = '$phoneNum', bio = '$bio', memberProfile = '$memberProfilePath' WHERE memberID = $memberID";
                     }
@@ -118,12 +118,12 @@ include ('db/db_conn.php');
                         window.location.href='admin_members.php';</script>";
                     }
                 }
-                elseif ($action == "delete"){
-                    $sql = "DELETE FROM members WHERE memberID = $memberID";
-                    if ($conn->query($sql) === TRUE) {
-                        echo "<script>alert('Member Info Deleted Successfully');
+            }
+            elseif ($action == "delete"){
+                $sql = "DELETE FROM members WHERE memberID = $memberID";
+                if ($conn->query($sql) === TRUE) {
+                    echo "<script>alert('Member Info Deleted Successfully');
                             window.location.href='admin_members.php';</script>";
-                    }
                 }
             }
         }
