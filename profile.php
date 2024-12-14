@@ -410,14 +410,14 @@ include ('db/db_conn.php');
                 <!--if change password button is pressed, show some fields for user to enter their password now and a new password?-->
 
                 <div class="change-password-field" id="change-password-field" style="display: <?= $passwordChangeAttempt ? 'block' : 'none'; ?>;">
-                    <label><input type="text" name="currentPassword" placeholder="Enter your current password..."></label>
+                    <label><input type="password" name="currentPassword" placeholder="Enter your current password..."></label>
                     <a href='forgotpassword.php'><p>Forgot password?</p></a>
                     <p class="error-message"><?= $passwordError['currentPassword'] ?? '';?></p>
 
-                    <label><input type="text" name="newPassword" placeholder="Enter your new password..."></label>
+                    <label><input type="password" name="newPassword" placeholder="Enter your new password..."></label>
                     <p class="error-message"><?= $passwordError['newPassword'] ?? '';?></p>
 
-                    <label><input type="text" name="confirmPassword" placeholder="Confirm your new password..."></label>
+                    <label><input type="password" name="confirmPassword" placeholder="Confirm your new password..."></label>
                     <p class="error-message"><?= $passwordError['confirmPassword'] ?? '';?></p>
                 </div>
 
