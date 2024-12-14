@@ -124,8 +124,8 @@ include ('db/db_conn.php');
     <?php
     $conn = connection();
     //check for event id presence
-    $eventID = isset($_GET['eventID']) ? $_GET['eventID'] : null;
-    $action = isset($_GET['action']) ? $_GET['action'] : null;
+    $eventID = $_GET['eventID'] ?? null;
+    $action = $_GET['action'] ?? null;
     $eventData = null;
 
     if ($eventID) {
@@ -243,8 +243,8 @@ include ('db/db_conn.php');
         }
 
         //update event
-        if (empty($errors)){
-            if ($action=="edit" || $action=="editPast"){
+        if ($action=="edit" || $action=="editPast" || $action=="add"){
+            if (empty($errors)){
 
                 $updateQuery = "UPDATE events SET eventName = '$eventName', start_dateTime = '$startDateTime', end_dateTime = '$endDateTime', location = '$location', details = '$details', participantsNeeded = '$participantsNeeded', volunteersNeeded = '$volunteersNeeded', eventStatus = '$eventStatus', eventPic = '$eventImagePath' WHERE eventID = '$eventID'";
 
@@ -328,63 +328,63 @@ include ('db/db_conn.php');
                     }
                     echo "<script>alert('Event Updated'); window.location.href='admin_events.php';</script>";
                 }
-            }
-            //delete
-            elseif ($action=="delete" || $action=="deletePast"){
-                $sql = "DELETE FROM events WHERE eventID = '$eventID'";
-                if ($action=="deletePast"){
-                    $sqlPast = "DELETE FROM pastevents WHERE eventID = '$eventID'";
-                    $conn->query($sqlPast);
+                //add new event
+                if ($action == "add"){
+                    $query = "INSERT INTO events (eventName, start_dateTime, end_dateTime, location, details, participantsNeeded, volunteersNeeded, eventStatus, eventPic) VALUES ('$eventName', '$startDateTime', '$endDateTime', '$location', '$details', '$participantsNeeded', '$volunteersNeeded', '$eventStatus', '$eventImagePath')";
 
-                    $sqlGallery = "DELETE FROM photoGallery WHERE eventID = '$eventID'";
-                    $conn->query($sqlGallery);
-                }
-                if ($conn->query($sql) === TRUE) {
-                    echo "<script>alert('Event Deleted'); window.location.href='admin_events.php';</script>";
-                }
-            }
-            //add new event
-            elseif ($action == "add"){
-                $query = "INSERT INTO events (eventName, start_dateTime, end_dateTime, location, details, participantsNeeded, volunteersNeeded, eventStatus, eventPic) VALUES ('$eventName', '$startDateTime', '$endDateTime', '$location', '$details', '$participantsNeeded', '$volunteersNeeded', '$eventStatus', '$eventImagePath')";
+                    if ($conn->query($query) === TRUE) {
+                        $eventID = $conn->insert_id;
 
-                if ($conn->query($query) === TRUE) {
-                    $eventID = $conn->insert_id;
+                        foreach ($schedules['datetime'] as $index => $datetime){
+                            $description = $schedules['description'][$index];
 
-                    foreach ($schedules['datetime'] as $index => $datetime){
-                        $description = $schedules['description'][$index];
+                            $datetime = $conn->real_escape_string($datetime);
+                            $description = $conn->real_escape_string($description);
 
-                        $datetime = $conn->real_escape_string($datetime);
-                        $description = $conn->real_escape_string($description);
+                            $scheduleUpdate = "INSERT INTO eventschedules(eventID, scheduleDateTime, activityDescription)".
+                                " VALUES ('$eventID', '$datetime', '$description')";
+                            $conn->query($scheduleUpdate);
+                        }
 
-                        $scheduleUpdate = "INSERT INTO eventschedules(eventID, scheduleDateTime, activityDescription)".
-                            " VALUES ('$eventID', '$datetime', '$description')";
-                        $conn->query($scheduleUpdate);
-                    }
+                        foreach ($highlights as $highlight) {
+                            $highlightQuery = "INSERT INTO eventhighlights (eventID, highlights)"
+                                . "VALUES ('$eventID', '$highlight')";
+                            $conn->query($highlightQuery);
+                        }
 
-                    foreach ($highlights as $highlight) {
-                        $highlightQuery = "INSERT INTO eventhighlights (eventID, highlights)"
-                            . "VALUES ('$eventID', '$highlight')";
-                        $conn->query($highlightQuery);
-                    }
+                        for ($i = 0; $i < count($guestName); $i++) {
+                            $name = $conn->real_escape_string($guestName[$i]);
+                            $bio = $conn->real_escape_string($guestBio[$i]);
+                            $imagePath = $conn->real_escape_string($uploadedImages[$i]);
 
-                    for ($i = 0; $i < count($guestName); $i++) {
-                        $name = $conn->real_escape_string($guestName[$i]);
-                        $bio = $conn->real_escape_string($guestBio[$i]);
-                        $imagePath = $conn->real_escape_string($uploadedImages[$i]);
-
-                        if (!empty($name)) {
-                            $guestInsert = "
+                            if (!empty($name)) {
+                                $guestInsert = "
             INSERT INTO eventguests (eventID, guestName, guestBio, guestProfilePic) 
             VALUES ('$eventID', '$name', '$bio', '$imagePath')
         ";
-                            if (!$conn->query($guestInsert)) {
-                                echo "Error adding guest $name: " . $conn->error . "<br>";
+                                if (!$conn->query($guestInsert)) {
+                                    echo "Error adding guest $name: " . $conn->error . "<br>";
+                                }
                             }
                         }
-                    }
 
-                    echo "<script>alert('New Event Added'); window.location.href='admin_events.php';</script>";
+                        echo "<script>alert('New Event Added'); window.location.href='admin_events.php';</script>";
+                    }
                 }
+            }
+            }
+        //delete
+        elseif ($action=="delete" || $action=="deletePast"){
+            $sql = "DELETE FROM events WHERE eventID = '$eventID'";
+            if ($action=="deletePast"){
+                $sqlPast = "DELETE FROM pastevents WHERE eventID = '$eventID'";
+                $conn->query($sqlPast);
+
+                $sqlGallery = "DELETE FROM photoGallery WHERE eventID = '$eventID'";
+                $conn->query($sqlGallery);
+            }
+            if ($conn->query($sql) === TRUE) {
+                echo "<script>alert('Event Deleted'); window.location.href='admin_events.php';</script>";
             }
         }
     }

@@ -71,24 +71,24 @@ include ('db/db_conn.php');
             $errors['points'] = "Points needed must be a positive integer";
         }
 
-        if (empty($errors)){
-            if ($action == "edit"){
+        if ($action == "edit" || $action == "add"){
+            if (empty($errors)){
                 $sql = "UPDATE rewards SET rewardName = '$rewardName', pointsNeeded = '$pointsNeeded', rewardPic = '$rewardPicPath' WHERE rewardID = '$rewardID'";
                 if ($conn->query($sql) === TRUE) {
                     echo "<script>alert('Reward updated successfully'); window.location.href = 'admin_rewards.php';</script>')";
                 }
-            }
-            elseif ($action == "delete"){
-                $sql = "DELETE FROM rewards WHERE rewardID = '$rewardID'";
-                if ($conn->query($sql) === TRUE) {
-                    echo "<script>alert('Reward deleted successfully'); window.location.href = 'admin_rewards.php';</script>";
+                if ($action == "add"){
+                    $sql = "INSERT INTO rewards (rewardName, pointsNeeded, rewardPic) VALUES ('$rewardName','$pointsNeeded','$rewardPicPath')";
+                    if ($conn->query($sql) === TRUE) {
+                        echo "<script>alert('Reward added successfully'); window.location.href = 'admin_rewards.php';</script>";
+                    }
                 }
             }
-            elseif ($action == "add"){
-                $sql = "INSERT INTO rewards (rewardName, pointsNeeded, rewardPic) VALUES ('$rewardName','$pointsNeeded','$rewardPicPath')";
-                if ($conn->query($sql) === TRUE) {
-                    echo "<script>alert('Reward added successfully'); window.location.href = 'admin_rewards.php';</script>";
-                }
+        }
+        elseif ($action == "delete"){
+            $sql = "DELETE FROM rewards WHERE rewardID = '$rewardID'";
+            if ($conn->query($sql) === TRUE) {
+                echo "<script>alert('Reward deleted successfully'); window.location.href = 'admin_rewards.php';</script>";
             }
         }
     }

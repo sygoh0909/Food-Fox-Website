@@ -33,8 +33,8 @@ include ('db/db_conn.php');
                 $errors['amount'] = "Amount is required";
             }
 
-            if (empty($errors)){
-                if ($action == "edit"){
+            if ($action == "edit"){
+                if (empty($errors)){
                     $sql = "UPDATE donations SET amount = '$amount', feedback = '$feedback' WHERE donationID = $donationID";
                     if ($conn->query($sql) === TRUE){
                         echo "<script>
@@ -44,15 +44,15 @@ include ('db/db_conn.php');
                         exit;
                     }
                 }
-                if ($action == "delete"){
-                    $sql = "DELETE FROM `donations` WHERE `donationID` = $donationID";
-                    if ($conn->query($sql) === TRUE) {
-                        echo "<script>
+            }
+            elseif ($action == "delete"){
+                $sql = "DELETE FROM `donations` WHERE `donationID` = $donationID";
+                if ($conn->query($sql) === TRUE) {
+                    echo "<script>
                               alert('Donation Info Deleted Successfully');
                               window.location.href = 'admin_donations.php';
                         </script>";
-                        exit;
-                    }
+                    exit;
                 }
             }
         }

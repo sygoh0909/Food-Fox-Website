@@ -63,8 +63,8 @@ include ('db/db_conn.php');
 
         $errors = array();
 
-            if (empty($errors)){
-                if ($action == "edit"){
+            if ($action == "edit"){
+                if (empty($errors)){
                     $sql = "UPDATE registrations SET dietaryRestrictions = '$dietaryRestrictions' WHERE registrationID = $registrationID";
 
                     if ($conn->query($sql) === TRUE){
@@ -86,11 +86,11 @@ include ('db/db_conn.php');
                         }
                     }
                 }
-                elseif ($action == "delete"){
-                    $sql = "DELETE FROM registrations WHERE registrationID = $registrationID";
-                    if ($conn->query($sql) === TRUE) {
-                        echo "<script>alert('Registration Deleted!'); window.location.href='admin_registrations.php?eventID=".$registrationInfo['eventID']."';</script>";
-                    }
+            }
+            elseif ($action == "delete"){
+                $sql = "DELETE FROM registrations WHERE registrationID = $registrationID";
+                if ($conn->query($sql) === TRUE) {
+                    echo "<script>alert('Registration Deleted!'); window.location.href='admin_registrations.php?eventID=".$registrationInfo['eventID']."';</script>";
                 }
             }
         }
