@@ -69,25 +69,6 @@ include ('db/db_conn.php');
             border-radius: 10px;
         }
 
-        .overlay-nav{
-            position: absolute;
-            display: flex;
-            gap: 50px;
-            top: 50px;
-            left: 400px;
-        }
-
-        .overlay-nav a{
-            text-decoration: none;
-            color: white;
-            font-size: larger;
-        }
-
-        .overlay-nav a:hover{
-            border-radius: 25px;
-            background-color: rgba(255,255,255,0.2);
-        }
-
         .main-info {
             display: flex;
             flex-direction: column;
@@ -202,17 +183,6 @@ include ('db/db_conn.php');
                 height: 120%;
             }
 
-            .overlay-nav {
-                top: 30px;
-                left: 20px;
-                flex-direction: column;
-                gap: 15px;
-            }
-
-            .overlay-nav a {
-                font-size: 18px;
-            }
-
             .companyDescription {
                 padding-left: 50px;
             }
@@ -256,17 +226,6 @@ include ('db/db_conn.php');
         @media screen and (max-width: 768px) {
             .banner {
                 height: 100%;
-            }
-
-            .overlay-nav {
-                top: 20px;
-                left: 10px;
-                flex-direction: column;
-                gap: 10px;
-            }
-
-            .overlay-nav a {
-                font-size: 16px;
             }
 
             .companyDescription {
@@ -353,12 +312,6 @@ include ('db/db_conn.php');
                         echo "<a href='login.php' class='roundButton join'>Join Us Now!</a>";
                     }
                     ?>
-                </div>
-                <div class="overlay-nav">
-                    <a href="mainpage.php" class="roundButton main">Home</a>
-                    <a href="events.php" class="roundButton main">Events</a>
-                    <a href="donations.php" class="roundButton main">Donation</a>
-                    <a href="contact.php" class="roundButton main">Contact</a>
                 </div>
             </div>
         </div>
