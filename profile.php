@@ -424,7 +424,7 @@ include ('db/db_conn.php');
 
                 <div class="btn-container">
                     <?php
-                    echo "<a href='mainpage.php?'><button type='button' class='btn back'>Home</button></a>";
+//                    echo "<a href='mainpage.php?'><button type='button' class='btn back'>Home</button></a>";
                     echo "<form action='' method='POST'><button type='submit' class='btn logout' name='logout'>Log Out</button></form>";
 
                     if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['logout'])){
