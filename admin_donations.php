@@ -114,7 +114,7 @@ include ('db/db_conn.php');
                 <?php
                 $conn = connection();
 
-                $searchQuery = isset($_GET['search']) ? $_GET['search'] : "";
+                $searchQuery = $_GET['search'] ?? "";
 
                 $sql = "SELECT d.*, m.memberName FROM donations d JOIN members m ON d.memberID = m.memberID";
 
@@ -131,7 +131,7 @@ include ('db/db_conn.php');
                         echo "<td>" . $row["memberName"] . "</td>";
                         echo "<td>" . $row["amount"] . "</td>";
                         echo "<td>" . $dateFormatted . "</td>";
-                        echo "<td><a href='action_donation.php?donationID=" . $row["donationID"] . "&action=edit '><button>Edit</button></a><a href='action_donation.php?donationID=" . $row["donationID"] . "&action=delete '><button>Delete</button></a></td>";
+                        echo "<td><a href='action_donation.php?donationID=" . $row["donationID"] . "&action=view '><button>View</button></a><a href='action_donation.php?donationID=" . $row["donationID"] . "&action=delete '><button>Delete</button></a></td>";
                         echo "</tr>";
                     }
                 }

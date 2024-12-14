@@ -23,41 +23,19 @@ include ('db/db_conn.php');
         $result = $conn->query($sql);
         $donationDetails = $result->fetch_assoc();
 
-        if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["confirmAction"])){
-            $amount = $_POST["amount"];
-            $feedback = $_POST["feedback"];
-
-            $errors = [];
-
-            if (empty($amount)){
-                $errors['amount'] = "Amount is required";
-            }
-
-            if ($action == "edit"){
-                if (empty($errors)){
-                    $sql = "UPDATE donations SET amount = '$amount', feedback = '$feedback' WHERE donationID = $donationID";
-                    if ($conn->query($sql) === TRUE){
-                        echo "<script>
-                              alert('Donation Info Updated Successfully');
-                              window.location.href = 'admin_donations.php';
-                        </script>";
-                        exit;
-                    }
-                }
-            }
-            elseif ($action == "delete"){
-                $sql = "DELETE FROM `donations` WHERE `donationID` = $donationID";
-                if ($conn->query($sql) === TRUE) {
-                    echo "<script>
+        if ($action == "delete"){
+            $sql = "DELETE FROM `donations` WHERE `donationID` = $donationID";
+            if ($conn->query($sql) === TRUE) {
+                echo "<script>
                               alert('Donation Info Deleted Successfully');
                               window.location.href = 'admin_donations.php';
                         </script>";
-                    exit;
-                }
+                exit;
             }
         }
-        if ($action == "edit"){
-            echo "<h2>Update Donation</h2>";
+
+        if ($action == "view"){
+            echo "<h2>View Donation</h2>";
         }
         elseif ($action == "delete"){
             echo "<h2>Delete Donation</h2>";
@@ -73,8 +51,12 @@ include ('db/db_conn.php');
 
         <div class="form-grp">
             <p>Donation Amount:</p>
-            <label><input type="text" name="amount" value="<?php echo $donationDetails['amount'] ?? '';?>"></label>
-            <p class="error-message"><?= $errors['amount'] ?? '' ?></p>
+            <?php echo $donationDetails['amount'] ?? '';?>
+        </div>
+
+        <div class="form-grp">
+            <p>Payment Method:</p>
+            <?php echo $donationDetails['paymentMethod']?>
         </div>
 
         <div class="form-grp">
@@ -84,20 +66,28 @@ include ('db/db_conn.php');
 
         <div class="form-grp">
             <p>Feedback:</p>
-            <label><input type="text" name="feedback" value="<?php echo $donationDetails['feedback'];?>"></label>
+            <?php echo $donationDetails['feedback'];?>
         </div>
 
+        <?php if ($donationID && $action == "delete"): ?>
         <div class="btn">
-            <button type="button" onclick="displayActionPopup()"><?php echo $donationID && $action=="edit"?'Update donation details':'Delete donation details'?></button>
+            <button type="button" onclick="displayActionPopup()">Delete</button>
             <a href="admin_donations.php"><button type="button">Cancel</button></a>
         </div>
 
+            <div id="action-popup" class="action-popup" style="display:none;">
+                <h2>Confirm to delete donation record?</h2>
+                <button type="submit" name="confirmAction">Yes</button>
+                <button type="button" onclick="closeActionPopup()">No</button>
+            </div>
 
-        <div id="action-popup" class="action-popup" style="display:none;">
-            <h2><?php echo $donationID && $action=="edit"?'Confirm to update donation details?':'Confirm to delete donation details?'?></h2>
-            <button type="submit" name="confirmAction">Yes</button>
-            <button type="button" onclick="closeActionPopup()">No</button>
+        <?php else: ?>
+        <div class="btn">
+            <a href="admin_donations.php"><button type="button">Cancel</button></a>
         </div>
+
+        <?php endif; ?>
+
     </form>
 </main>
 </body>

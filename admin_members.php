@@ -69,7 +69,7 @@ include ('db/db_conn.php');
                 <?php
                 $conn = connection();
 
-                $searchQuery = isset($_GET['search']) ? $_GET['search'] : ""; //check search or not
+                $searchQuery = $_GET['search'] ?? ""; //check search or not
 
                 $sql = "SELECT memberID, memberName, email, joinDate FROM members";
 
