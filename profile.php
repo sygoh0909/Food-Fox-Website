@@ -8,7 +8,7 @@ include ('db/db_conn.php');
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Profile Page</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
     <link rel="stylesheet" href="main.css">
     <style>
         .container {
@@ -224,13 +224,19 @@ include ('db/db_conn.php');
         .profile-sidebar .btn.back {
             position: absolute;
             top: 20px;
-            left: 20px;
-            background-color: #A89E92;
-            color: #FFFFFF;
+            left: 30px;
+            background-color: transparent;
+            border: none;
+            color: #A89E92;
+            font-size: 24px;
+            cursor: pointer;
+            transition: color 0.3s ease, transform 0.2s ease;
+            text-decoration: none;
         }
 
-        .btn.back:hover {
-            background-color: #7F6C54;
+        .profile-sidebar .btn.back:hover {
+            color: #7F6C54;
+            transform: scale(1.1);
         }
 
         p.error-message {
@@ -424,7 +430,7 @@ include ('db/db_conn.php');
 
                 <div class="btn-container">
                     <?php
-//                    echo "<a href='mainpage.php?'><button type='button' class='btn back'>Home</button></a>";
+                    echo "<a href='mainpage.php' class='btn back' title='Go to Home'><i class='fas fa-home'></i></a></a>";
                     echo "<form action='' method='POST'><button type='submit' class='btn logout' name='logout'>Log Out</button></form>";
 
                     if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['logout'])){
@@ -470,7 +476,7 @@ include ('db/db_conn.php');
                     <h3>Recent Activity</h3>
                     <?php
                     $sql = "
-        (SELECT CONCAT('Event Registration - ', r.registerType) AS activityType, e.eventName AS activityName, r.registrationDate AS activityDate 
+        (SELECT 'Event Registration' AS activityType, CONCAT(e.eventName, ' - ',  r.registerType) AS activityName, r.registrationDate AS activityDate 
          FROM events e 
          INNER JOIN registrations r ON e.eventID = r.eventID 
          WHERE r.memberID = $memberID)
