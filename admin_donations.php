@@ -31,6 +31,47 @@ include ('db/db_conn.php');
             border-radius: 5px;
             width: 300px;
         }
+
+        .action-popup {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #FFFFFF;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+            text-align: center;
+            z-index: 1000;
+            border: 2px solid #C5B4A5;
+        }
+
+        .action-popup h2 {
+            margin-bottom: 20px;
+            color: #444444;
+            font-size: 20px;
+        }
+
+        .action-popup button {
+            margin: 10px;
+            padding: 10px 25px;
+        }
+
+        .action-popup button:nth-child(1) {
+            background-color: #7F6C54;
+        }
+
+        .action-popup button:nth-child(1):hover {
+            background-color: #6B5A48;
+        }
+
+        .action-popup button:nth-child(2) {
+            background-color: #D9534F;
+        }
+
+        .action-popup button:nth-child(2):hover {
+            background-color: #C9302C;
+        }
     </style>
 </head>
 <body>

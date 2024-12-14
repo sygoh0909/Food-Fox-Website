@@ -78,7 +78,7 @@ include ('db/db_conn.php');
                     $sql = "SELECT r.*, e.eventName, m.memberName FROM registrations r JOIN events e ON r.eventID = e.eventID JOIN members m ON r.memberID = m.memberID WHERE r.eventID = '$eventID'";
 
                     if (!empty($searchQuery)){
-                        $sql .= " AND (m.memberName LIKE '%$searchQuery%' OR r.registrationDate LIKE '%$searchQuery%' OR r.registerType LIKE '%$searchQuery%' OR r.attendance LIKE '%$searchQuery%')";
+                        $sql .= " AND (m.memberName LIKE '%$searchQuery%' OR r.registerType LIKE '%$searchQuery%' OR r.attendance LIKE '%$searchQuery%')";
                     }
 
                     $result = mysqli_query($conn, $sql);
@@ -98,10 +98,10 @@ include ('db/db_conn.php');
                         }
                     }
                     else{
-                        echo "<tr><td colspan='6' class='no-results'>No registrations found.</td></tr>";
+                        echo "<tr><td colspan='7' class='no-results'>No registrations found.</td></tr>";
                     }
                 }else{
-                    echo "<tr><td colspan='6' class='no-results'>No event ID found.</td></tr>";
+                    echo "<tr><td colspan='7' class='no-results'>No event ID found.</td></tr>";
                 }
                 ?>
             </table>
