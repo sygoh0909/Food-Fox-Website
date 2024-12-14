@@ -142,10 +142,10 @@ include ('db/db_conn.php');
 <main>
     <?php
     $conn = connection();
-    $memberID = isset($_GET['memberID']) ? $_GET['memberID'] : '';
+    $memberID = $_GET['memberID'] ?? '';
 
     $sql = "
-        (SELECT CONCAT('Event Registration - ', r.registerType) AS activityType, e.eventName AS activityName, r.registrationDate AS activityDate 
+        (SELECT 'Event Registration' AS activityType, CONCAT(e.eventName, ' - ', r.registerType) AS activityName, r.registrationDate AS activityDate 
          FROM events e 
          INNER JOIN registrations r ON e.eventID = r.eventID 
          WHERE r.memberID = $memberID)
