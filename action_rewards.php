@@ -51,7 +51,7 @@ include ('db/db_conn.php');
     if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $rewardName = $_POST['rewardName'];
         $pointsNeeded = $_POST['pointsNeeded'];
-        $rewardPicPath = $rewardData['rewardPic'];
+        $rewardPicPath = $rewardData['rewardPic'] ?? '';
 
         if (isset($_FILES['rewardPic']) && $_FILES['rewardPic']['error'] == 0) {
             $target_dir = "../uploads/";
