@@ -181,8 +181,14 @@ include ('db/db_conn.php');
         if (!empty ($participantsNeeded) && !preg_match('/^[1-9]\d*$/', $participantsNeeded)){
             $errors['participantsNeeded'] = "Participants needed must be a positive integer number.";
         }
-        if (empty($volunteersNeeded) && !preg_match('/^[1-9]\d*$/', $volunteersNeeded)){
+        elseif (empty($participantsNeeded)){
+            $errors['participantsNeeded'] = "Participants needed is required";
+        }
+        if (!empty($volunteersNeeded) && !preg_match('/^[1-9]\d*$/', $volunteersNeeded)){
             $errors['volunteersNeeded'] = "Volunteers needed must be a positive integer number.";
+        }
+        elseif(empty($volunteersNeeded)){
+            $errors['volunteersNeeded'] = "Volunteers needed is required";
         }
         if (empty($eventStatus)) {
             $errors['eventStatus'] = "Event Status is required";
@@ -372,7 +378,7 @@ include ('db/db_conn.php');
                     }
                 }
             }
-            }
+        }
         //delete
         elseif ($action=="delete" || $action=="deletePast"){
             $sql = "DELETE FROM events WHERE eventID = '$eventID'";
