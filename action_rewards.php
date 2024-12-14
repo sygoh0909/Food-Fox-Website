@@ -132,13 +132,13 @@ include ('db/db_conn.php');
             $buttonText = '';
 
             if ($rewardID && $action == "edit"){
-                $buttonText = "Update Event";
+                $buttonText = "Update Reward";
             }
             elseif ($rewardID && $action == "delete"){
-                $buttonText = "Delete Event";
+                $buttonText = "Delete Reward";
             }
             elseif ($action == "add"){
-                $buttonText = "Add Event";
+                $buttonText = "Add Reward";
             }
             echo "<button type='button' onclick='displayActionPopup()'>{$buttonText}</button>";
             ?>
