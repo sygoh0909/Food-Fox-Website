@@ -9,6 +9,15 @@ include ('db/db_conn.php');
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Actions for Donation Page</title>
     <link rel="stylesheet" href="form.css">
+
+    <style>
+        form {
+            display: flex;
+            gap: 20px;
+            align-items: start;
+            justify-items: center;
+        }
+    </style>
 </head>
 <body>
 <main>
@@ -23,14 +32,16 @@ include ('db/db_conn.php');
         $result = $conn->query($sql);
         $donationDetails = $result->fetch_assoc();
 
-        if ($action == "delete"){
-            $sql = "DELETE FROM `donations` WHERE `donationID` = $donationID";
-            if ($conn->query($sql) === TRUE) {
-                echo "<script>
+        if ($_SERVER["REQUEST_METHOD"] == "POST"){
+            if ($action == "delete"){
+                $sql = "DELETE FROM `donations` WHERE `donationID` = $donationID";
+                if ($conn->query($sql) === TRUE) {
+                    echo "<script>
                               alert('Donation Info Deleted Successfully');
                               window.location.href = 'admin_donations.php';
                         </script>";
-                exit;
+                    exit;
+                }
             }
         }
 
