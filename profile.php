@@ -295,16 +295,15 @@ include ('db/db_conn.php');
     $memberID = $_GET['memberID'] ?? '';
     $memberData = null;
 
-    $passwordFlag = $_POST['changePasswordFlag'] ?? false;
-
-    $sql = "SELECT * FROM members WHERE memberID = $memberID";
-    $result = mysqli_query($conn, $sql);
-    $memberData = mysqli_fetch_assoc($result);
-
     $changePassword = false;
     $passwordChangeAttempt = false;
+    $passwordFlag = $_POST['changePasswordFlag'] ?? false;
 
     if ($memberID){
+        $sql = "SELECT * FROM members WHERE memberID = $memberID";
+        $result = mysqli_query($conn, $sql);
+        $memberData = mysqli_fetch_assoc($result);
+
         if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['saveChanges'])){
             $memberName = $_POST['memberName'] ?? $memberData['memberName']; // Default to existing data
             $email = $_POST['email'] ?? $memberData['email'];
@@ -343,12 +342,11 @@ include ('db/db_conn.php');
 
 
             if ($passwordFlag === 'true'){ //if the change password button is pressed and the fields displayed
+                $currentPassword = $_POST['currentPassword'] ?? '';
+                $newPassword = $_POST['newPassword'] ?? '';
+                $confirmPassword = $_POST['confirmPassword'] ?? '';
 
-                $currentPassword = $_POST['currentPassword'];
-                $newPassword = $_POST['newPassword'];
-                $confirmPassword = $_POST['confirmPassword'];
-
-                if ($currentPassword == ''){
+                if (empty($currentPassword)){
                     $passwordChangeAttempt = true;
                     $passwordError['currentPassword'] = "Current password is required";
                 }
@@ -356,7 +354,7 @@ include ('db/db_conn.php');
                     $passwordChangeAttempt = true;
                     $passwordError['currentPassword'] = "Current password is different";
                 }
-                if ($newPassword == ''){
+                if (empty($newPassword)){
                     $passwordChangeAttempt = true;
                     $passwordError['newPassword'] = "New password is required";
                 }
@@ -371,12 +369,7 @@ include ('db/db_conn.php');
             }
 
             if (empty($errors) && empty($passwordError)){
-                if (!$passwordFlag){
-                    $hashedPassword = $memberData['password'];
-                    }
-                else{
-                    $hashedPassword = password_hash($newPassword, PASSWORD_DEFAULT);
-                    }
+                $hashedPassword = $passwordFlag === 'true' ? password_hash($newPassword, PASSWORD_DEFAULT) : $memberData['password'];
 
                 $sql = "UPDATE members SET memberProfile = '$memberProfilePath', memberName = '$memberName', email = '$email', phoneNum = '$phoneNum', bio = '$bio', password = '$hashedPassword' WHERE memberID = $memberID";
                 if ($conn->query($sql) === TRUE) {
