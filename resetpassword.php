@@ -68,6 +68,10 @@ if ($token){
         color: #333;
     }
 
+    .h1{
+        padding-right: 20px;
+    }
+
     form {
         background-color: #fff;
         border-radius: 8px;
@@ -130,7 +134,7 @@ if ($token){
 
 </style>
 <body>
-<h1>Reset Password</h1>
+<div class="h1"><h1>Reset Password</h1></div>
 <form method="POST" action="">
     <label>
         <span class="required">*</span>New Password:
