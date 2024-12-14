@@ -105,6 +105,10 @@ if (!empty($cartItems)) {
             border-bottom: 2px solid #d3a029;
         }
 
+        .h1 {
+            text-align: center;
+        }
+
         .cart-container {
             max-width: 800px;
             margin: 20px auto;
@@ -232,7 +236,7 @@ if (!empty($cartItems)) {
     </nav>
 </header>
 <main>
-    <h1>Shopping Cart</h1>
+    <div class="h1"><h1>Shopping Cart</h1></div>
     <div class="cart-container">
         <?php if ($result && mysqli_num_rows($result) > 0) { ?>
             <form id="cart-form" method="post" enctype="multipart/form-data">
