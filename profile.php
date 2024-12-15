@@ -517,7 +517,12 @@ include ('db/db_conn.php');
     if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['confirmAction'])) {
         $sql = "DELETE FROM members WHERE memberID = $memberID";
         if ($conn->query($sql) === TRUE) {
+            session_unset();
+            session_destroy();
             echo "<script>alert('Account deleted successfully! Logging out...'); window.location.href='mainpage.php'</script>')";
+        }
+        else{
+            echo "Error deleting account: " . $conn->error;
         }
     }
     ?>
