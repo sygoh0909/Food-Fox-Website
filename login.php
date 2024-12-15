@@ -81,8 +81,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <label><input type="password" name="password" required></label>
         <a href='forgotpassword.php'><p class="forgot-pass">Forgot password?</p></a>
 
-        <p class="error-message"><?= isset ($errors['emptyFields']) ? $errors['emptyFields'] : ''?></p>
-        <p class="error-message"><?= isset($errors['incorrectField']) ? $errors['incorrectField'] : ''?></p>
+        <p class="error-message"><?= $errors['emptyFields'] ?? '' ?></p>
+        <p class="error-message"><?= $errors['incorrectField'] ?? '' ?></p>
 
         <button type="submit">Sign In</button>
     </form>
