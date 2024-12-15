@@ -77,8 +77,8 @@ function loginSection(){
             }
         }
     }else {
-        echo "<a href='../../assignment/login.php' class='roundButton login'>Login</a>";
-        echo "<a href='../../assignment/signup.php' class='roundButton signup'>Sign Up</a>";
+        echo "<a href='../login.php' class='roundButton login'>Login</a>";
+        echo "<a href='../signup.php' class='roundButton signup'>Sign Up</a>";
     }
 }
 

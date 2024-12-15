@@ -7,7 +7,7 @@ $memberData = null;
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 
-require 'C:/xampp/htdocs/assignment/vendor/autoload.php';
+require 'C:/xampp/htdocs/Food-Fox-Website/vendor/autoload.php';
 
 if (isset($_POST['submit'])){
     $email = $_POST['email'];
@@ -23,7 +23,7 @@ if (isset($_POST['submit'])){
         $sql = "INSERT INTO passwordresets(memberID, token, expiry) VALUES ('$memberID', '$token', '$expiry')";
         mysqli_query($conn, $sql);
 
-        $resetLink = "http://localhost/assignment/resetpassword.php?token=$token";
+        $resetLink = "http://localhost/Food-Fox-Website/resetpassword.php?token=$token";
 
         sendMail($memberData['email'], $resetLink);
     }

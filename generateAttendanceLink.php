@@ -6,7 +6,7 @@ $conn = connection();
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 
-require 'C:/xampp/htdocs/assignment/vendor/autoload.php';
+require 'C:/xampp/htdocs/Food-Fox-Website/vendor/autoload.php';
 
 $eventID = $_GET['eventID'] ?? '';
 if ($eventID){
@@ -18,7 +18,7 @@ if ($eventID){
             $memberEmail = $row['email'];
             $eventName = $row['eventName'];
 
-            $loginFormUrl = 'http://localhost/assignment/loginform.php?eventID=' .$eventID . "&memberID=" .$row['memberID'];
+            $loginFormUrl = 'http://localhost/Food-Fox-Website/attendance.php?eventID=' .$eventID . "&memberID=" .$row['memberID'];
             sendMail($eventName, $loginFormUrl, $memberEmail);
 
         }

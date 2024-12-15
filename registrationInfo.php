@@ -6,10 +6,10 @@ $conn = connection();
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 
-//require('C:/xampp/htdocs/assignment/phpmailer/src/Exception.php');
-//require('C:/xampp/htdocs/assignment/phpmailer/src/PHPMailer.php');
-//require('C:/xampp/htdocs/assignment/phpmailer/src/SMTP.php');
-require 'C:/xampp/htdocs/assignment/vendor/autoload.php';
+//require('C:/xampp/htdocs/Food-Fox-Website/phpmailer/src/Exception.php');
+//require('C:/xampp/htdocs/Food-Fox-Website/phpmailer/src/PHPMailer.php');
+//require('C:/xampp/htdocs/Food-Fox-Website/phpmailer/src/SMTP.php');
+require 'C:/xampp/htdocs/Food-Fox-Website/vendor/autoload.php';
 
 $registrationID = isset($_GET['registrationID']) ? $_GET['registrationID'] : null;
 $registrationData = null;
