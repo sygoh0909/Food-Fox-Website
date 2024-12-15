@@ -30,4 +30,5 @@ if ($memberID && $eventID){
         exit();
     }
 }
+
 ?>
