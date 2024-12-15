@@ -54,7 +54,7 @@ include ('db/db_conn.php');
         $rewardPicPath = $rewardData['rewardPic'] ?? '';
 
         if (isset($_FILES['rewardPic']) && $_FILES['rewardPic']['error'] == 0) {
-            $target_dir = "../uploads/";
+            $target_dir = "uploads/";
             $rewardPicPath = $target_dir . basename($_FILES['rewardPic']['name']);
             move_uploaded_file($_FILES['rewardPic']['tmp_name'], $rewardPicPath);
         }

@@ -124,8 +124,8 @@ include ('db/db_conn.php');
     <?php
     $conn = connection();
     //check for event id presence
-    $eventID = isset($_GET['eventID']) ? $_GET['eventID'] : null;
-    $action = isset($_GET['action']) ? $_GET['action'] : null;
+    $eventID = $_GET['eventID'] ?? null;
+    $action = $_GET['action'] ?? null;
     $eventData = null;
 
     if ($eventID) {
