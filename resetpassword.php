@@ -140,12 +140,12 @@ if ($token){
         <span class="required">*</span>New Password:
         <input type="password" name="newPassword" placeholder="Enter your new password" required>
     </label>
-    <p class="error-message"><?= isset($errors['newPassword']) ? $errors['newPassword'] : '' ?></p>
+    <p class="error-message"><?= $errors['newPassword'] ?? '' ?></p>
     <label>
         <span class="required">*</span>Confirm Password:
         <input type="password" name="confirmPassword" placeholder="Confirm your new password" required>
     </label>
-    <p class="error-message"><?= isset($errors['confirmPassword']) ? $errors['confirmPassword'] : '' ?></p>
+    <p class="error-message"><?= $errors['confirmPassword'] ?? '' ?></p>
     <button type="submit">Reset Password</button>
 </form>
 </body>

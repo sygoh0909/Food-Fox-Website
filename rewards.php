@@ -153,7 +153,7 @@ include ('db/db_conn.php');
         <h2>Your Total Points</h2>
         <?php
         $conn = connection();
-        $memberID = isset($_SESSION['memberID']) ? $_SESSION['memberID'] : "";
+        $memberID = $_SESSION['memberID'] ?? "";
         $memberPoints = 0;
 
         if ($memberID) {

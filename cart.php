@@ -3,7 +3,7 @@ include('cookie/cookie.php');
 include ('db/db_conn.php');
 $conn = connection();
 
-$cartItems = isset($_SESSION['cart']) ? $_SESSION['cart'] : array();
+$cartItems = $_SESSION['cart'] ?? array();
 
 // Handle amount update
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -29,10 +29,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
 
     if (isset($_POST['checkout'])) {
-        $memberID = isset($_SESSION['memberID']) ? $_SESSION['memberID'] : null;
+        $memberID = $_SESSION['memberID'] ?? null;
         if($memberID) {
             //must be member, but logically only member can access to reward page which link here
-            $selectedItems = isset($_POST['selected_items']) ? $_POST['selected_items'] : array();
+            $selectedItems = $_POST['selected_items'] ?? array();
 
             if (!empty($selectedItems)){
                 $totalPointsRequired = 0;
