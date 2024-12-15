@@ -8,7 +8,7 @@ use PHPMailer\PHPMailer\Exception;
 
 require 'C:/xampp/htdocs/assignment/vendor/autoload.php';
 
-$eventID = isset($_GET['eventID']) ? $_GET['eventID'] :'';
+$eventID = $_GET['eventID'] ?? '';
 if ($eventID){
     $sql = "SELECT m.memberID, m.email, e.eventName FROM registrations r INNER JOIN members m ON r.memberID = m.memberID INNER JOIN events e ON r.eventID = e.eventID WHERE r.eventID = $eventID";
     $result = mysqli_query($conn, $sql);
@@ -46,7 +46,7 @@ function sendMail($eventName, $loginFormUrl, $memberEmail){
         $email->Subject = 'Attendance link!';
         $email->Body = "<h3>Attendance link</h3>
 <p>You have registered for the event $eventName. Please use the link below to mark your attendance:</p>
-$loginFormUrl";
+<a href='$loginFormUrl'>Click here</a>";
 
         $email->send();
         echo "<script>alert('Attendance link sent successfully!'); window.location.href = 'admin_events.php';</script>";

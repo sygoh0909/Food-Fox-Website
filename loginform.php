@@ -3,8 +3,8 @@ include('cookie/cookie.php');
 include ('db/db_conn.php');
 $conn = connection();
 
-$memberID = isset($_GET['memberID']) ? $_GET['memberID'] :'';
-$eventID = isset($_GET['eventID']) ? $_GET['eventID'] : '';
+$memberID = $_GET['memberID'] ?? '';
+$eventID = $_GET['eventID'] ?? '';
 
 if ($memberID && $eventID){
     $sql = "SELECT eventName FROM events WHERE eventID = $eventID";
