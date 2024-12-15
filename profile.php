@@ -23,6 +23,7 @@ include ('db/db_conn.php');
         }
 
         .profile-sidebar {
+            position: relative;
             flex: 0 0 25%;
             background-color: #F7F7F7;
             padding: 20px;
@@ -223,8 +224,8 @@ include ('db/db_conn.php');
 
         .profile-sidebar .btn.back {
             position: absolute;
-            top: 20px;
-            left: 30px;
+            top: 10px;
+            left: 10px;
             background-color: transparent;
             border: none;
             color: #A89E92;
