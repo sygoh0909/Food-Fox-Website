@@ -6,12 +6,9 @@ $conn = connection();
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 
-//require('C:/xampp/htdocs/Food-Fox-Website/phpmailer/src/Exception.php');
-//require('C:/xampp/htdocs/Food-Fox-Website/phpmailer/src/PHPMailer.php');
-//require('C:/xampp/htdocs/Food-Fox-Website/phpmailer/src/SMTP.php');
 require 'C:/xampp/htdocs/Food-Fox-Website/vendor/autoload.php';
 
-$registrationID = isset($_GET['registrationID']) ? $_GET['registrationID'] : null;
+$registrationID = $_GET['registrationID'] ?? null;
 $registrationData = null;
 
 if ($registrationID) {

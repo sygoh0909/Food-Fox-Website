@@ -2,7 +2,7 @@
 include('cookie/cookie.php');
 include ('db/db_conn.php');
 $conn = connection();
-$token = isset($_GET['token']) ? $_GET['token'] : '';
+$token = $_GET['token'] ?? '';
 $resetData = null;
 
 if ($token){

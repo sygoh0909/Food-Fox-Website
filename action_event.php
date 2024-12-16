@@ -178,13 +178,13 @@ include ('db/db_conn.php');
         elseif (!preg_match("/^[a-zA-Z0-9\s,.\-\/]+$/", $location)) {
             $errors['location'] = "Location should only contain letters, numbers, spaces, commas, periods, hyphens, and slashes.";
         }
-        if (!empty ($participantsNeeded) && !preg_match('/^[1-9]\d*$/', $participantsNeeded)){
+        if (!empty ($participantsNeeded) && !preg_match('/^[0-9]\d*$/', $participantsNeeded)){
             $errors['participantsNeeded'] = "Participants needed must be a positive integer number.";
         }
         elseif (empty($participantsNeeded)){
             $errors['participantsNeeded'] = "Participants needed is required";
         }
-        if (!empty($volunteersNeeded) && !preg_match('/^[1-9]\d*$/', $volunteersNeeded)){
+        if (!empty($volunteersNeeded) && !preg_match('/^[0-9]\d*$/', $volunteersNeeded)){
             $errors['volunteersNeeded'] = "Volunteers needed must be a positive integer number.";
         }
         elseif (empty($volunteersNeeded)){
