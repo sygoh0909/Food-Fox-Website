@@ -77,8 +77,8 @@ function loginSection(){
             }
         }
     }else {
-        echo "<a href='login.php' class='roundButton login'>Login</a>";
-        echo "<a href='signup.php' class='roundButton signup'>Sign Up</a>";
+        echo "<a href='http://localhost/Food-Fox-Website/login.php' class='roundButton login'>Login</a>";
+        echo "<a href='http://localhost/Food-Fox-Website/signup.php' class='roundButton signup'>Sign Up</a>";
     }
 }
 
